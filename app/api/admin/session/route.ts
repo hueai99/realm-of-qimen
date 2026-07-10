@@ -1,0 +1,3 @@
+import { NextResponse } from "next/server"; import { cookies } from "next/headers"; import { createHash,timingSafeEqual } from "crypto";
+const hash=(value:string)=>createHash("sha256").update(value).digest();
+export async function POST(request:Request){const {passphrase}=await request.json();const expected=process.env.ADMIN_PASSPHRASE;if(!expected||typeof passphrase!=="string"||!timingSafeEqual(hash(passphrase),hash(expected)))return NextResponse.json({error:"Unauthorized"},{status:401});const store=await cookies();store.set("roq_admin",hash(expected).toString("hex"),{httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",maxAge:60*60*8,path:"/"});return NextResponse.json({ok:true})}

@@ -1,0 +1,2 @@
+import { cookies } from "next/headers"; import { createHash,timingSafeEqual } from "crypto";
+export async function isAdmin(){const expected=process.env.ADMIN_PASSPHRASE;if(!expected)return false;const actual=(await cookies()).get("roq_admin")?.value;if(!actual)return false;const wanted=createHash("sha256").update(expected).digest("hex");try{return timingSafeEqual(Buffer.from(actual),Buffer.from(wanted))}catch{return false}}
