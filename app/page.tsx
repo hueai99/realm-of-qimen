@@ -1,21 +1,11 @@
-export default function Home() {
-  return (
-    <main className="min-h-screen flex items-center justify-center p-8">
-      <div className="max-w-xl text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">vibe-stack-supabase</h1>
-        <p className="text-neutral-500">
-          Edit{" "}
-          <code className="bg-neutral-100 px-1.5 py-0.5 rounded text-sm">
-            app/page.tsx
-          </code>{" "}
-          to start building.
-        </p>
-        <p className="text-xs text-neutral-400">
-          See{" "}
-          <code className="bg-neutral-100 px-1.5 py-0.5 rounded">CLAUDE.md</code>{" "}
-          for project conventions and gstack workflow.
-        </p>
-      </div>
-    </main>
-  );
+import { createClient } from "@/lib/supabase/server";
+import IntakeForm from "@/app/components/intake-form";
+import Link from "next/link";
+import type { BaziReport } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
+export default async function Home() {
+  let demos: BaziReport[] = [];
+  try { const db = await createClient(); const { data } = await db.from("bazi_reports").select("*").eq("is_demo", true).order("created_at"); demos = (data ?? []) as BaziReport[]; } catch {}
+  return <main><header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6"><Link href="/" className="text-lg font-semibold tracking-wide">REALM OF QIMEN</Link><Link href="/admin/leads" className="text-sm underline underline-offset-4">Lead desk</Link></header><section className="mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-8 lg:grid-cols-[.9fr_1.1fr] lg:pt-16"><div className="pt-5"><p className="mb-5 text-xs font-bold uppercase tracking-[.28em] text-[#9b3c2b]">A clearer view of what comes naturally</p><h1 className="max-w-xl text-5xl leading-[1.02] sm:text-6xl">Meet the person inside the possibilities.</h1><p className="mt-7 max-w-lg text-lg leading-8 text-[#665a50]">Enter birth details to receive a four-pillar reading, an element profile, and three practical reflections. No login required.</p><div className="mt-10 border-l-2 border-[#b7422d] pl-5 text-sm leading-6 text-[#665a50]">A reflective Bazi experience—not a substitute for professional advice or a promise about the future.</div></div><IntakeForm /></section><section className="bg-[#211b16] px-6 py-16 text-[#f6f0e4]"><div className="mx-auto max-w-6xl"><p className="text-xs uppercase tracking-[.25em] text-[#d99a85]">Explore the format</p><h2 className="mb-8 mt-2 text-3xl">Sample readings</h2><div className="grid gap-4 md:grid-cols-3">{demos.map(demo => <Link key={demo.id} href={`/report/${demo.id}`} className="rounded-sm border border-white/15 bg-white/5 p-6 transition hover:-translate-y-1 hover:bg-white/10"><span className="text-xs uppercase tracking-widest text-[#d99a85]">{demo.question_type.replace("_", " ")}</span><h3 className="mt-5 text-2xl">{demo.subject_name}</h3><p className="mt-3 line-clamp-2 text-sm leading-6 text-[#cfc5bd]">{demo.element_profile}</p><span className="mt-6 inline-block text-sm underline underline-offset-4">Read report →</span></Link>)}{!demos.length && <p className="text-[#cfc5bd]">Demo readings will appear when the database is connected.</p>}</div></div></section></main>;
 }

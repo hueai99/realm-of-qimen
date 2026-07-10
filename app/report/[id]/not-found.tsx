@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound(){return <main className="grid min-h-screen place-items-center p-6 text-center"><div><p className="text-xs uppercase tracking-widest text-[#9b3c2b]">Reading not found</p><h1 className="mt-3 text-4xl">This report may have moved.</h1><p className="mt-4 text-[#74685e]">Check the link or create a new personal reading.</p><Link className="mt-7 inline-block bg-[#9b3c2b] px-6 py-3 text-white" href="/">Create a reading</Link></div></main>}

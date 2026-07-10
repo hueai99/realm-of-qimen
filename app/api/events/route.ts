@@ -1,0 +1,2 @@
+import { NextResponse } from "next/server"; import { createAdminClient } from "@/lib/supabase/admin";
+export async function POST(request: Request) { const { report_id, event } = await request.json(); if (event !== "upgrade_cta.clicked" || !/^[0-9a-f-]{36}$/i.test(report_id ?? "")) return NextResponse.json({ error: "Invalid event" }, { status: 400 }); const db = createAdminClient(); await db.from("audit_logs").insert({ actor: "visitor", action: event, target_table: "bazi_reports", target_id: report_id, payload: {} }); return NextResponse.json({ ok: true }); }
