@@ -1,10 +1,11 @@
 import type { QuestionType, SummaryReport } from "@/lib/types";
+import { Solar } from "lunar-javascript";
 
-const stems = ["Jia · Wood", "Yi · Wood", "Bing · Fire", "Ding · Fire", "Wu · Earth", "Ji · Earth", "Geng · Metal", "Xin · Metal", "Ren · Water", "Gui · Water"];
-const branches = ["Zi · Rat", "Chou · Ox", "Yin · Tiger", "Mao · Rabbit", "Chen · Dragon", "Si · Snake", "Wu · Horse", "Wei · Goat", "Shen · Monkey", "You · Rooster", "Xu · Dog", "Hai · Pig"];
-const pillar = (seed: number) => `${stems[((seed % 10) + 10) % 10]} / ${branches[((seed % 12) + 12) % 12]}`;
+const stems: Record<string, [string, string]> = { "甲":["Jia","Wood"], "乙":["Yi","Wood"], "丙":["Bing","Fire"], "丁":["Ding","Fire"], "戊":["Wu","Earth"], "己":["Ji","Earth"], "庚":["Geng","Metal"], "辛":["Xin","Metal"], "壬":["Ren","Water"], "癸":["Gui","Water"] };
+const branches: Record<string, [string, string]> = { "子":["Zi","Rat"], "丑":["Chou","Ox"], "寅":["Yin","Tiger"], "卯":["Mao","Rabbit"], "辰":["Chen","Dragon"], "巳":["Si","Snake"], "午":["Wu","Horse"], "未":["Wei","Goat"], "申":["Shen","Monkey"], "酉":["You","Rooster"], "戌":["Xu","Dog"], "亥":["Hai","Pig"] };
+const formatPillar = (gan: string, zhi: string) => `${gan} · ${stems[gan][0]} ${stems[gan][1]} / ${zhi} · ${branches[zhi][1]}`;
 type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType };
-export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; report_content: SummaryReport };
+export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
 function fallbackSummary(name: string, concern?: string | null): SummaryReport {
   return {
@@ -29,9 +30,11 @@ function fallbackSummary(name: string, concern?: string | null): SummaryReport {
 }
 
 export function calculateReading(input: Input): Reading {
-  const date = new Date(`${input.birth_date}T12:00:00Z`); const year = date.getUTCFullYear(); const month = date.getUTCMonth() + 1; const daySeed = Math.floor(date.getTime() / 86400000); const hour = input.birth_time ? Number(input.birth_time.split(":")[0]) : null;
+  const [year, month, day] = input.birth_date.split("-").map(Number); const [hour, minute] = (input.birth_time ?? "12:00").split(":").map(Number);
+  const chart = Solar.fromYmdHms(year, month, day, hour, minute, 0).getLunar().getEightChar();
+  const values = { year: [chart.getYearGan(), chart.getYearZhi()], month: [chart.getMonthGan(), chart.getMonthZhi()], day: [chart.getDayGan(), chart.getDayZhi()], hour: [chart.getTimeGan(), chart.getTimeZhi()] } as const;
   const focus: Record<QuestionType, string> = { career: "work that rewards visible craft and patient leadership", wealth: "steady wealth-building through disciplined choices and clear boundaries", child_potential: "learning through curiosity, structure, and encouragement at an individual pace", relationship: "relationships built through direct communication and reciprocity" };
-  return { year_pillar: pillar(year - 4), month_pillar: pillar(year * 12 + month + 14), day_pillar: pillar(daySeed + 40), hour_pillar: hour === null ? null : pillar(daySeed * 12 + Math.floor((hour + 1) / 2)), element_profile: "A balanced pattern of Wood growth, Earth steadiness, and Water reflection. Use this as a reflective lens, not a fixed prediction.", insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: hour === null ? 0.66 : 0.76, insights_source: "realm-of-qimen/calculation-v1", report_content: fallbackSummary(input.subject_name, (input as Input & { parenting_concern?: string | null }).parenting_concern) };
+  return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${stems[values.day[0]][0]} ${stems[values.day[0]][1]} Day Master. Use this as a reflective lens, not a fixed label.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v2", report_content: fallbackSummary(input.subject_name, (input as Input & { parenting_concern?: string | null }).parenting_concern), chart_status: "verified", chart_data: { ...values, day_master: `${stems[values.day[0]][0]} ${stems[values.day[0]][1]}` } };
 }
 
 export async function generateReading(input: Input): Promise<Reading> {
