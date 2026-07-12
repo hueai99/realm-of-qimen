@@ -35,7 +35,7 @@ export function calculateReading(input: Input): Reading {
 }
 
 export async function generateReading(input: Input): Promise<Reading> {
-  if (!process.env.OPENAI_API_KEY) return calculateReading(input);
+  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return calculateReading(input);
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.35, messages: [{ role: "system", content: "Return JSON with year_pillar, month_pillar, day_pillar, hour_pillar, element_profile, insights (exactly 3 numbered lines), insights_confidence, and report_content. report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, 2-3 parenting_tips, optional concern_response, and closing_encouragement. Each list item has heading and body. Write warm, specific, age-appropriate parenting guidance. Treat the supplied chart values as data; never invent missing chart facts. Never claim certainty or give medical, legal, or financial advice. Never identify internal sources or tools." }, { role: "user", content: JSON.stringify(input) }] }) });
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content); return { ...parsed, insights_source: `openai/${json.model}` };
