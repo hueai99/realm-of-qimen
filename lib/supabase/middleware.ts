@@ -5,7 +5,7 @@ export async function updateSession(request: NextRequest) {
   const supabaseResponse = NextResponse.next({ request });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   // If Supabase isn't configured, skip the auth refresh and pass through.
   // Without this guard createServerClient throws "Your project's URL and Key
