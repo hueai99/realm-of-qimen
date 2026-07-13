@@ -170,7 +170,7 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Weak", concern?: string | null): SummaryReport {
   const profile = getDayMasterKnowledge(dayMasterName);
   const support = strength === "Weak"
-    ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. It means the qualities linked to the Day Master may be less obvious at first. They may become easier to see when ${name} feels safe, trusted, and encouraged.`
+    ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. ${profile.weakExpression}`
     : `The chart also describes his or her Day Master as Strong. This means the qualities linked to the Day Master may be easier to see. It does not mean that he or she will feel strong or confident in every situation.`;
   const personality = [
     `${name}'s Day Master is ${dayMaster}. In Bazi, it is compared to ${profile.image}. ${profile.story}`,

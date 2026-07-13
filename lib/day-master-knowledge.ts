@@ -145,7 +145,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Pushes too hard", meaning: "may keep pushing when he or she wants to do well", everyday: "refusing to stop even when already frustrated or tired", examples: ["You may see him or her refuse to stop even when already frustrated or tired.", "A small mistake may upset him or her when something is not working."], support: "Let him or her take a short break before trying again. Remind him or her that taking a break is not giving up" },
     ],
     strongExpression: "Drive and resilience may be obvious; guidance helps strength include reflection, flexibility, and measured effort.",
-    weakExpression: "Courage may first appear in focused bursts or around trusted people, growing through achievable challenges and honest encouragement.",
+    weakExpression: "This means courage and determination may not appear consistently. He or she may act boldly in one situation but hesitate in another. Clear goals, practical challenges, and encouragement can help these qualities become steadier.",
     limits: "The Day Master alone cannot establish aggression, authority, competitiveness, or ability to handle pressure.",
     closing: "courage, determination, and a strong sense of loyalty",
   },
