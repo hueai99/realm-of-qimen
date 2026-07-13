@@ -15,13 +15,17 @@ const tenGodNames: Record<string, [string, string]> = { "比肩":["Bi Jian","Fri
 type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType };
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
-function fallbackSummary(name: string, concern?: string | null): SummaryReport {
+function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", season: string, seasonalStateName: string, concern?: string | null): SummaryReport {
+  const support = strength === "Weak"
+    ? `In Bazi, “Weak” describes the balance of ${element} energy in this season—not a weak personality. ${name} may do best with preparation, reassurance, and time to settle before being asked to perform under pressure.`
+    : `In Bazi, “Strong” describes the balance of ${element} energy in this season—not a label for personality or behaviour. ${name} may have plenty of inner drive and benefit from choices, movement, and gentle help with flexibility.`;
+  const seasonLink = `${dayMaster} is the Day Master, the chart's simple reference point for temperament. Because ${name} was born in ${season}, ${element} is considered ${seasonalStateName.toLowerCase()} at that time. ${support}`;
   return {
-    personality: `${name} is likely to respond best when warmth and clear expectations are offered together. They may take time to observe before showing what they know, then become deeply engaged once a task feels meaningful. A steady rhythm gives their confidence room to grow.`,
+    personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
     strengths: [
-      { heading: "Thoughtful observation", body: `${name} may notice details and emotional shifts that others miss. In everyday life, this can appear when they remember a small promise or quietly adjust their approach after watching how something works.` },
-      { heading: "Purposeful persistence", body: `Once committed, ${name} can stay with a challenge longer than expected. Breaking homework or chores into visible steps helps this determination become a source of pride rather than pressure.` },
-      { heading: "A caring inner compass", body: `${name} may care strongly about fairness and the wellbeing of people close to them. They can flourish when adults recognise the intention behind their actions as well as the final result.` },
+      { heading: `${element} clarity`, body: `${name} may prefer to understand what is expected before beginning. Clear examples and one manageable first step can help their natural ${element} qualities become easier to express.` },
+      { heading: "Purposeful persistence", body: `Once a task feels safe and meaningful, ${name} may stay with it longer than expected. Breaking homework or chores into visible steps helps determination grow without unnecessary pressure.` },
+      { heading: "Learning through experience", body: `${name} is more than a chart. Notice when they are most engaged, calm, and curious; those real-life patterns are the best way to decide which parts of this reflection are useful.` },
     ],
     soft_spots: [
       { heading: "Space after busy moments", body: `${name} may retreat when overwhelmed or when too many instructions arrive at once. A short pause, a drink of water, and one gentle question can help them return without feeling pushed.` },
@@ -33,7 +37,7 @@ function fallbackSummary(name: string, concern?: string | null): SummaryReport {
       { heading: "Make progress visible", body: `Use short checklists and acknowledge effort specifically. Seeing small steps completed can be more motivating than a distant reward.` },
       { heading: "Connect before redirecting", body: `Reflect the feeling first, then guide the behaviour. A sentence such as “I can see this is frustrating; let’s find the first small step” keeps support and responsibility together.` },
     ],
-    closing_encouragement: `Your attention to ${name} is already a meaningful source of strength. This blueprint is a reflective guide, not a fixed label; keep what helps you understand your child with more patience, curiosity, and confidence.`,
+    closing_encouragement: `Your attention to ${name} is already a meaningful source of strength. Bazi is a traditional reflective framework—not a religion, prediction, or fixed destiny. Birth-time accuracy, age, environment, experience, and personal choices all matter, so keep what helps and set aside what does not fit.`,
   };
 }
 
@@ -45,7 +49,8 @@ export function calculateReading(input: Input): Reading {
   const lunar = Solar.fromYmdHms(year, month, day, hour, minute, 0).getLunar(); const rawGods = [...lunar.getBaZiShiShenGan(), ...lunar.getBaZiShiShenZhi()].filter((name: string) => name !== "日主");
   const tenGods = rawGods.map((name: string) => ({ name, pinyin: tenGodNames[name]?.[0] ?? name, english: tenGodNames[name]?.[1] ?? name }));
   const focus: Record<QuestionType, string> = { career: "work that rewards visible craft and patient leadership", wealth: "steady wealth-building through disciplined choices and clear boundaries", child_potential: "learning through curiosity, structure, and encouragement at an individual pace", relationship: "relationships built through direct communication and reciprocity" };
-  return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${stems[values.day[0]][0]} ${stems[values.day[0]][1]} Day Master — ${strength}. Use this as a reflective lens, not a fixed label.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v2", report_content: fallbackSummary(input.subject_name, (input as Input & { parenting_concern?: string | null }).parenting_concern), chart_status: "verified", chart_data: { ...values, day_master: `${stems[values.day[0]][0]} ${stems[values.day[0]][1]}`, day_master_strength: strength, seasonal_state: state, season, strength_method: "season-first-v1", strength_review_status: state === "Prosperous" || state === "Dead" ? "high-confidence" : "review-recommended", ten_gods: tenGods } };
+  const dayMaster = `${stems[values.day[0]][0]} ${stems[values.day[0]][1]}`;
+  return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${dayMaster} Day Master — ${strength}. “Strength” describes seasonal energy balance, not strength of character.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v3", report_content: groundedSummary(input.subject_name, dayMaster, dayElement, strength, season, state, (input as Input & { parenting_concern?: string | null }).parenting_concern), chart_status: "verified", chart_data: { ...values, day_master: dayMaster, day_master_strength: strength, seasonal_state: state, season, strength_method: "season-first-v1", strength_review_status: state === "Prosperous" || state === "Dead" ? "high-confidence" : "review-recommended", ten_gods: tenGods } };
 }
 
 export async function generateReading(input: Input): Promise<Reading> {

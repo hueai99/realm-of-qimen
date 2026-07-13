@@ -31,6 +31,11 @@ export default function IntakeForm() {
       <input type="hidden" name="question_type" value="child_potential" />
       <label className="text-sm sm:col-span-2">What would you most like help with? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} /></label>
     </div>
+    {busy && <div className="mt-6 space-y-3 border-y border-[#d7cbbd] py-5 text-sm leading-6 text-[#665a50]" aria-live="polite">
+      <p className="font-semibold text-[#211b16]">Preparing a thoughtful reflection…</p>
+      <p><strong>A reflection, not a prediction.</strong> Bazi is a traditional way of reflecting on temperament and natural tendencies. It is not a religion, fixed destiny, or replacement for your values and knowledge of your child.</p>
+      <p><strong>Why some details may not fit.</strong> No chart captures a whole person. Birth-time accuracy, age, environment, experiences, and personal choices all matter. Keep what feels useful and set aside what does not.</p>
+    </div>}
     {error && <p role="alert" className="mt-5 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
     <button disabled={busy} className="mt-7 w-full bg-[#9b3c2b] px-5 py-4 font-semibold text-white disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>
   </form>;
