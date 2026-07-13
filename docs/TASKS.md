@@ -63,6 +63,11 @@ Week 2: Sprint 4 (Conversion Polish)       ← money in
 ## Sprint 4 — Conversion Polish
 **Goal:** Money can flow; paid users get premium content.
 
+- [ ] Position the free summary transparently as a useful Day Master-focused snapshot, with three Day Master qualities, gentle support areas, and five practical parenting tips
+- [ ] Keep free-summary AI token-efficient: calculate chart facts with rules, send only compact verified facts plus the parent's concern for personalised writing, and retain the deterministic version as fallback
+- [ ] Add a versioned, expert-reviewed database library for 10 Day Masters x strong/weak expression; AI may personalise delivery but must not alter the approved interpretation
+- [ ] Store the selected Day Master profile version and QC result with every generated summary for auditability
+- [ ] Reserve wider developmental, learning, emotional, relationship, daily-harmony, and future-direction analysis for the full report
 - [ ] Summary-report upsell: offer the full personalised report at **SGD 98**
 - [ ] Offer an optional online-consult add-on only with the SGD 98 full report, for clarifying the completed report and answering the purchaser's questions (not as a standalone general consultation)
 - [ ] Collect the approved full-report template and completed sample before building generation

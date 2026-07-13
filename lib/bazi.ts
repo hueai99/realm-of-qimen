@@ -18,6 +18,7 @@ export type Reading = { year_pillar: string; month_pillar: string; day_pillar: s
 
 type QcResult = { approved: boolean; issues: string[]; reviewer: string };
 const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped|the subject|this individual|profile indicates|behavioural profile)\b/i;
+const sourceLeak = /\b(Joey Yap|Destiny\s*X|Power of X|uploaded (?:file|document|reference)|source material|reference document|knowledge base|internal prompt|training data)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 const elementStyle: Record<string, string> = {
@@ -75,6 +76,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   if (!summary?.personality || summary.strengths?.length !== 3 || summary.soft_spots?.length < 2 || summary.parenting_tips?.length < 2 || !summary.closing_encouragement) issues.push("summary structure is incomplete");
   if (chart.day_master && !summary.personality.includes(chart.day_master)) issues.push("personality explanation does not identify the verified Day Master");
   if (unsupportedClaims.test(prose)) issues.push("unsupported or over-certain claim detected");
+  if (sourceLeak.test(prose)) issues.push("private source or internal process disclosure detected");
   if (aiStylePhrases.test(prose)) issues.push("formulaic AI-style wording detected");
   const sections = [...(summary.strengths ?? []), ...(summary.soft_spots ?? []), ...(summary.parenting_tips ?? [])];
   if (sections.some(({ heading }) => !heading || words(heading) > 6)) issues.push("section heading format is inconsistent");
@@ -127,6 +129,14 @@ function genderedSummary(summary: SummaryReport, gender: string): SummaryReport 
   return JSON.parse(JSON.stringify(summary), (_key, value) => typeof value === "string" ? replace(value) : value) as SummaryReport;
 }
 
+function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport): SummaryReport {
+  return {
+    ...candidate,
+    strengths: candidate.strengths.map((point, index) => ({ ...point, basis: verified.strengths[index]?.basis })),
+    soft_spots: candidate.soft_spots.map((point, index) => ({ ...point, basis: verified.soft_spots[index]?.basis })),
+  };
+}
+
 function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", _season: string, _seasonalStateName: string, concern?: string | null): SummaryReport {
   const themes = elementThemes[element];
   const support = strength === "Weak"
@@ -142,6 +152,8 @@ function groundedSummary(name: string, dayMaster: string, element: string, stren
       { heading: "Offer two clear choices", body: `Keep boundaries steady while allowing some ownership: “Would you like to start with reading or maths?” This reduces friction and helps ${name} practise decision-making safely.` },
       { heading: "Make progress visible", body: `Use short checklists and acknowledge effort specifically. Seeing small steps completed can be more motivating than a distant reward.` },
       { heading: "Connect before redirecting", body: `Reflect the feeling first, then guide the behaviour. A sentence such as “I can see this is frustrating; let’s find the first small step” keeps support and responsibility together.` },
+      { heading: "Notice the quiet signals", body: `A change in tone, play, appetite, or willingness to join in may say more than words. Naming the observation gently gives ${name} a way into the conversation without pressure.` },
+      { heading: "Leave room to try again", body: `After a difficult moment, return to the lesson when everyone is calmer. A fresh attempt helps ${name} experience correction as guidance rather than rejection.` },
     ],
     closing_encouragement: `${name} is ${themes.closing}. While he or she may not always show what is needed directly, this chart suggests a child who blossoms with steady mentorship and gentle accountability. By seeing sensitivity as a sign of depth—not weakness—you are already giving ${name} something powerful: the freedom to grow into a clear and resilient self.`,
   };
@@ -164,13 +176,14 @@ export async function generateReading(input: Input): Promise<Reading> {
   calculated.report_content = genderedSummary(calculated.report_content, input.gender);
   const calculatedChart = calculated.chart_data as { day_master?: string };
   const publicElement = Object.keys(elementStyle).find((element) => calculatedChart.day_master?.includes(element)) ?? "element";
-  calculated.element_profile = `${input.subject_name}'s Day Master is ${calculatedChart.day_master}. This is associated with ${elementStyle[publicElement] ?? "their own distinctive way of responding to the world"}.`;
+  calculated.element_profile = `This summary focuses on one important part of the chart: ${input.subject_name}'s ${calculatedChart.day_master} Day Master. It is associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
   const verified = withQc(calculated, deterministicQc(calculated, input.subject_name, input.gender));
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return verified;
+  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true" || process.env.FREE_SUMMARY_AI_ENABLED === "false") return verified;
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.35, messages: [{ role: "system", content: "Return JSON containing only report_content. Ground the writing in the supplied verified Day Master, season, and strength. Strength means seasonal energy balance, not character weakness. Use warm, relatable, age-appropriate language and cautious phrases such as 'may' and 'you may notice'. Present Bazi as a traditional reflective framework, not science, religion, prediction, or fixed destiny. Briefly acknowledge that birth-time accuracy, age, environment, experiences, and choices affect fit. Never invent a structure or ranked profile stars. Never identify internal sources or tools. report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, 2-3 parenting_tips, optional concern_response, and closing_encouragement; each list item has heading and body." }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, fixed_element_profile: verified.element_profile }) }] }) });
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
-    const candidate = { ...verified, report_content: genderedSummary(parsed.report_content, input.gender), insights_source: `calculation/validated-v3+openai/${json.model}` };
+    const personalised = genderedSummary(parsed.report_content, input.gender);
+    const candidate = { ...verified, report_content: attachVerifiedBasis(personalised, verified.report_content), insights_source: `calculation/validated-v3+openai/${json.model}` };
     const qc = deterministicQc(candidate, input.subject_name, input.gender);
     return qc.approved ? withQc(candidate, qc) : withQc(verified, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
   } catch (error) { console.error("AI generation fallback", error); return verified; }

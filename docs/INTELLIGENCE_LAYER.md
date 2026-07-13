@@ -50,3 +50,11 @@ User provides: name, birth date (may be approximate), birth time (often unknown)
 | Rule-based lead score | ML model trained on converted leads |
 | AI insights stored as text | Structured JSON with per-pillar tags |
 | Manual review_status | Admin one-click approve/reject UI |
+
+## Curated Day Master Summary Library
+
+The free summary should use a versioned, expert-reviewed content library covering the 10 Day Masters in their strong and weak expressions (20 profiles). Each profile stores factual qualities, likely strengths, gentle support areas, parenting approaches, age-appropriate examples, source references, version, and approval status.
+
+AI does not invent the Bazi interpretation. It receives the matching approved profile, the child's name/age/gender, and the parent's concern, then varies the wording, examples, emphasis, and concern response. Final QC checks every visible claim against the selected profile and stores the profile version with the report. This keeps factual content stable and token use low without producing canned reports.
+
+The library is derived privately from the owner's supplied references. Customer-facing output must never name or imply the source books, authors, websites, files, prompts, tools, or knowledge base. Store only concise derived guidance in production, never copied passages. Any provenance mapping used for internal QC must be server-only and protected by restrictive RLS; it must not be placed in public report JSON or a client-readable table.

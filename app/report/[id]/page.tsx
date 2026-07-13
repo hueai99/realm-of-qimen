@@ -14,5 +14,6 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
 }
 
 function PointSection({ title, points }: { title: string; points: { heading: string; body: string }[] }) {
-  return <section><h2 className="text-3xl">{title}</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{points.map((point) => <div key={point.heading} className="border border-[#d7cbbd] bg-[#fffaf0] p-6"><h3 className="text-xl">{point.heading}</h3><p className="mt-3 leading-7 text-[#665a50]">{point.body}</p></div>)}</div></section>;
+  const displayTitle = title === "Top 3 strengths" ? "Three Day Master qualities" : title === "Soft spots & gentle support" ? "Where gentle support helps" : title;
+  return <section><h2 className="text-3xl">{displayTitle}</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{points.map((point) => <div key={point.heading} className="border border-[#d7cbbd] bg-[#fffaf0] p-6"><h3 className="text-xl">{point.heading}</h3><p className="mt-3 leading-7 text-[#665a50]">{point.body}</p></div>)}</div></section>;
 }
