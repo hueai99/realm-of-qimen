@@ -16,6 +16,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
   const pillars = [["Hour", report.hour_pillar ?? "Birth time unknown"], ["Day", report.day_pillar], ["Month", report.month_pillar], ["Year", report.year_pillar]];
   const insights = report.insights?.split("\n").filter(Boolean) ?? [];
   const summary = report.report_content;
+  const dayMasterStrength = report.chart_data?.day_master_strength ?? report.chart_data?.strength;
 
   return <main className="min-h-screen">
     <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
@@ -36,7 +37,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
           <p className="text-xs uppercase tracking-[.2em] text-[#9b3c2b]">Personality at a glance</p>
           <h2 className="mt-3 text-3xl leading-tight">A gentle view of what comes naturally</h2>
           <p className="mt-5 max-w-3xl leading-8">{summary.personality}</p>
-          <p className="mt-4 max-w-3xl border-l border-[#b7422d] pl-4 text-sm leading-6 text-[#74685e]">The strengths and softer spots below are viewed through {report.subject_name}&apos;s Day Master, including whether that energy is more supported or less supported in the birth season. It is one meaningful part of the Bazi chart, rather than the whole story of the child.</p>
+          <p className="mt-4 max-w-3xl border-l border-[#b7422d] pl-4 text-sm leading-6 text-[#74685e]">The strengths and softer spots below are viewed through {report.subject_name}&apos;s {dayMasterStrength ? `${dayMasterStrength} Day Master` : "Day Master"}. In Bazi, “weak” does not mean a weak child or a lack of character, ability, confidence, or potential. It simply means that the Day Master receives less support from the birth season, so some qualities may emerge more gently or benefit from the right encouragement. This is one meaningful part of the chart, rather than the child&apos;s whole story.</p>
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Soft spots & gentle support" points={summary.soft_spots} />
