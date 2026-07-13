@@ -140,7 +140,7 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
 function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", _season: string, _seasonalStateName: string, concern?: string | null): SummaryReport {
   const themes = elementThemes[element];
   const support = strength === "Weak"
-    ? `${name} has what Bazi calls a Weak Day Master. “Weak” is simply the traditional technical label; in everyday terms, these natural qualities may be more subtle, take time to show, and unfold best when the child feels trusted and encouraged. Time to settle, a clear sense of what comes next, and permission to learn through mistakes can make a noticeable difference.`
+    ? `${name} has what Bazi calls a Weak Day Master. In everyday terms, these natural qualities may be more subtle, take time to show, and unfold best when the child feels trusted and encouraged. Time to settle, a clear sense of what comes next, and permission to learn through mistakes can make a noticeable difference.`
     : `${name} has what Bazi calls a Strong Day Master, so these natural qualities may be easier to notice and call upon. At their best, they give the child a natural source of confidence and momentum. On a difficult day, the same energy may need a calm boundary or a useful direction rather than being pushed down.`;
   const seasonLink = `${name}, born under the ${dayMaster} Day Master, often carries ${elementNature[element]}. This is less about placing the child in a box and more about recognising a familiar rhythm: parents may see it when ${elementMoment[element]}. ${support}`;
   return {
