@@ -1,0 +1,208 @@
+export type DayMasterPoint = {
+  heading: string;
+  meaning: string;
+  everyday: string;
+  support: string;
+};
+
+export type DayMasterKnowledge = {
+  name: string;
+  image: string;
+  warmIntroduction: string;
+  motivations: string[];
+  strengths: [DayMasterPoint, DayMasterPoint, DayMasterPoint];
+  softSpots: [DayMasterPoint, DayMasterPoint];
+  strongExpression: string;
+  weakExpression: string;
+  limits: string;
+  closing: string;
+};
+
+// Child-appropriate, independently phrased guidance distilled from the private
+// reference set. Source names and adult-only claims must never be sent to users.
+export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
+  Jia: {
+    name: "Jia (Yang Wood)", image: "a tall, rooted tree",
+    warmIntroduction: "a steady, direct nature that often wants to grow towards something worthwhile",
+    motivations: ["clear progress", "being trusted with responsibility", "protecting people or principles that matter"],
+    strengths: [
+      { heading: "Steady determination", meaning: "can stay with a meaningful goal even when it takes time", everyday: "returning to a difficult model, book, or skill because finishing matters", support: "notice persistence without turning every interest into a performance target" },
+      { heading: "Straightforward heart", meaning: "often prefers honesty and clear expectations", everyday: "saying plainly when a rule feels unfair or a promise has been broken", support: "value the honesty, then help shape the message with kindness" },
+      { heading: "Protective loyalty", meaning: "may care deeply about people and commitments", everyday: "standing beside a friend or taking a family responsibility seriously", support: "show that caring for others can include asking for help and respecting personal limits" },
+    ],
+    softSpots: [
+      { heading: "Hard to change course", meaning: "may hold tightly to a plan once committed", everyday: "struggling when an outing, rule, or project changes unexpectedly", support: "give a little warning and invite the child to help choose the revised path" },
+      { heading: "Words can land strongly", meaning: "directness may sound sharper than intended", everyday: "correcting a sibling or classmate before noticing their feelings", support: "teach a pause and a gentler second sentence without shaming the honesty" },
+    ],
+    strongExpression: "The steadiness and directness may be easy to see; guidance helps determination stay flexible rather than rigid.",
+    weakExpression: "The same qualities may appear more quietly and grow through reliable encouragement, manageable challenges, and time to establish trust.",
+    limits: "The Day Master alone cannot establish sociability, academic ability, emotional health, or a fixed future.",
+    closing: "a principled child whose persistence can mature into dependable, compassionate leadership",
+  },
+  Yi: {
+    name: "Yi (Yin Wood)", image: "a flexible vine or flowering plant",
+    warmIntroduction: "an adaptable, observant nature that often finds a way to grow around obstacles",
+    motivations: ["connection", "room to approach things creatively", "encouragement that preserves dignity"],
+    strengths: [
+      { heading: "Flexible problem-solving", meaning: "can adjust intelligently when the first route is blocked", everyday: "finding a different way into a game, friendship, or school task", support: "ask what else might work before supplying the answer" },
+      { heading: "Social awareness", meaning: "may notice tone, timing, and how others are responding", everyday: "changing approach when a friend seems uncomfortable", support: "affirm consideration while reminding the child that personal needs also matter" },
+      { heading: "Quiet resilience", meaning: "can keep growing through change without making a show of the effort", everyday: "settling into a new routine little by little", support: "name small signs of courage that might otherwise go unseen" },
+    ],
+    softSpots: [
+      { heading: "Pulled by many opinions", meaning: "may adapt so much that personal preference becomes hard to hear", everyday: "changing an answer after noticing what friends chose", support: "offer private thinking time before asking for a decision" },
+      { heading: "Needs a gentle anchor", meaning: "many possibilities can delay commitment", everyday: "starting several ideas but hesitating over which to finish", support: "help choose one small next step while leaving room for creativity" },
+    ],
+    strongExpression: "Adaptability and social ease may be readily visible; support helps flexibility remain authentic rather than approval-seeking.",
+    weakExpression: "The child's resourcefulness may be subtle at first and emerge best in relationships and settings that feel emotionally safe.",
+    limits: "The Day Master alone cannot prove confidence, popularity, manipulation, or learning style.",
+    closing: "a resourceful child whose flexibility can grow into graceful confidence and thoughtful independence",
+  },
+  Bing: {
+    name: "Bing (Yang Fire)", image: "the sun",
+    warmIntroduction: "an open, bright nature that often brings warmth, visibility, and life to what matters",
+    motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
+    strengths: [
+      { heading: "Natural warmth", meaning: "can make people feel included through an open presence", everyday: "welcoming someone into play or sharing enthusiasm freely", support: "appreciate the warmth without making the child responsible for everyone else's mood" },
+      { heading: "Hopeful energy", meaning: "often sees what could become possible", everyday: "bringing excitement back to a group after disappointment", support: "pair optimism with one realistic next step" },
+      { heading: "Consistent spirit", meaning: "may prefer a clear direction and stay loyal to it", everyday: "returning to a familiar plan because it still feels right", support: "honour commitment while modelling that changing course can also be wise" },
+    ],
+    softSpots: [
+      { heading: "Fixed on Plan A", meaning: "may find it difficult when reality does not match the expected picture", everyday: "feeling deflated when an event or project changes", support: "acknowledge the disappointment before exploring a new version together" },
+      { heading: "Needs room to recharge", meaning: "a bright outward presence can hide tiredness or discouragement", everyday: "seeming cheerful until reaching the safety of home", support: "allow quiet recovery without demanding an explanation immediately" },
+    ],
+    strongExpression: "Warmth and enthusiasm may be immediately visible; calm limits help the child share the space rather than fill all of it.",
+    weakExpression: "The brightness may appear selectively, often unfolding around trusted people, meaningful interests, and unhurried encouragement.",
+    limits: "The Day Master alone cannot determine extroversion, popularity, emotional regulation, or leadership ability.",
+    closing: "a warm-hearted child whose optimism can become a steady source of courage for self and others",
+  },
+  Ding: {
+    name: "Ding (Yin Fire)", image: "a lamp or guiding flame",
+    warmIntroduction: "a thoughtful, illuminating nature that may notice meaning and feeling beneath the surface",
+    motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
+    strengths: [
+      { heading: "Thoughtful insight", meaning: "may think deeply before revealing what has been noticed", everyday: "offering an observation that shows careful listening", support: "leave a pause after questions so the child's fuller answer has time to arrive" },
+      { heading: "Gentle consideration", meaning: "often cares about how words and choices affect others", everyday: "remembering a small detail that comforts someone", support: "appreciate the kindness while protecting the child from carrying every feeling in the room" },
+      { heading: "Quiet influence", meaning: "can guide through ideas and example rather than force", everyday: "helping a sibling or friend see a different way", support: "invite contribution without putting the child on display" },
+    ],
+    softSpots: [
+      { heading: "Thoughts keep circling", meaning: "careful reflection can turn into overthinking", everyday: "replaying a mistake or conversation long after it ended", support: "listen briefly, separate what can be changed from what can be released, then reconnect through a grounding activity" },
+      { heading: "Feelings may flicker", meaning: "inner confidence can vary with atmosphere and response", everyday: "feeling capable one day and doubtful the next", support: "offer calm consistency rather than arguing the child out of the feeling" },
+    ],
+    strongExpression: "Insight and expressiveness may be easier to access; guidance helps conviction remain warm rather than becoming tense or exacting.",
+    weakExpression: "The child's light may be more private, growing through reassurance, patient listening, and relationships where sensitivity is respected.",
+    limits: "The Day Master alone cannot establish anxiety, instability, intelligence, or mental health.",
+    closing: "a perceptive child whose quiet light can mature into thoughtful confidence and compassionate influence",
+  },
+  Wu: {
+    name: "Wu (Yang Earth)", image: "a mountain",
+    warmIntroduction: "a grounded, private nature that often values reliability, principles, and a secure foundation",
+    motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
+    strengths: [
+      { heading: "A dependable presence", meaning: "can bring steadiness when people or routines feel unsettled", everyday: "remembering what needs to be done or staying near someone who needs support", support: "thank the child specifically without making dependability an obligation" },
+      { heading: "Strong principles", meaning: "often takes promises and responsibilities seriously", everyday: "wanting rules to mean what adults said they mean", support: "explain exceptions honestly rather than dismissing the concern" },
+      { heading: "Patient preparation", meaning: "may prefer to understand the ground before beginning", everyday: "checking materials or instructions before a new task", support: "allow preparation while agreeing on a gentle point to begin" },
+    ],
+    softSpots: [
+      { heading: "Slow to shift", meaning: "may need time to absorb change or a different viewpoint", everyday: "going quiet or resisting when plans change suddenly", support: "share the reason, preserve one familiar element, and allow a little processing time" },
+      { heading: "Carries responsibility", meaning: "may take on worries that were never meant to belong to the child", everyday: "trying to keep peace or solve an adult's concern", support: "reassure the child clearly about what adults will handle" },
+    ],
+    strongExpression: "Reliability and conviction may be easy to see; support helps steadiness remain open to movement and other perspectives.",
+    weakExpression: "The grounded qualities may emerge gradually and strengthen through predictable care, preparation, and confidence built one experience at a time.",
+    limits: "The Day Master alone cannot establish stubbornness, charisma, maturity, or family role.",
+    closing: "a grounded child whose steady values can mature into wise, reassuring strength",
+  },
+  Ji: {
+    name: "Ji (Yin Earth)", image: "cultivated soil",
+    warmIntroduction: "a nurturing, receptive nature that often gathers knowledge and helps people or ideas grow",
+    motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
+    strengths: [
+      { heading: "Nurtures growth", meaning: "may naturally help others feel supported", everyday: "showing a younger child how to do something or tending carefully to a shared project", support: "celebrate the care while making space for the child's own needs" },
+      { heading: "Gathers useful knowledge", meaning: "often remembers information that can help in real situations", everyday: "connecting a fact learned earlier to today's problem", support: "invite the child to explain discoveries without expecting an answer to everything" },
+      { heading: "Resourceful care", meaning: "can find practical ways to make things better", everyday: "quietly organising materials or noticing what someone needs", support: "name the thought behind the action, not only the helpful result" },
+    ],
+    softSpots: [
+      { heading: "Gives too much", meaning: "may focus on keeping others comfortable and overlook personal limits", everyday: "agreeing to help while already tired", support: "teach that a kind no can protect genuine kindness" },
+      { heading: "Worries beneath the surface", meaning: "receptiveness can mean absorbing more than is spoken", everyday: "seeming fine but becoming tense around family or school uncertainty", support: "offer simple facts, reassurance, and a chance to ask again later" },
+    ],
+    strongExpression: "Care and capability may be readily visible; guidance helps helpfulness include boundaries and personal choice.",
+    weakExpression: "The nurturing qualities may appear in small private gestures and grow through appreciation that does not demand constant usefulness.",
+    limits: "The Day Master alone cannot define maternal behaviour, dependence, pessimism, or intellectual ability.",
+    closing: "a caring child whose practical wisdom can grow into generous, well-grounded confidence",
+  },
+  Geng: {
+    name: "Geng (Yang Metal)", image: "raw iron shaped through forging",
+    warmIntroduction: "a forthright, resilient nature that often meets challenges through action, loyalty, and determination",
+    motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
+    strengths: [
+      { heading: "Courage to act", meaning: "may step forward when something difficult needs doing", everyday: "trying the demanding part first or defending someone treated unfairly", support: "recognise courage while showing that asking for help is also strong" },
+      { heading: "Loyal follow-through", meaning: "often takes bonds and commitments seriously", everyday: "staying beside a friend or finishing a promised task", support: "help distinguish healthy loyalty from carrying what belongs to someone else" },
+      { heading: "Built through challenge", meaning: "can become more capable through practical effort and feedback", everyday: "improving after a mistake by trying again directly", support: "give clear, respectful feedback focused on the next attempt" },
+    ],
+    softSpots: [
+      { heading: "Moves before reflecting", meaning: "decisive energy can act faster than the situation needs", everyday: "jumping into an argument or solution before hearing the whole story", support: "practise one pause question: 'What else do I need to know?'" },
+      { heading: "All or nothing effort", meaning: "determination may become intense when success feels personal", everyday: "pushing through frustration until emotions spill over", support: "normalise breaks as part of finishing well, not a sign of giving up" },
+    ],
+    strongExpression: "Drive and resilience may be obvious; guidance helps strength include reflection, flexibility, and measured effort.",
+    weakExpression: "Courage may first appear in focused bursts or around trusted people, growing through achievable challenges and honest encouragement.",
+    limits: "The Day Master alone cannot establish aggression, authority, competitiveness, or ability to handle pressure.",
+    closing: "a courageous child whose determination can mature into loyal, measured, and compassionate strength",
+  },
+  Xin: {
+    name: "Xin (Yin Metal)", image: "finely worked metal or jewellery",
+    warmIntroduction: "a refined, discerning nature that often notices quality, meaning, and details others pass by",
+    motivations: ["doing something well", "thoughtful appreciation", "time to understand before committing"],
+    strengths: [
+      { heading: "A discerning eye", meaning: "may notice small differences in quality, presentation, or reasoning", everyday: "spotting an error, choosing words carefully, or refining a creative piece", support: "value the care while agreeing on when something is complete enough" },
+      { heading: "Curious mind", meaning: "often wants enough information to understand how something fits together", everyday: "asking follow-up questions or researching beyond the assignment", support: "welcome curiosity while helping choose the most useful question first" },
+      { heading: "Loyal soft heart", meaning: "a composed exterior may protect deep care for trusted people", everyday: "remembering a friend's preference or quietly defending a close relationship", support: "make affection safe without forcing public displays" },
+    ],
+    softSpots: [
+      { heading: "Hard to feel finished", meaning: "high standards and many details can make decisions or completion difficult", everyday: "redoing work or hesitating because one part is not quite right", support: "agree on two success markers before starting and celebrate completion" },
+      { heading: "Sensitive to response", meaning: "appreciation and social feedback may matter more than is openly shown", everyday: "appearing unaffected but replaying criticism later", support: "give feedback privately, begin with what was understood, and keep the next step specific" },
+    ],
+    strongExpression: "Discernment and self-possession may be easy to see; support helps high standards remain humane and flexible.",
+    weakExpression: "The refined qualities may be private or easily unsettled by pressure, unfolding through trust, sincere appreciation, and manageable expectations.",
+    limits: "The Day Master alone cannot establish vanity, status-seeking, manipulation, perseverance, or stress tolerance.",
+    closing: "a discerning child whose careful mind and loyal heart can grow into quietly assured confidence",
+  },
+  Ren: {
+    name: "Ren (Yang Water)", image: "a broad river or ocean",
+    warmIntroduction: "an active, imaginative nature that often moves towards possibility, experience, and a wider view",
+    motivations: ["movement and discovery", "a meaningful challenge", "freedom within clear boundaries"],
+    strengths: [
+      { heading: "Big-picture thinking", meaning: "may connect ideas quickly and imagine possibilities beyond the immediate task", everyday: "turning one question into a larger story or inventive plan", support: "enjoy the vision, then help choose the first workable step" },
+      { heading: "Adaptive courage", meaning: "can find momentum when circumstances change", everyday: "joining a new activity or trying a different route after a setback", support: "offer room to explore with a clear point for checking back" },
+      { heading: "Energetic engagement", meaning: "often learns by entering the experience rather than watching from the edge", everyday: "wanting to participate, test, discuss, or build", support: "include movement and hands-on discovery where possible" },
+    ],
+    softSpots: [
+      { heading: "Pulled in many directions", meaning: "a wide field of interest can scatter attention", everyday: "moving excitedly between activities without closing one", support: "keep a visible 'now, next, later' list so ideas are saved without all becoming urgent" },
+      { heading: "Momentum runs ahead", meaning: "speed and confidence may outpace reflection", everyday: "speaking directly or agreeing before considering the impact", support: "use a brief pause ritual before decisions rather than a long lecture afterwards" },
+    ],
+    strongExpression: "Movement, imagination, and independence may be readily visible; boundaries help that energy become purposeful rather than scattered.",
+    weakExpression: "The child's range may appear as private imagination before outward confidence, growing through safe exploration and one attainable step at a time.",
+    limits: "The Day Master alone cannot establish extroversion, intelligence, realism, distractibility, or risk-taking.",
+    closing: "an imaginative child whose range and courage can mature into purposeful, adaptable confidence",
+  },
+  Gui: {
+    name: "Gui (Yin Water)", image: "rain, mist, or dew",
+    warmIntroduction: "a perceptive, subtle nature that often gathers impressions quietly and finds unexpected connections",
+    motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
+    strengths: [
+      { heading: "Perceptive awareness", meaning: "may notice small shifts in mood, meaning, or environment", everyday: "sensing that someone is uncomfortable before anything is said", support: "confirm observations without asking the child to manage the situation" },
+      { heading: "Flow of ideas", meaning: "can connect thoughts in original and surprising ways", everyday: "offering an unusual answer, story, or solution", support: "ask how the idea formed and help give it a simple shape" },
+      { heading: "Gentle versatility", meaning: "often adjusts to different people and settings", everyday: "finding a place in varied groups or changing approach quietly", support: "provide a reliable home base where adaptation is not required" },
+    ],
+    softSpots: [
+      { heading: "Feelings stay private", meaning: "the inner world may be difficult to read from the outside", everyday: "saying little while mood or play changes", support: "offer observations and an open door rather than repeated questions" },
+      { heading: "Focus follows the current", meaning: "interest and energy may shift with atmosphere", everyday: "working deeply when engaged but drifting when a task feels disconnected", support: "link the task to a meaningful question and use one short finishing point" },
+    ],
+    strongExpression: "Perception and versatility may be easy to access; gentle structure helps fluidity become consistent without feeling confined.",
+    weakExpression: "The child's insight may be especially subtle, unfolding through quiet trust, patient invitations, and freedom from immediate performance.",
+    limits: "The Day Master alone cannot establish mood disorder, secrecy, manipulation, wisdom, or consistency.",
+    closing: "a perceptive child whose quiet sensitivity and originality can grow into calm, adaptable wisdom",
+  },
+};
+
+export function getDayMasterKnowledge(name: string): DayMasterKnowledge {
+  return dayMasterKnowledge[name] ?? dayMasterKnowledge.Gui;
+}
