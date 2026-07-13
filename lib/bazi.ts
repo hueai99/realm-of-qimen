@@ -102,12 +102,14 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   if (relatableMoments.length < 4) issues.push("report lacks enough recognisable everyday moments");
   if (!/\b(parents may recognise|at the heart|does not have to|get everything right|feel understood|not a flaw|steady mentorship)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
   if (gender && gender !== "other" && /\b(they|them|their|theirs|themselves)\b/i.test(prose)) issues.push("report does not use the selected he or she pronouns consistently");
+  if (gender && gender !== "other" && /\bthe child(?:['’]s)?\b/i.test(prose)) issues.push("report refers generically to 'the child' instead of using personal pronouns");
   if (summary.concern_response) {
     if (childName && !summary.concern_response.includes(childName)) issues.push("parenting concern response is not personal to the child");
     if (words(summary.concern_response) < 45 || words(summary.concern_response) > 120) issues.push("parenting concern response is too brief or mechanical");
     if (/\b(start by|look for the situations|consistent observation|deserves a calm|offer one manageable choice)\b/i.test(summary.concern_response)) issues.push("parenting concern response sounds procedural or templated");
   }
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
+  if (!/\b(summary|day master|one part|fuller|more)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement does not gently place the summary in the wider Bazi picture");
   if (/\b(traditional reflective framework|not a fixed label|set aside anything|keep what helps|this blueprint)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement sounds like a disclaimer or template");
   return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v3" };
 }
@@ -122,6 +124,8 @@ function genderedSummary(summary: SummaryReport, gender: string): SummaryReport 
     ? { they: "he", them: "him", their: "his", theirs: "his", themselves: "himself" }
     : { they: "she", them: "her", their: "her", theirs: "hers", themselves: "herself" };
   const replace = (value: string) => value
+    .replace(/\bthe child['’]s\b/gi, pronouns.their)
+    .replace(/\bthe child\b/gi, pronouns.they)
     .replace(/\bhimself or herself\b/gi, gender === "male" ? "himself" : "herself")
     .replace(/\bhim or her\b/gi, gender === "male" ? "him" : "her")
     .replace(/\bhis or her\b/gi, gender === "male" ? "his" : "her")
@@ -164,13 +168,13 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       : `Sometimes ${name} ${point.meaning}. It may look like ${name} is ${point.everyday}. ${capitalise(point.support)}. A little warmth can help both parent and child reconnect.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     concern_response: concern ? `${concernReflection(concern, name)} Hard days can leave any parent unsure about what to do next. Stay close and notice what helps ${name} settle. One small response that works is more useful than trying to solve everything at once.` : undefined,
     parenting_tips: [
-      { heading: "Offer two clear choices", body: `A small choice can help ${name} feel involved while the boundary stays clear. Try: “Would you like to start with reading or maths?” The task remains the same, but the child gains a safe sense of ownership.` },
+      { heading: "Offer two clear choices", body: `A small choice can help ${name} feel involved while the boundary stays clear. Try: “Would you like to start with reading or maths?” The task remains the same, but he or she gains a safe sense of ownership.` },
       { heading: "Make progress visible", body: `Long tasks can feel overwhelming. Break the work into a few small steps. Notice the effort honestly: “You stayed with that even when it was tricky.” This helps ${name} see progress and approach the next step with more confidence.` },
       { heading: "Connect before redirecting", body: `Correction is easier to hear after a child feels understood. Try: “I can see this is frustrating.” Then keep the limit calm and clear. Connection does not excuse the behaviour; it helps ${name} become ready to learn from it.` },
       { heading: "Notice quiet signals", body: `${name} may not always say when something feels wrong. A change in tone, play, appetite, or willingness to join in may be the first clue. Name what you notice gently, then leave room for an answer later.` },
       { heading: "Leave room to try again", body: `A difficult moment does not have to define the day. When everyone is calm, invite ${name} to try again. Keep the conversation short and kind. This teaches that mistakes can be repaired and relationships can remain safe.` },
     ],
-    closing_encouragement: `${name} is ${profile.closing}. The chart offers a starting point. A parent's daily love and attention bring the picture to life. Keep noticing the small signs of growth. They often matter more than the big milestones.`,
+    closing_encouragement: `${name} is ${profile.closing}. These qualities are a starting point, not a limit. A parent's daily love and attention bring them to life. This summary has explored only the Day Master. Other parts of Bazi can reveal more about how he or she learns, feels, relates, and grows. For now, keep noticing ${name}'s small signs of progress. They often matter more than the big milestones.`,
   };
 }
 
@@ -196,7 +200,25 @@ export async function generateReading(input: Input): Promise<Reading> {
   const verified = withQc(calculated, deterministicQc(calculated, input.subject_name, input.gender));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true" || process.env.FREE_SUMMARY_AI_ENABLED === "false") return verified;
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.55, messages: [{ role: "system", content: "Return JSON containing only report_content. Write like a warm, experienced Bazi consultant speaking to one parent. Use plain English and short sentences. Most sentences should stay below 22 words. The report must sound natural when read aloud. Use only the supplied reviewed Day Master guidance and verified strong/weak state. Do not add traits. Keep calculation details internal. Introduce the child first, then use the Day Master's natural image to help tell the story. Never begin with an abstract explanation of Bazi. Every strength and soft spot must include a scene a parent could recognise from homework, play, friendship, family routines, transitions, mistakes, or emotional moments. Apply this test to every point: could a parent picture it and think, 'Yes, I have seen that in my child'? If not, rewrite it. Use the child's name and selected he/she pronouns. Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases. Never say 'rather than treating it as a flaw', 'this quality may not appear in every setting', or similar defensive wording. Do not repeat 'Day Master' in every card. Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative. Write exactly five parenting tips of 35-60 words. Each tip must explain why it may help and include a realistic example or phrase. Suggestions are options, not commands or guarantees. Present Bazi as a reflective framework, not science, religion, prediction, diagnosis, or fixed destiny. Never invent structures, profile stars, Ten Gods, or other chart factors. Never identify internal sources or tools. report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, exactly 5 parenting_tips, optional concern_response, and closing_encouragement." }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, reviewed_day_master_guidance: getDayMasterKnowledge(calculatedChart.day_master_name ?? "Gui"), fixed_element_profile: verified.element_profile }) }] }) });
+    const systemPrompt = [
+      "Return JSON containing only report_content.",
+      "Write like a warm, experienced Bazi consultant speaking to one parent.",
+      "Use plain English and short sentences. Most sentences should stay below 22 words and sound natural when read aloud.",
+      "Use only the supplied reviewed Day Master guidance and verified strong/weak state. Do not add traits or calculation details.",
+      "Introduce the child by name first. Then use the Day Master's natural image to help tell the story.",
+      "Every strength and soft spot must include a scene from homework, play, friendship, family routines, transitions, mistakes, or emotional moments.",
+      "Apply this test to every point: could a parent picture it and think, 'Yes, I have seen that in my child'? If not, rewrite it.",
+      "Use the child's name and selected he or she pronouns. Never call the person 'the child' or 'the subject'.",
+      "Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases.",
+      "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
+      "Write exactly five parenting tips of 35-60 words. Explain why each may help and include a realistic example or phrase.",
+      "The closing must warmly summarise the child's main qualities, encourage the parent, and mention that the Day Master summary is only one part of what Bazi can reveal.",
+      "The invitation to explore more must feel natural and helpful, never salesy.",
+      "Present Bazi as a reflective framework, not science, religion, prediction, diagnosis, or fixed destiny.",
+      "Never invent structures, profile stars, Ten Gods, or other chart factors. Never identify internal sources or tools.",
+      "report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, exactly 5 parenting_tips, optional concern_response, and closing_encouragement.",
+    ].join(" ");
+    const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.55, messages: [{ role: "system", content: systemPrompt }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, reviewed_day_master_guidance: getDayMasterKnowledge(calculatedChart.day_master_name ?? "Gui"), fixed_element_profile: verified.element_profile }) }] }) });
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
     const personalised = genderedSummary(parsed.report_content, input.gender);
     const candidate = { ...verified, report_content: attachVerifiedBasis(personalised, verified.report_content), insights_source: `calculation/validated-v3+openai/${json.model}` };
