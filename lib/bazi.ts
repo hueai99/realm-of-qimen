@@ -13,7 +13,27 @@ const seasonalState = {
 } as const;
 const tenGodNames: Record<string, [string, string]> = { "比肩":["Bi Jian","Friend"], "劫财":["Jie Cai","Rob Wealth"], "食神":["Shi Shen","Eating God"], "伤官":["Shang Guan","Hurting Officer"], "偏财":["Pian Cai","Indirect Wealth"], "正财":["Zheng Cai","Direct Wealth"], "七杀":["Qi Sha","Seven Killings"], "正官":["Zheng Guan","Direct Officer"], "偏印":["Pian Yin","Indirect Resource"], "正印":["Zheng Yin","Direct Resource"] };
 type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType };
-export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
+export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
+
+type QcResult = { approved: boolean; issues: string[]; reviewer: string };
+const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven)\b/i;
+
+function deterministicQc(reading: Reading): QcResult {
+  const issues: string[] = [];
+  const summary = reading.report_content;
+  const prose = JSON.stringify(summary);
+  const chart = reading.chart_data as { day_master?: string; day_master_strength?: string; season?: string };
+  if (!reading.year_pillar || !reading.month_pillar || !reading.day_pillar || !chart.day_master || !chart.day_master_strength || !chart.season) issues.push("verified chart data is incomplete");
+  if (!summary?.personality || summary.strengths?.length !== 3 || summary.soft_spots?.length < 2 || summary.parenting_tips?.length < 2 || !summary.closing_encouragement) issues.push("summary structure is incomplete");
+  if (chart.day_master && !summary.personality.includes(chart.day_master)) issues.push("personality explanation does not identify the verified Day Master");
+  if (chart.day_master_strength && !summary.personality.toLowerCase().includes(chart.day_master_strength.toLowerCase())) issues.push("personality explanation does not identify verified strength");
+  if (unsupportedClaims.test(prose)) issues.push("unsupported or over-certain claim detected");
+  return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-qc-v1" };
+}
+
+function withQc(reading: Reading, qc: QcResult): Reading {
+  return { ...reading, insights_review_status: qc.approved ? "reviewed" : "rejected", chart_data: { ...reading.chart_data, expert_qc: { ...qc, reviewed_at: new Date().toISOString() } } };
+}
 
 function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", season: string, seasonalStateName: string, concern?: string | null): SummaryReport {
   const support = strength === "Weak"
@@ -54,10 +74,14 @@ export function calculateReading(input: Input): Reading {
 }
 
 export async function generateReading(input: Input): Promise<Reading> {
-  const verified = calculateReading(input);
+  const calculated = calculateReading(input);
+  const verified = withQc(calculated, deterministicQc(calculated));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return verified;
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.35, messages: [{ role: "system", content: "Return JSON containing only report_content. Ground the writing in the supplied verified Day Master, season, and strength. Strength means seasonal energy balance, not character weakness. Use warm, relatable, age-appropriate language and cautious phrases such as 'may' and 'you may notice'. Present Bazi as a traditional reflective framework, not science, religion, prediction, or fixed destiny. Briefly acknowledge that birth-time accuracy, age, environment, experiences, and choices affect fit. Never invent a structure or ranked profile stars. Never identify internal sources or tools. report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, 2-3 parenting_tips, optional concern_response, and closing_encouragement; each list item has heading and body." }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, fixed_element_profile: verified.element_profile }) }] }) });
-    if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content); return { ...verified, report_content: parsed.report_content, insights_source: `calculation/validated-v3+openai/${json.model}` };
+    if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
+    const candidate = { ...verified, report_content: parsed.report_content, insights_source: `calculation/validated-v3+openai/${json.model}` };
+    const qc = deterministicQc(candidate);
+    return qc.approved ? withQc(candidate, qc) : withQc(verified, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
   } catch (error) { console.error("AI generation fallback", error); return verified; }
 }
