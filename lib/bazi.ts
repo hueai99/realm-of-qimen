@@ -26,6 +26,13 @@ const elementStyle: Record<string, string> = {
   Metal: "clear standards, attention to detail, and a strong sense of what feels right",
   Water: "observation, adaptability, and thoughtful curiosity",
 };
+const elementHeading: Record<string, string> = {
+  Wood: "Keen to grow",
+  Fire: "Brings warmth and energy",
+  Earth: "A steady presence",
+  Metal: "Knows what feels right",
+  Water: "Notices more than they say",
+};
 
 function deterministicQc(reading: Reading): QcResult {
   const issues: string[] = [];
@@ -53,13 +60,13 @@ function withQc(reading: Reading, qc: QcResult): Reading {
 
 function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", _season: string, _seasonalStateName: string, concern?: string | null): SummaryReport {
   const support = strength === "Weak"
-    ? `These qualities may come through most clearly when ${name} has time to prepare, feels reassured, and knows what comes next. This says nothing about being a strong or weak person.`
-    : `These qualities may be easy to see in ${name}. They may benefit from room to make choices, use their natural drive, and practise adapting when plans change.`;
-  const seasonLink = `${dayMaster} is ${name}'s Day Master—the chart's starting point for understanding temperament. In everyday terms, ${element} is associated with ${elementStyle[element]}. ${support}`;
+    ? `${name} may not show these sides straight away, especially in a new place or when they feel watched. Give them a little time, a clear idea of what will happen next, and the reassurance that they don't have to get everything right on the first try.`
+    : `You may see these sides of ${name} quite readily. They may enjoy having some say in how they do things and respond well when their natural drive has a positive direction.`;
+  const seasonLink = `Meet ${name}'s ${dayMaster} Day Master. In everyday life, this can look like ${elementStyle[element]}. ${support}`;
   return {
     personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
     strengths: [
-      { heading: `${element} clarity`, body: `${name} may prefer to understand what is expected before beginning. Clear examples and one manageable first step can help their natural ${element} qualities become easier to express.` },
+      { heading: elementHeading[element], body: `${name} may prefer to understand what is expected before beginning. A clear example and one manageable first step can help them relax and show what they can do.` },
       { heading: "Purposeful persistence", body: `Once a task feels safe and meaningful, ${name} may stay with it longer than expected. Breaking homework or chores into visible steps helps determination grow without unnecessary pressure.` },
       { heading: "Learning through experience", body: `${name} is more than a chart. Notice when they are most engaged, calm, and curious; those real-life patterns are the best way to decide which parts of this reflection are useful.` },
     ],
@@ -93,7 +100,7 @@ export async function generateReading(input: Input): Promise<Reading> {
   const calculated = calculateReading(input);
   const calculatedChart = calculated.chart_data as { day_master?: string };
   const publicElement = calculatedChart.day_master?.split(" ").at(-1) ?? "element";
-  calculated.element_profile = `${calculatedChart.day_master} Day Master — associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
+  calculated.element_profile = `${input.subject_name}'s Day Master is ${calculatedChart.day_master}. You may recognise ${elementStyle[publicElement] ?? "their own distinctive way of responding to the world"} in the way they move through everyday life.`;
   const verified = withQc(calculated, deterministicQc(calculated));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return verified;
   try {
