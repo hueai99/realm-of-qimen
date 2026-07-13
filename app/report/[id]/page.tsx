@@ -29,6 +29,13 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <h1 className="mt-3 text-5xl">{report.subject_name}</h1>
         <p className="mt-4 text-[#74685e]">Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{report.birth_place ? ` · ${report.birth_place}` : ""}</p>
       </div>
+      <section className="my-8 max-w-3xl border-l-2 border-[#b7422d] bg-[#fffaf0] px-6 py-5">
+        <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>
+        <p className="mt-3 leading-7 text-[#665a50]">This short reading begins with {report.subject_name}&apos;s Day Master—the part of the Bazi chart that offers a first glimpse of the child&apos;s natural temperament and way of meeting the world. It explores three strengths, a few tender spots, and practical ways to offer support at home.</p>
+        {dayMasterStrength === "Weak" && <p className="mt-3 leading-7 text-[#665a50]">The chart describes this as a Weak Day Master. In everyday life, this simply means some qualities may be quieter at first and often grow through time, trust, and encouragement.</p>}
+        {dayMasterStrength === "Strong" && <p className="mt-3 leading-7 text-[#665a50]">The chart describes this as a Strong Day Master, so some of these qualities may be easier to notice and draw upon.</p>}
+        <p className="mt-3 leading-7 text-[#665a50]">A full Bazi reading widens the lens to other parts of the chart, giving a richer view of how the child learns, relates, handles emotions, and grows through different stages of life.</p>
+      </section>
       <div className="grid gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
         {pillars.map(([label, value]) => <div key={label} className="bg-[#fffaf0] p-6"><p className="text-xs uppercase tracking-widest text-[#9b3c2b]">{label}</p><p className="mt-6 text-xl leading-8">{value ?? "Analysis pending"}</p></div>)}
       </div>
@@ -37,7 +44,6 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
           <p className="text-xs uppercase tracking-[.2em] text-[#9b3c2b]">Personality at a glance</p>
           <h2 className="mt-3 text-3xl leading-tight">Getting to know {report.subject_name}</h2>
           <p className="mt-5 max-w-3xl leading-8">{summary.personality}</p>
-          <p className="mt-4 max-w-3xl border-l border-[#b7422d] pl-4 text-sm leading-6 text-[#74685e]">The strengths and softer spots below are viewed through {report.subject_name}&apos;s {dayMasterStrength ? `${dayMasterStrength} Day Master` : "Day Master"}. {dayMasterStrength === "Weak" ? "Here, ‘Weak’ simply means these natural qualities may be quieter at first and often unfold with time, trust, and encouragement." : dayMasterStrength === "Strong" ? "Here, ‘Strong’ means these natural qualities may come through more readily and become easier for the child to draw upon." : "These qualities can appear differently depending on the child and the situation."} This is one meaningful part of the chart, rather than the child&apos;s whole story.</p>
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Soft spots & gentle support" points={summary.soft_spots} />
