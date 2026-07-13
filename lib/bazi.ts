@@ -58,12 +58,12 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
 
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
-  if (/school|study|homework|learn|grade|exam/.test(text)) return `You are trying to understand how ${name} learns best and how to make school demands feel less discouraging.`;
-  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You are looking for a gentler way to understand what sits underneath ${name}'s strong reactions.`;
-  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You want to help ${name} feel safer and more confident without pushing too hard.`;
-  if (/friend|social|lonely|bully|fit in/.test(text)) return `You are concerned about how ${name} is finding connection and belonging with other children.`;
-  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You are trying to reduce the tension between holding a boundary and helping ${name} feel heard.`;
-  return `You are trying to understand what ${name} may be communicating through this difficulty and how to respond with both warmth and clarity.`;
+  if (/school|study|homework|learn|grade|exam/.test(text)) return `The heart of this concern is understanding how ${name} learns best and how school demands can feel less discouraging.`;
+  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `The concern seems to be about understanding what sits underneath ${name}'s strong reactions and helping those moments feel safer.`;
+  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `At the heart of this concern is a wish for ${name} to feel safer and more confident without being pushed too hard.`;
+  if (/friend|social|lonely|bully|fit in/.test(text)) return `This concern centres on how ${name} is finding connection and a sense of belonging with other children.`;
+  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `The difficult balance here is holding a clear boundary while helping ${name} feel heard.`;
+  return `The heart of this concern is understanding what ${name} may be communicating through the difficulty and finding a response that holds both warmth and clarity.`;
 }
 
 function deterministicQc(reading: Reading, childName?: string, gender?: string): QcResult {
@@ -85,10 +85,11 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   const repeatedOpenings = sections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
   if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
   if (childName && prose.toLowerCase().split(childName.toLowerCase()).length - 1 < 4) issues.push("report is not personalised to the child often enough");
-  if (!/\b(you|your)\b/i.test(prose)) issues.push("report does not speak directly and empathetically to the parent");
+  if (!/\b(parent|family|home|care|support|understood)\b/i.test(prose)) issues.push("report does not acknowledge the parent or family experience");
+  if ((prose.match(/\b(you|your)\b/gi) ?? []).length > 8) issues.push("report addresses the parent as 'you' too repeatedly");
   const relatableMoments = prose.match(/\b(when|before|after|homework|chores|school|mistake|routine|first step|choice|difficult day)\b/gi) ?? [];
   if (relatableMoments.length < 4) issues.push("report lacks enough recognisable everyday moments");
-  if (!/\b(it makes sense|you might recognise|you may notice|you already know|does not have to|get everything right|feel understood)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
+  if (!/\b(parents may recognise|at the heart|does not have to|get everything right|feel understood|not a flaw|steady mentorship)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
   if (gender && gender !== "other" && /\b(they|them|their|theirs|themselves)\b/i.test(prose)) issues.push("report does not use the selected he or she pronouns consistently");
   if (summary.concern_response) {
     if (childName && !summary.concern_response.includes(childName)) issues.push("parenting concern response is not personal to the child");
@@ -131,11 +132,11 @@ function groundedSummary(name: string, dayMaster: string, element: string, stren
   const support = strength === "Weak"
     ? `${name} may not show these sides straight away, especially in a new place or when they feel watched. Give them a little time, a clear idea of what will happen next, and the reassurance that they don't have to get everything right on the first try.`
     : `You may see these sides of ${name} quite readily. They may enjoy having some say in how they do things and respond well when their natural drive has a positive direction.`;
-  const seasonLink = `${name}, born under the ${dayMaster} Day Master, often carries ${elementNature[element]}. You might recognise this when ${elementMoment[element]}. ${support}`;
+  const seasonLink = `${name}, born under the ${dayMaster} Day Master, often carries ${elementNature[element]}. Parents may recognise this when ${elementMoment[element]}. ${support}`;
   return {
     personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
-    strengths: themes.strengths.map(([heading, meaning], index) => ({ heading, body: index === 0 ? `${name}'s ${dayMaster} Day Master is linked with someone who ${meaning}. You may see this when he or she feels secure enough to act without being rushed.` : index === 1 ? `The ${element} quality in ${name}'s Day Master ${meaning}. It often becomes clearer when an activity feels purposeful rather than imposed.` : `Another expression of ${name}'s ${dayMaster} Day Master is that he or she ${meaning}. Encouragement helps this quality mature without becoming a source of pressure.`, basis: { factor: "Day Master", value: `${dayMaster} / ${element}` } })),
-    soft_spots: themes.softSpots.map(([heading, meaning], index) => ({ heading, body: index === 0 ? `With a ${dayMaster} Day Master, ${name} ${meaning}. This is not a flaw; calm support can help him or her regain balance.` : `${name}'s ${element} nature also means he or she ${meaning}. A little patience here can protect confidence while he or she learns a more flexible response.`, basis: { factor: strength === "Weak" ? "Day Master and seasonal balance" : "Day Master expression", value: `${dayMaster} / ${strength}` } })),
+    strengths: themes.strengths.map(([heading, meaning], index) => ({ heading, body: index === 0 ? `${name} ${meaning}. This often appears most naturally when he or she feels secure enough to act without being rushed.` : index === 1 ? `${name} also ${meaning}. It may become clearer when an activity feels purposeful rather than imposed.` : `A further strength is that ${name} ${meaning}. Encouragement can help this quality mature without becoming a source of pressure.`, basis: { factor: "Day Master", value: `${dayMaster} / ${element}` } })),
+    soft_spots: themes.softSpots.map(([heading, meaning], index) => ({ heading, body: index === 0 ? `${name} ${meaning}. This is not a flaw; calm support can help him or her regain balance.` : `At other times, ${name} ${meaning}. A little patience can protect confidence while he or she learns a more flexible response.`, basis: { factor: strength === "Weak" ? "Day Master and seasonal balance" : "Day Master expression", value: `${dayMaster} / ${strength}` } })),
     concern_response: concern ? `${concernReflection(concern, name)} There may be days when you wonder whether to step in, give more space, or handle things differently. You do not have to solve everything at once. In the next difficult moment, stay close, notice what ${name} seems to need, and try one small response. What helps your child settle and reconnect will tell you more than any single hard day.` : undefined,
     parenting_tips: [
       { heading: "Offer two clear choices", body: `Keep boundaries steady while allowing some ownership: “Would you like to start with reading or maths?” This reduces friction and helps ${name} practise decision-making safely.` },
