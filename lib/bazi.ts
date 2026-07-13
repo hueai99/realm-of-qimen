@@ -16,7 +16,7 @@ type Input = { subject_name: string; birth_date: string; birth_time?: string | n
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
 type QcResult = { approved: boolean; issues: string[]; reviewer: string };
-const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped)\b/i;
+const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped|the subject|this individual|profile indicates|behavioural profile)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 const elementStyle: Record<string, string> = {
@@ -33,8 +33,15 @@ const elementHeading: Record<string, string> = {
   Metal: "Knows what feels right",
   Water: "Notices more than they say",
 };
+const elementMoment: Record<string, string> = {
+  Wood: "they become absorbed in learning something new, ask to do it their own way, or feel frustrated when progress is blocked",
+  Fire: "their face lights up around people or activities they love, or when their feelings arrive quickly and visibly",
+  Earth: "they look for familiar routines, quietly take care of others, or need time before feeling comfortable with change",
+  Metal: "they notice when something is unfair, remember exactly how things should be done, or become hard on themselves after a mistake",
+  Water: "they watch a room before joining in, ask questions that surprise you, or adjust quietly to what is happening around them",
+};
 
-function deterministicQc(reading: Reading): QcResult {
+function deterministicQc(reading: Reading, childName?: string): QcResult {
   const issues: string[] = [];
   const summary = reading.report_content;
   const prose = JSON.stringify(summary);
@@ -51,6 +58,11 @@ function deterministicQc(reading: Reading): QcResult {
   if (words(summary.closing_encouragement ?? "") < 25 || words(summary.closing_encouragement ?? "") > 90) issues.push("closing encouragement is too brief or overwhelming");
   const repeatedOpenings = sections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
   if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
+  if (childName && prose.toLowerCase().split(childName.toLowerCase()).length - 1 < 4) issues.push("report is not personalised to the child often enough");
+  if (!/\b(you|your)\b/i.test(prose)) issues.push("report does not speak directly and empathetically to the parent");
+  const relatableMoments = prose.match(/\b(when|before|after|homework|chores|school|mistake|routine|first step|choice|difficult day)\b/gi) ?? [];
+  if (relatableMoments.length < 4) issues.push("report lacks enough recognisable everyday moments");
+  if (!/\b(it makes sense|you might recognise|you may notice|you already know|does not have to|get everything right|feel understood)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
   return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v2" };
 }
 
@@ -62,7 +74,7 @@ function groundedSummary(name: string, dayMaster: string, element: string, stren
   const support = strength === "Weak"
     ? `${name} may not show these sides straight away, especially in a new place or when they feel watched. Give them a little time, a clear idea of what will happen next, and the reassurance that they don't have to get everything right on the first try.`
     : `You may see these sides of ${name} quite readily. They may enjoy having some say in how they do things and respond well when their natural drive has a positive direction.`;
-  const seasonLink = `Meet ${name}'s ${dayMaster} Day Master. In everyday life, this can look like ${elementStyle[element]}. ${support}`;
+  const seasonLink = `Meet ${name}'s ${dayMaster} Day Master. In everyday life, this can look like ${elementStyle[element]}. You might recognise it when ${elementMoment[element]}. ${support}`;
   return {
     personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
     strengths: [
@@ -74,13 +86,13 @@ function groundedSummary(name: string, dayMaster: string, element: string, stren
       { heading: "Space after busy moments", body: `${name} may retreat when overwhelmed or when too many instructions arrive at once. A short pause, a drink of water, and one gentle question can help them return without feeling pushed.` },
       { heading: "Confidence before correction", body: `Direct criticism may linger longer than it appears to. Begin with what worked, name one next step, and let ${name} try again privately when possible.` },
     ],
-    concern_response: concern ? `Your concern about “${concern}” deserves a calm, curious approach. Look for the situations that happen immediately before the difficulty, offer one manageable choice, and notice which form of support helps ${name} recover most comfortably. Consistent observation over several weeks will be more useful than treating one hard day as a fixed trait.` : undefined,
+    concern_response: concern ? `It makes sense that “${concern}” has been on your mind. When we care deeply, it can be hard to know whether to step in, wait, or try something different. Start by noticing what happens just before the difficult moment, then offer ${name} one manageable choice. You are not looking for a perfect response—only the kind of support that helps your child feel understood and try again.` : undefined,
     parenting_tips: [
       { heading: "Offer two clear choices", body: `Keep boundaries steady while allowing some ownership: “Would you like to start with reading or maths?” This reduces friction and helps ${name} practise decision-making safely.` },
       { heading: "Make progress visible", body: `Use short checklists and acknowledge effort specifically. Seeing small steps completed can be more motivating than a distant reward.` },
       { heading: "Connect before redirecting", body: `Reflect the feeling first, then guide the behaviour. A sentence such as “I can see this is frustrating; let’s find the first small step” keeps support and responsibility together.` },
     ],
-    closing_encouragement: `Your attention to ${name} is already a meaningful source of strength. Bazi is a traditional reflective framework—not a religion, prediction, or fixed destiny. Birth-time accuracy, age, environment, experience, and personal choices all matter, so keep what helps and set aside what does not fit.`,
+    closing_encouragement: `You already know ${name} in ways no report ever could—the small expressions, the difficult days, and the moments when they surprise you. Let this reading add another gentle perspective, not replace your own wisdom. Keep the parts that help you meet your child with more understanding, and set aside anything that does not feel true to the person growing in front of you.`,
   };
 }
 
@@ -101,13 +113,13 @@ export async function generateReading(input: Input): Promise<Reading> {
   const calculatedChart = calculated.chart_data as { day_master?: string };
   const publicElement = calculatedChart.day_master?.split(" ").at(-1) ?? "element";
   calculated.element_profile = `${input.subject_name}'s Day Master is ${calculatedChart.day_master}. You may recognise ${elementStyle[publicElement] ?? "their own distinctive way of responding to the world"} in the way they move through everyday life.`;
-  const verified = withQc(calculated, deterministicQc(calculated));
+  const verified = withQc(calculated, deterministicQc(calculated, input.subject_name));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return verified;
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.35, messages: [{ role: "system", content: "Return JSON containing only report_content. Ground the writing in the supplied verified Day Master, season, and strength. Strength means seasonal energy balance, not character weakness. Use warm, relatable, age-appropriate language and cautious phrases such as 'may' and 'you may notice'. Present Bazi as a traditional reflective framework, not science, religion, prediction, or fixed destiny. Briefly acknowledge that birth-time accuracy, age, environment, experiences, and choices affect fit. Never invent a structure or ranked profile stars. Never identify internal sources or tools. report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, 2-3 parenting_tips, optional concern_response, and closing_encouragement; each list item has heading and body." }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, fixed_element_profile: verified.element_profile }) }] }) });
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
     const candidate = { ...verified, report_content: parsed.report_content, insights_source: `calculation/validated-v3+openai/${json.model}` };
-    const qc = deterministicQc(candidate);
+    const qc = deterministicQc(candidate, input.subject_name);
     return qc.approved ? withQc(candidate, qc) : withQc(verified, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
   } catch (error) { console.error("AI generation fallback", error); return verified; }
 }
