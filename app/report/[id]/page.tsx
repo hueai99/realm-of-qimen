@@ -42,15 +42,15 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <section>
           <p className="text-xs uppercase tracking-[.2em] text-[#9b3c2b]">Personality at a glance</p>
           <h2 className="mt-3 text-3xl leading-tight">Getting to know {report.subject_name}</h2>
-          <p className="mt-5 max-w-3xl leading-8">{summary.personality}</p>
+          <div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.personality.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Soft spots & gentle support" points={summary.soft_spots} />
-        {summary.concern_response && <section><h2 className="text-3xl">What you&apos;re noticing</h2><p className="mt-5 max-w-3xl leading-8">{summary.concern_response}</p></section>}
+        {summary.concern_response && <section><h2 className="text-3xl">Making sense of what you&apos;re seeing</h2><p className="mt-5 max-w-3xl leading-8">{summary.concern_response}</p></section>}
         <PointSection title={`Small ways to support ${report.subject_name}`} points={summary.parenting_tips} />
-        <section className="border-l-2 border-[#b7422d] py-2 pl-6"><h2 className="text-3xl">Closing encouragement</h2><p className="mt-5 max-w-3xl leading-8">{summary.closing_encouragement}</p></section>
+        <section className="border-l-2 border-[#b7422d] py-2 pl-6"><h2 className="text-3xl">Closing encouragement</h2><div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.closing_encouragement.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>
       </div> : report.insights ? <div className="mt-12"><h2 className="text-3xl">Three reflections</h2><ol className="mt-5 space-y-4">{insights.map((insight, i) => <li key={i} className="border-l border-[#b7422d] py-2 pl-5 leading-7">{insight.replace(/^\d+\.\s*/, "")}</li>)}</ol></div> : <div className="my-12 border border-amber-300 bg-amber-50 p-6"><h2 className="text-xl">Analysis pending</h2><p className="mt-2 text-sm">We saved this reading and will update it shortly.</p></div>}
-      <section className="mt-14 bg-[#211b16] p-8 text-[#f6f0e4] sm:flex sm:items-center sm:justify-between sm:gap-8"><div><p className="text-xs uppercase tracking-widest text-[#d99a85]">The fuller picture</p><h2 className="mt-2 text-3xl">Understand more of what makes {report.subject_name} unique.</h2><p className="mt-2 text-sm text-[#cfc5bd]">The full report explores how {subjectPronoun} may learn, handle emotions, build relationships, and respond to support through different stages.</p></div><UpgradeButton reportId={report.id} /></section>
+      <section className="mt-14 bg-[#211b16] p-8 text-[#f6f0e4] sm:flex sm:items-center sm:justify-between sm:gap-8"><div><p className="text-xs uppercase tracking-widest text-[#d99a85]">Beyond the Day Master</p><h2 className="mt-2 text-3xl">Discover more of {report.subject_name}&apos;s Bazi story.</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-[#cfc5bd]">The full SGD 98 report brings the wider chart together with more detailed guidance for home, school, relationships, and the years ahead. An online consultation can be added if you would like help understanding the report.</p></div><UpgradeButton reportId={report.id} /></section>
     </article>
   </main>;
 }

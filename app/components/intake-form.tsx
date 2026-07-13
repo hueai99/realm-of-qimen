@@ -6,14 +6,17 @@ export default function IntakeForm() {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [submittedName, setSubmittedName] = useState("");
+  const [readyReportId, setReadyReportId] = useState("");
   async function submit(formData: FormData) {
-    setBusy(true); setError("");
+    const childName = String(formData.get("subject_name") ?? "").trim();
+    setSubmittedName(childName); setReadyReportId(""); setBusy(true); setError("");
     try {
       const response = await fetch("/api/generate-report", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(formData.entries())) });
       const raw = await response.text();
       const result = raw ? JSON.parse(raw) : {};
       if (!response.ok) throw new Error(result.error ?? "Could not create your report");
-      router.push(`/report/${result.report_id}`);
+      setReadyReportId(result.report_id); setBusy(false);
     } catch (e) { setError(e instanceof Error ? e.message : "Something went wrong"); setBusy(false); }
   }
   const cls = "mt-2 w-full rounded-sm border border-[#c9bcad] bg-[#fffdf8] px-4 py-3 outline-none focus:border-[#9b3c2b]";
@@ -31,13 +34,23 @@ export default function IntakeForm() {
       <input type="hidden" name="question_type" value="child_potential" />
       <label className="text-sm sm:col-span-2">What would you most like help with? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} /></label>
     </div>
-    {busy && <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#211b16]/75 px-5 backdrop-blur-sm" role="status" aria-live="assertive">
-      <div className="w-full max-w-lg rounded-sm bg-[#fffaf0] p-8 text-center shadow-2xl sm:p-10">
-        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-[#d7cbbd] border-t-[#9b3c2b]" aria-hidden="true" />
-        <p className="mt-6 text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]">Your request has been received</p>
-        <h2 className="mt-3 text-3xl">Thank you for your interest.</h2>
-        <p className="mt-4 leading-7 text-[#665a50]">We are preparing your child&apos;s personalised report. This may take a short while, so please keep this page open.</p>
-        <div className="mt-6 border-t border-[#d7cbbd] pt-5 text-left text-sm leading-6 text-[#665a50]"><strong className="text-[#211b16]">How does Bazi work?</strong> A child&apos;s birth date and time are arranged into four parts: the Year, Month, Day, and Hour Pillars. Each carries different elements. Read together, they can offer clues about how a child may think, express feelings, learn, relate to others, and respond to support.</div>
+    {(busy || readyReportId) && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#211b16]/75 px-5 py-8 backdrop-blur-sm" role="status" aria-live="polite">
+      <div className="w-full max-w-2xl rounded-sm bg-[#fffaf0] p-7 shadow-2xl sm:p-10">
+        {busy ? <>
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-[#d7cbbd] border-t-[#9b3c2b]" aria-hidden="true" />
+          <p className="mt-6 text-center text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]">Your details have been received</p>
+          <h2 className="mt-3 text-center text-3xl">Preparing {submittedName}&apos;s personality summary…</h2>
+          <p className="mt-3 text-center leading-7 text-[#665a50]">Please keep this page open while the report is prepared.</p>
+          <div className="mt-7 space-y-4 border-t border-[#d7cbbd] pt-6 text-left leading-7 text-[#665a50]">
+            <p>Bazi&apos;s Four Pillars system took shape in China more than 1,000 years ago and is still used today to understand a person&apos;s natural patterns and tendencies.</p>
+            <p>A Bazi chart turns the year, month, day, and hour of birth into eight Chinese characters. Each pair offers a different view of personality, emotions, relationships, learning, and growth.</p>
+            <p>A Bazi chart may not describe everything seen in a child today. Age, upbringing, experiences, surroundings, and personal choices all influence how these qualities appear. Bazi offers another way to understand a child—not a fixed description of who he or she must become.</p>
+          </div>
+        </> : <div className="text-center">
+          <p className="text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]">Report prepared</p>
+          <h2 className="mt-3 text-3xl">{submittedName}&apos;s personality summary is ready.</h2>
+          <button type="button" onClick={() => router.push(`/report/${readyReportId}`)} className="mt-7 bg-[#9b3c2b] px-8 py-4 font-semibold text-white">Click to read</button>
+        </div>}
       </div>
     </div>}
     {error && <p role="alert" className="mt-5 bg-red-50 p-3 text-sm text-red-800">{error}</p>}

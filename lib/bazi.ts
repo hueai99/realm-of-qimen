@@ -21,7 +21,7 @@ type QcResult = { approved: boolean; issues: string[]; reviewer: string };
 const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped|the subject|this individual|profile indicates|behavioural profile)\b/i;
 const sourceLeak = /\b(Joey Yap|Destiny\s*X|Power of X|uploaded (?:file|document|reference)|source material|reference document|knowledge base|internal prompt|training data)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
-const awkwardPhrases = /\b(needs doing|show he|show she|he often grow|she often grow|recognise courage while|this image offers|born under the .+ day master day|loyalty does not mean carrying|quality may not appear in every setting)\b/i;
+const awkwardPhrases = /\b(needs doing|show he|show she|he often grow|she often grow|recognise courage while|this image offers|born under the .+ day master day|loyalty does not mean carrying|quality may not appear in every setting|decisive energy|success feels personal|emotions spill over|normalise breaks|hard days|one small response|boundary stays clear|leave room for an answer|relationships can remain safe)\b/i;
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 const capitalise = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 const elementStyle: Record<string, string> = {
@@ -70,6 +70,17 @@ function concernReflection(concern: string, name: string): string {
   return `The heart of this concern is understanding what ${name} may be communicating through the difficulty and finding a response that holds both warmth and clarity.`;
 }
 
+function concernGuidance(concern: string, name: string): string {
+  const reflection = concernReflection(concern, name);
+  const text = concern.toLowerCase();
+  if (/school|study|homework|learn|grade|exam/.test(text)) return `${reflection} Ask ${name} which part feels hardest. Then help him or her choose one small step to do first. If the work becomes frustrating, take a short break and return to that same step.`;
+  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `${reflection} When ${name} becomes upset, give him or her time to settle before discussing what happened. Once calm, ask one simple question: “What upset you most?” Listen to the answer, then explain clearly what needs to happen next.`;
+  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `${reflection} Avoid pushing ${name} to be brave immediately. Help him or her take one manageable step, then notice the effort. A calm “You tried even though you were worried” can help more than repeated reassurance.`;
+  if (/friend|social|lonely|bully|fit in/.test(text)) return `${reflection} Ask about one specific moment instead of asking whether the whole day was good or bad. Try: “Who did you spend time with today?” This can make it easier for ${name} to explain what happened.`;
+  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `${reflection} State the instruction once in a short sentence. If possible, let ${name} choose which part to do first. When he or she is calm, explain why the rule matters instead of repeating it during the argument.`;
+  return `${reflection} Watch what happens just before the problem begins. If ${name} becomes upset, wait until he or she is calm before talking about it. Ask one simple question, listen to the answer, and choose one clear action to try next time.`;
+}
+
 function deterministicQc(reading: Reading, childName?: string, gender?: string): QcResult {
   const issues: string[] = [];
   const summary = reading.report_content;
@@ -94,7 +105,9 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   if (childInsights.some(({ body }) => !/\b(when|homework|school|friend|play|task|plan|mistake|routine|change|try|notice|moment|start|finish|join|speak|help)\b/i.test(body))) issues.push("an insight lacks a recognisable moment from the child's daily life");
   if ([...(summary.strengths ?? []), ...(summary.soft_spots ?? [])].some(({ basis }) => !basis?.factor || !basis?.value)) issues.push("a strength or soft spot is not traceable to verified Bazi data");
   if (words(summary.personality ?? "") < 45 || words(summary.personality ?? "") > 180) issues.push("opening explanation is too brief or overwhelming");
+  if ((summary.personality ?? "").split(/\n\s*\n/).filter(Boolean).length < 3) issues.push("personality explanation does not separate the image, the child, and Day Master strength clearly");
   if (words(summary.closing_encouragement ?? "") < 25 || words(summary.closing_encouragement ?? "") > 90) issues.push("closing encouragement is too brief or overwhelming");
+  if ((summary.closing_encouragement ?? "").split(/\n\s*\n/).filter(Boolean).length < 2) issues.push("closing encouragement does not separate encouragement from the wider Bazi invitation");
   const repeatedOpenings = sections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
   if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
   const sentences = prose.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).map((sentence) => sentence.trim().toLowerCase()).filter((sentence) => words(sentence) >= 7);
@@ -105,18 +118,19 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   if ((prose.match(/\b(you|your)\b/gi) ?? []).length > 8) issues.push("report addresses the parent as 'you' too repeatedly");
   const relatableMoments = prose.match(/\b(when|before|after|homework|chores|school|mistake|routine|first step|choice|difficult day)\b/gi) ?? [];
   if (relatableMoments.length < 4) issues.push("report lacks enough recognisable everyday moments");
-  if (!/\b(parents may recognise|at the heart|does not have to|get everything right|feel understood|not a flaw|steady mentorship)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
+  if (!/\b(you may|you can|at the heart|feel understood|with calm guidance|ready to listen)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
   if (gender && gender !== "other" && /\b(they|them|their|theirs|themselves)\b/i.test(prose)) issues.push("report does not use the selected he or she pronouns consistently");
   if (gender && gender !== "other" && /\bthe child(?:['’]s)?\b/i.test(prose)) issues.push("report refers generically to 'the child' instead of using personal pronouns");
   if (summary.concern_response) {
     if (childName && !summary.concern_response.includes(childName)) issues.push("parenting concern response is not personal to the child");
     if (words(summary.concern_response) < 45 || words(summary.concern_response) > 120) issues.push("parenting concern response is too brief or mechanical");
     if (/\b(start by|look for the situations|consistent observation|deserves a calm|offer one manageable choice)\b/i.test(summary.concern_response)) issues.push("parenting concern response sounds procedural or templated");
+    if (!/\b(ask|give|let|wait|say|state|avoid|watch|explain)\b/i.test(summary.concern_response)) issues.push("parenting concern response does not give the parent a clear action");
   }
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
   if (!/\b(summary|day master|one part|fuller|more)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement does not gently place the summary in the wider Bazi picture");
   if (/\b(traditional reflective framework|not a fixed label|set aside anything|keep what helps|this blueprint)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement sounds like a disclaimer or template");
-  return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v3" };
+  return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v4" };
 }
 
 function withQc(reading: Reading, qc: QcResult): Reading {
@@ -156,28 +170,29 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Weak", concern?: string | null): SummaryReport {
   const profile = getDayMasterKnowledge(dayMasterName);
   const support = strength === "Weak"
-    ? `This is known as a Weak Day Master. It simply means these qualities may be less obvious at first. They may become clearer when ${name} feels safe, trusted, and encouraged.`
-    : `This is known as a Strong Day Master. It means these qualities may be easier for ${name} to show and use.`;
-  const seasonLink = `${name}'s Day Master is ${dayMaster}. In Bazi, it is compared to ${profile.image}. ${profile.story} For ${name}, this may appear as ${profile.warmIntroduction}. ${support}`;
+    ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. It means the qualities linked to the Day Master may be less obvious at first. They may become easier to see when ${name} feels safe, trusted, and encouraged.`
+    : `The chart also describes his or her Day Master as Strong. This means the qualities linked to the Day Master may be easier to see. It does not mean that he or she will feel strong or confident in every situation.`;
+  const personality = [
+    `${name}'s Day Master is ${dayMaster}. In Bazi, it is compared to ${profile.image}. ${profile.story}`,
+    `${name} may have ${profile.warmIntroduction}. You may notice this in the way ${name} enters a new place, keeps a promise, or tries again after a disappointment.`,
+    support,
+  ].join("\n\n");
+  const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => point.examples
+    ? `${name} ${point.meaning}. ${point.examples.join(" ")} ${capitalise(point.support)}.`
+    : `${name} ${point.meaning}. One example is ${point.everyday}. ${capitalise(point.support)}.`;
   return {
-    personality: `${seasonLink} Parents may notice this in the way ${name} enters a new place, keeps a promise, or tries again after disappointment.`,
-    strengths: profile.strengths.map((point, index) => ({ heading: point.heading, body: index === 0
-      ? `${name} ${point.meaning}. Parents may recognise this in everyday moments, such as ${point.everyday}. ${capitalise(point.support)}.`
-      : index === 1
-        ? `${name} ${point.meaning}. It may show up through ${point.everyday}. ${capitalise(point.support)}.`
-        : `${name} ${point.meaning}. An everyday example is ${point.everyday}. ${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
-    soft_spots: profile.softSpots.map((point, index) => ({ heading: point.heading, body: index === 0
-      ? `When the day feels harder, ${name} ${point.meaning}. This may show up through ${point.everyday}. ${capitalise(point.support)}. A calm response can help him or her feel understood.`
-      : `${name} ${point.meaning}, especially when tired or under pressure. Parents may notice ${point.everyday}. ${capitalise(point.support)}. Warmth and clear guidance can help him or her find a way forward.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
-    concern_response: concern ? `${concernReflection(concern, name)} Hard days can leave any parent unsure about what to do next. Stay close and notice what helps ${name} settle. One small response that works is more useful than trying to solve everything at once.` : undefined,
+    personality,
+    strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
+    soft_spots: profile.softSpots.map((point) => ({ heading: point.heading, body: pointBody(point), basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
+    concern_response: concern ? concernGuidance(concern, name) : undefined,
     parenting_tips: [
-      { heading: "Offer two clear choices", body: `A small choice can help ${name} feel involved while the boundary stays clear. Try: “Would you like to start with reading or maths?” The task remains the same, but he or she gains a safe sense of ownership.` },
-      { heading: "Make progress visible", body: `Long tasks can feel overwhelming. Break the work into a few small steps. Notice the effort honestly: “You stayed with that even when it was tricky.” This helps ${name} see progress and approach the next step with more confidence.` },
-      { heading: "Connect before redirecting", body: `Correction is easier to hear after a child feels understood. Try: “I can see this is frustrating.” Then keep the limit calm and clear. Connection does not excuse the behaviour; it helps ${name} become ready to learn from it.` },
-      { heading: "Notice quiet signals", body: `${name} may not always say when something feels wrong. A change in tone, play, appetite, or willingness to join in may be the first clue. Name what you notice gently, then leave room for an answer later.` },
-      { heading: "Leave room to try again", body: `A difficult moment does not have to define the day. When everyone is calm, invite ${name} to try again. Keep the conversation short and kind. This teaches that mistakes can be repaired and relationships can remain safe.` },
+      { heading: `Let ${name} choose first`, body: `Let ${name} choose which task to do first. For example: “Would you like to start with reading or maths?” Both tasks still need to be completed, but choosing the order can make it easier to get started.` },
+      { heading: "Break long tasks into steps", body: `If a task feels too big, divide it into two or three smaller steps. Show ${name} the first step only. When it is finished, point out the effort: “You stayed with that even when it was difficult.” Then move to the next step.` },
+      { heading: "Settle first, talk second", body: `If ${name} is upset, avoid explaining too much straight away. Say: “I can see that you are frustrated.” Give him or her time to calm down. Then explain the rule or discuss what happened using short, clear sentences.` },
+      { heading: "Notice changes in behaviour", body: `${name} may not always say when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Say: “You seem quieter than usual today.” If ${name} does not want to talk, let him or her know that you are ready to listen later.` },
+      { heading: "Give him or her another try", body: `If ${name} has spoken harshly or lost his or her temper, wait until everyone is calm. Briefly explain what went wrong, then let him or her try the conversation again in a kinder way. This shows ${name} that a mistake can be corrected.` },
     ],
-    closing_encouragement: `${name} is ${profile.closing}. His or her strengths may not look the same every day, but each small sign of progress is worth noticing. This summary has explored only the Day Master. The rest of the Bazi chart can add more about how he or she learns, handles feelings, and connects with others. For now, helping ${name} feel understood gives these qualities room to grow.`,
+    closing_encouragement: `${name} has ${profile.closing}. As he or she grows, he or she can learn when to step forward, when to pause, and when to ask for help. With calm guidance, these qualities can help ${name} become both strong and considerate.\n\nA full Bazi reading can explain more about how ${name} learns, manages emotions, and connects with others. This summary focuses only on the Day Master. If it feels familiar, the full report can connect more of the pieces and offer guidance based on ${name}'s wider Bazi chart.`,
   };
 }
 
@@ -207,17 +222,22 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Return JSON containing only report_content.",
       "Write like a warm, experienced Bazi consultant speaking to one parent.",
       "Use plain English and short sentences. Most sentences should stay below 22 words and sound natural when read aloud.",
+      "Write so that a 12-year-old can understand every sentence. Replace abstract phrases with actions a parent can see.",
       "Use only the supplied reviewed Day Master guidance and verified strong/weak state. Do not add traits or calculation details.",
       "Introduce the child by name first. Then use the Day Master's natural image to help tell the story.",
+      "Write personality as three short paragraphs: the Day Master image; how it may appear in this child; then a separate explanation of Strong or Weak.",
       "Every strength and soft spot must include a scene from homework, play, friendship, family routines, transitions, mistakes, or emotional moments.",
+      "When a point has two examples, write them as two separate sentences. Never compress two examples into one list.",
       "Apply this test to every point: could a parent picture it and think, 'Yes, I have seen that in my child'? If not, rewrite it.",
       "Use the child's name and selected he or she pronouns. Never call the person 'the child' or 'the subject'.",
       "Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases.",
+      "Address parenting guidance directly to the reader using 'you'. State exactly what the parent can say or do. Never use vague words such as response, boundary, hard day, or difficult moment without explaining the situation.",
       "After drafting each section, read it as spoken English. Rewrite any sentence that sounds translated, stiff, vague, or grammatically awkward.",
       "Then read the report from beginning to end. Remove repeated ideas, repeated examples, abrupt transitions, and advice that appears in more than one section.",
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
       "Write exactly five parenting tips of 35-60 words. Explain why each may help and include a realistic example or phrase.",
       "The closing must warmly summarise the child's main qualities, encourage the parent, and mention that the Day Master summary is only one part of what Bazi can reveal.",
+      "Write the closing as two paragraphs. Keep the encouragement separate from the gentle invitation to explore the full chart.",
       "The invitation to explore more must feel natural and helpful, never salesy.",
       "Present Bazi as a reflective framework, not science, religion, prediction, diagnosis, or fixed destiny.",
       "Never invent structures, profile stars, Ten Gods, or other chart factors. Never identify internal sources or tools.",

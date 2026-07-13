@@ -3,6 +3,7 @@ export type DayMasterPoint = {
   meaning: string;
   everyday: string;
   support: string;
+  examples?: [string, string];
 };
 
 export type DayMasterKnowledge = {
@@ -38,7 +39,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     strongExpression: "The steadiness and directness may be easy to see; guidance helps determination stay flexible rather than rigid.",
     weakExpression: "The same qualities may appear more quietly and grow through reliable encouragement, manageable challenges, and time to establish trust.",
     limits: "The Day Master alone cannot establish sociability, academic ability, emotional health, or a fixed future.",
-    closing: "a principled child whose persistence can mature into dependable, compassionate leadership",
+    closing: "persistence, strong principles, and a protective sense of loyalty",
   },
   Yi: {
     name: "Yi (Yin Wood)", image: "a flexible vine or flowering plant", story: "A vine does not need to force a straight path; it notices what is around it, adapts, and still finds a way to grow.",
@@ -54,9 +55,9 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Needs a gentle anchor", meaning: "many possibilities can delay commitment", everyday: "starting several ideas but hesitating over which to finish", support: "help choose one small next step while leaving room for creativity" },
     ],
     strongExpression: "Adaptability and social ease may be readily visible; support helps flexibility remain authentic rather than approval-seeking.",
-    weakExpression: "The child's resourcefulness may be subtle at first and emerge best in relationships and settings that feel emotionally safe.",
+    weakExpression: "This resourcefulness may be subtle at first and emerge best in relationships and settings that feel emotionally safe.",
     limits: "The Day Master alone cannot prove confidence, popularity, manipulation, or learning style.",
-    closing: "a resourceful child whose flexibility can grow into graceful confidence and thoughtful independence",
+    closing: "flexibility, resourcefulness, and a thoughtful way of noticing other people",
   },
   Bing: {
     name: "Bing (Yang Fire)", image: "the sun", story: "Like sunlight that naturally warms and brightens a space, this nature often brings visible energy to people, ideas, and experiences that matter.",
@@ -71,10 +72,10 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Fixed on Plan A", meaning: "may find it difficult when reality does not match the expected picture", everyday: "feeling deflated when an event or project changes", support: "acknowledge the disappointment before exploring a new version together" },
       { heading: "Needs room to recharge", meaning: "a bright outward presence can hide tiredness or discouragement", everyday: "staying cheerful around others, then becoming unusually quiet at home", support: "allow quiet recovery without demanding an explanation immediately" },
     ],
-    strongExpression: "Warmth and enthusiasm may be immediately visible; calm limits help the child share the space rather than fill all of it.",
+    strongExpression: "Warmth and enthusiasm may be immediately visible; calm guidance can help that energy leave room for other people too.",
     weakExpression: "The brightness may appear selectively, often unfolding around trusted people, meaningful interests, and unhurried encouragement.",
     limits: "The Day Master alone cannot determine extroversion, popularity, emotional regulation, or leadership ability.",
-    closing: "a warm-hearted child whose optimism can become a steady source of courage for self and others",
+    closing: "warmth, optimism, and an ability to bring energy to the people and activities that matter",
   },
   Ding: {
     name: "Ding (Yin Fire)", image: "a lamp or guiding flame", story: "A lamp does not fill the whole sky. Its gift is quieter: helping people see what was hidden and bringing warmth close to home.",
@@ -90,9 +91,9 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Feelings may flicker", meaning: "inner confidence can vary with atmosphere and response", everyday: "feeling capable one day and doubtful the next", support: "offer calm reassurance instead of trying to argue the feeling away" },
     ],
     strongExpression: "Insight and expressiveness may be easier to access; guidance helps conviction remain warm rather than becoming tense or exacting.",
-    weakExpression: "The child's light may be more private, growing through reassurance, patient listening, and relationships where sensitivity is respected.",
+    weakExpression: "These qualities may be more private, growing through reassurance, patient listening, and relationships where sensitivity is respected.",
     limits: "The Day Master alone cannot establish anxiety, instability, intelligence, or mental health.",
-    closing: "a perceptive child whose quiet light can mature into thoughtful confidence and compassionate influence",
+    closing: "thoughtful insight, quiet influence, and care for how other people feel",
   },
   Wu: {
     name: "Wu (Yang Earth)", image: "a mountain", story: "A mountain offers a sense of steadiness and shelter. It does not rush to move, and its strength is often felt simply because it remains present.",
@@ -110,7 +111,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     strongExpression: "Reliability and conviction may be easy to see; support helps steadiness remain open to movement and other perspectives.",
     weakExpression: "The grounded qualities may emerge gradually and strengthen through predictable care, preparation, and confidence built one experience at a time.",
     limits: "The Day Master alone cannot establish stubbornness, charisma, maturity, or family role.",
-    closing: "a grounded child whose steady values can mature into wise, reassuring strength",
+    closing: "steadiness, strong values, and a dependable way of caring for people",
   },
   Ji: {
     name: "Ji (Yin Earth)", image: "cultivated soil", story: "Good soil quietly receives, nourishes, and helps many different things take root. Much of its work happens without asking to be seen.",
@@ -128,25 +129,25 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     strongExpression: "Care and capability may be readily visible; guidance helps helpfulness include boundaries and personal choice.",
     weakExpression: "The nurturing qualities may appear in small private gestures and grow through appreciation that does not demand constant usefulness.",
     limits: "The Day Master alone cannot define maternal behaviour, dependence, pessimism, or intellectual ability.",
-    closing: "a caring child whose practical wisdom can grow into generous, well-grounded confidence",
+    closing: "a caring nature, practical thinking, and a wish to help people or ideas grow",
   },
   Geng: {
     name: "Geng (Yang Metal)", image: "raw iron", story: "Raw iron needs patient forging before it becomes strong and useful. In the same way, challenge may bring out courage, loyalty, and a willingness to act.",
-    warmIntroduction: "a forthright, resilient nature that often meets challenges through action, loyalty, and determination",
+    warmIntroduction: "a direct and determined nature. He or she may prefer to act instead of standing back when something matters",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
-      { heading: "Courage to act", meaning: "may be quick to step forward when a task feels difficult or someone needs support", everyday: "choosing the harder part of a task or speaking up when someone is treated unfairly", support: "praise the courage and remind him or her that asking for help can also be a brave choice" },
+      { heading: "Courage to act", meaning: "may be quick to step forward when something feels difficult", everyday: "choosing the harder part of a task", examples: ["You may see him or her choose the harder part of a task instead of avoiding it.", "He or she may also speak up when someone is treated unfairly."], support: "Praise the courage. Remind him or her that asking for help can also be brave" },
       { heading: "Loyal follow-through", meaning: "often takes bonds and commitments seriously", everyday: "staying beside a friend or finishing a promised task", support: "remind him or her that caring for a friend does not mean having to solve every problem for that friend" },
       { heading: "Built through challenge", meaning: "can become more capable through practical effort and feedback", everyday: "improving after a mistake by trying again directly", support: "give clear, respectful feedback focused on the next attempt" },
     ],
     softSpots: [
-      { heading: "Moves before reflecting", meaning: "decisive energy can act faster than the situation needs", everyday: "jumping into an argument or solution before hearing the whole story", support: "practise one pause question: 'What else do I need to know?'" },
-      { heading: "All or nothing effort", meaning: "determination may become intense when success feels personal", everyday: "pushing through frustration until emotions spill over", support: "normalise breaks as part of finishing well, not a sign of giving up" },
+      { heading: "Acts before hearing everything", meaning: "may react quickly before hearing the full story", everyday: "interrupting an argument before the other person has finished", examples: ["You may see him or her interrupt an argument before the other person has finished speaking.", "He or she may also jump in to fix a problem before fully understanding what happened."], support: "Ask him or her to pause and explain what happened first. A simple question such as ‘What else do we need to know?’ can help" },
+      { heading: "Pushes too hard", meaning: "may keep pushing when he or she wants to do well", everyday: "refusing to stop even when already frustrated or tired", examples: ["You may see him or her refuse to stop even when already frustrated or tired.", "A small mistake may upset him or her when something is not working."], support: "Let him or her take a short break before trying again. Remind him or her that taking a break is not giving up" },
     ],
     strongExpression: "Drive and resilience may be obvious; guidance helps strength include reflection, flexibility, and measured effort.",
     weakExpression: "Courage may first appear in focused bursts or around trusted people, growing through achievable challenges and honest encouragement.",
     limits: "The Day Master alone cannot establish aggression, authority, competitiveness, or ability to handle pressure.",
-    closing: "a courageous child whose determination can mature into loyal, measured, and compassionate strength",
+    closing: "courage, determination, and a strong sense of loyalty",
   },
   Xin: {
     name: "Xin (Yin Metal)", image: "finely worked metal or jewellery", story: "Finely worked metal is shaped with care and attention. Its beauty lies in refinement, precision, and the small details that others might overlook.",
@@ -164,7 +165,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     strongExpression: "Discernment and self-possession may be easy to see; support helps high standards remain humane and flexible.",
     weakExpression: "The refined qualities may be private or easily unsettled by pressure, unfolding through trust, sincere appreciation, and manageable expectations.",
     limits: "The Day Master alone cannot establish vanity, status-seeking, manipulation, perseverance, or stress tolerance.",
-    closing: "a discerning child whose careful mind and loyal heart can grow into quietly assured confidence",
+    closing: "a careful mind, a loyal heart, and an eye for details that other people may miss",
   },
   Ren: {
     name: "Ren (Yang Water)", image: "a broad river or ocean", story: "A broad river keeps moving, gathers many streams, and discovers new routes. This nature often comes alive through movement, possibility, and a wider view.",
@@ -180,9 +181,9 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Momentum runs ahead", meaning: "speed and confidence may outpace reflection", everyday: "speaking directly or agreeing before considering the impact", support: "use a brief pause ritual before decisions rather than a long lecture afterwards" },
     ],
     strongExpression: "Movement, imagination, and independence may be readily visible; boundaries help that energy become purposeful rather than scattered.",
-    weakExpression: "The child's range may appear as private imagination before outward confidence, growing through safe exploration and one attainable step at a time.",
+    weakExpression: "This range may appear as private imagination before outward confidence, growing through safe exploration and one attainable step at a time.",
     limits: "The Day Master alone cannot establish extroversion, intelligence, realism, distractibility, or risk-taking.",
-    closing: "an imaginative child whose range and courage can mature into purposeful, adaptable confidence",
+    closing: "imagination, courage, and an ability to find another way when plans change",
   },
   Gui: {
     name: "Gui (Yin Water)", image: "rain, mist, or dew", story: "Rain and mist can be gentle yet reach everywhere. They gather quietly, respond to the surrounding landscape, and bring life in ways that are easy to miss at first.",
@@ -198,9 +199,9 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Focus follows the current", meaning: "interest and energy may shift with atmosphere", everyday: "working deeply when engaged but drifting when a task feels disconnected", support: "link the task to a meaningful question and use one short finishing point" },
     ],
     strongExpression: "Perception and versatility may be easy to access; gentle structure helps fluidity become consistent without feeling confined.",
-    weakExpression: "The child's insight may be especially subtle, unfolding through quiet trust, patient invitations, and freedom from immediate performance.",
+    weakExpression: "This insight may be especially subtle, unfolding through quiet trust, patient invitations, and freedom from immediate performance.",
     limits: "The Day Master alone cannot establish mood disorder, secrecy, manipulation, wisdom, or consistency.",
-    closing: "a perceptive child whose quiet sensitivity and originality can grow into calm, adaptable wisdom",
+    closing: "sensitivity, original ideas, and a quiet ability to notice what is happening around him or her",
   },
 };
 
