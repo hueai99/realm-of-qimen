@@ -17,6 +17,8 @@ export type Reading = { year_pillar: string; month_pillar: string; day_pillar: s
 
 type QcResult = { approved: boolean; issues: string[]; reviewer: string };
 const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven)\b/i;
+const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
+const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 
 function deterministicQc(reading: Reading): QcResult {
   const issues: string[] = [];
@@ -28,7 +30,15 @@ function deterministicQc(reading: Reading): QcResult {
   if (chart.day_master && !summary.personality.includes(chart.day_master)) issues.push("personality explanation does not identify the verified Day Master");
   if (chart.day_master_strength && !summary.personality.toLowerCase().includes(chart.day_master_strength.toLowerCase())) issues.push("personality explanation does not identify verified strength");
   if (unsupportedClaims.test(prose)) issues.push("unsupported or over-certain claim detected");
-  return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-qc-v1" };
+  if (aiStylePhrases.test(prose)) issues.push("formulaic AI-style wording detected");
+  const sections = [...(summary.strengths ?? []), ...(summary.soft_spots ?? []), ...(summary.parenting_tips ?? [])];
+  if (sections.some(({ heading }) => !heading || words(heading) > 6)) issues.push("section heading format is inconsistent");
+  if (sections.some(({ body }) => words(body) < 12 || words(body) > 85)) issues.push("section length is outside the parent-friendly range");
+  if (words(summary.personality ?? "") < 45 || words(summary.personality ?? "") > 180) issues.push("opening explanation is too brief or overwhelming");
+  if (words(summary.closing_encouragement ?? "") < 25 || words(summary.closing_encouragement ?? "") > 90) issues.push("closing encouragement is too brief or overwhelming");
+  const repeatedOpenings = sections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
+  if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
+  return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v2" };
 }
 
 function withQc(reading: Reading, qc: QcResult): Reading {
