@@ -31,10 +31,14 @@ export default function IntakeForm() {
       <input type="hidden" name="question_type" value="child_potential" />
       <label className="text-sm sm:col-span-2">What would you most like help with? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} /></label>
     </div>
-    {busy && <div className="mt-6 space-y-3 border-y border-[#d7cbbd] py-5 text-sm leading-6 text-[#665a50]" aria-live="polite">
-      <p className="font-semibold text-[#211b16]">Preparing a thoughtful reflection…</p>
-      <p><strong>A reflection, not a prediction.</strong> Bazi is a traditional way of reflecting on temperament and natural tendencies. It is not a religion, fixed destiny, or replacement for your values and knowledge of your child.</p>
-      <p><strong>Why some details may not fit.</strong> No chart captures a whole person. Birth-time accuracy, age, environment, experiences, and personal choices all matter. Keep what feels useful and set aside what does not.</p>
+    {busy && <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#211b16]/75 px-5 backdrop-blur-sm" role="status" aria-live="assertive">
+      <div className="w-full max-w-lg rounded-sm bg-[#fffaf0] p-8 text-center shadow-2xl sm:p-10">
+        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-[#d7cbbd] border-t-[#9b3c2b]" aria-hidden="true" />
+        <p className="mt-6 text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]">Your request has been received</p>
+        <h2 className="mt-3 text-3xl">Thank you for your interest.</h2>
+        <p className="mt-4 leading-7 text-[#665a50]">We are preparing your child&apos;s personalised report. This may take a short while, so please keep this page open.</p>
+        <div className="mt-6 border-t border-[#d7cbbd] pt-5 text-left text-sm leading-6 text-[#665a50]"><strong className="text-[#211b16]">How does Bazi work?</strong> A child&apos;s birth date and time are arranged into four parts: the Year, Month, Day, and Hour Pillars. Each carries different elements. Read together, they can offer clues about how a child may think, express feelings, learn, relate to others, and respond to support.</div>
+      </div>
     </div>}
     {error && <p role="alert" className="mt-5 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
     <button disabled={busy} className="mt-7 w-full bg-[#9b3c2b] px-5 py-4 font-semibold text-white disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>

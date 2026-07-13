@@ -48,6 +48,23 @@ const elementNature: Record<string, string> = {
   Metal: "a principled, clear-cut nature that gravitates toward fairness, order, and doing what feels right",
   Water: "a perceptive, adaptable nature that is drawn to understanding, observing, and finding a path around obstacles",
 };
+const elementThemes: Record<string, { strengths: [string, string][]; softSpots: [string, string][]; closing: string }> = {
+  Wood: { strengths: [["Sees room to grow", "notices possibilities and is often motivated by progress"], ["Keeps reaching forward", "can recover momentum when there is a meaningful next step"], ["Independent ideas", "often wants to understand, explore, and try a personal approach"]], softSpots: [["Frustrated by roadblocks", "may become impatient when progress feels blocked"], ["Needs room, with guidance", "can resist when every step is decided for him or her"]], closing: "a forward-looking child whose independent ideas can become purposeful confidence" },
+  Fire: { strengths: [["Brings warmth", "can lift the mood and connect readily through genuine enthusiasm"], ["Expresses what matters", "often communicates feelings and ideas with vivid energy"], ["Inspires participation", "can draw others into activities he or she cares about"]], softSpots: [["Feelings can arrive quickly", "may need help settling before talking through an intense moment"], ["Sensitive to the atmosphere", "can be affected by tension or a lack of response from others"]], closing: "a warm-hearted child whose bright expression can mature into generous confidence" },
+  Earth: { strengths: [["A steady presence", "often brings patience and reliability to familiar people and routines"], ["Practical care", "may show love through helpful actions more than big words"], ["Builds trust slowly", "can become deeply dependable once he or she feels secure"]], softSpots: [["Change may take time", "may need advance notice before moving away from a familiar plan"], ["Carries more than is shown", "can hold worries quietly to avoid unsettling others"]], closing: "a steady-hearted child whose quiet care can grow into grounded self-belief" },
+  Metal: { strengths: [["Knows what feels right", "often notices fairness, standards, and the difference between a careful job and a rushed one"], ["A precise eye", "can spot details others overlook and improve things with thoughtful care"], ["Loyal follow-through", "may take promises and responsibilities seriously once committed"]], softSpots: [["Hard on mistakes", "may judge himself or herself more sharply than the situation deserves"], ["Needs help with grey areas", "can feel unsettled when rules shift or there is no clearly right answer"]], closing: "a quietly perceptive child with a strong moral thread and a natural wish to do what is right" },
+  Water: { strengths: [["Reads the room", "often notices small shifts in people and situations before speaking"], ["Finds another way", "can adapt intelligently when the obvious route does not work"], ["Thoughtful curiosity", "may ask surprisingly deep questions and connect ideas quietly"]], softSpots: [["Keeps thoughts inside", "may not ask for help until worry has already built up"], ["Can drift without an anchor", "benefits from gentle structure when there are too many possibilities"]], closing: "a quietly insightful child whose sensitivity and curiosity can grow into calm resilience" },
+};
+
+function concernReflection(concern: string, name: string): string {
+  const text = concern.toLowerCase();
+  if (/school|study|homework|learn|grade|exam/.test(text)) return `You are trying to understand how ${name} learns best and how to make school demands feel less discouraging.`;
+  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You are looking for a gentler way to understand what sits underneath ${name}'s strong reactions.`;
+  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You want to help ${name} feel safer and more confident without pushing too hard.`;
+  if (/friend|social|lonely|bully|fit in/.test(text)) return `You are concerned about how ${name} is finding connection and belonging with other children.`;
+  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You are trying to reduce the tension between holding a boundary and helping ${name} feel heard.`;
+  return `You are trying to understand what ${name} may be communicating through this difficulty and how to respond with both warmth and clarity.`;
+}
 
 function deterministicQc(reading: Reading, childName?: string, gender?: string): QcResult {
   const issues: string[] = [];
@@ -93,6 +110,10 @@ function genderedSummary(summary: SummaryReport, gender: string): SummaryReport 
     ? { they: "he", them: "him", their: "his", theirs: "his", themselves: "himself" }
     : { they: "she", them: "her", their: "her", theirs: "hers", themselves: "herself" };
   const replace = (value: string) => value
+    .replace(/\bhimself or herself\b/gi, gender === "male" ? "himself" : "herself")
+    .replace(/\bhim or her\b/gi, gender === "male" ? "him" : "her")
+    .replace(/\bhis or her\b/gi, gender === "male" ? "his" : "her")
+    .replace(/\bhe or she\b/gi, gender === "male" ? "he" : "she")
     .replace(/\bthey don't\b/gi, gender === "male" ? "he doesn't" : "she doesn't")
     .replace(/\bthey are\b/gi, gender === "male" ? "he is" : "she is")
     .replace(/\bthey have\b/gi, gender === "male" ? "he has" : "she has")
@@ -106,28 +127,22 @@ function genderedSummary(summary: SummaryReport, gender: string): SummaryReport 
 }
 
 function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", _season: string, _seasonalStateName: string, concern?: string | null): SummaryReport {
+  const themes = elementThemes[element];
   const support = strength === "Weak"
     ? `${name} may not show these sides straight away, especially in a new place or when they feel watched. Give them a little time, a clear idea of what will happen next, and the reassurance that they don't have to get everything right on the first try.`
     : `You may see these sides of ${name} quite readily. They may enjoy having some say in how they do things and respond well when their natural drive has a positive direction.`;
   const seasonLink = `${name}, born under the ${dayMaster} Day Master, often carries ${elementNature[element]}. You might recognise this when ${elementMoment[element]}. ${support}`;
   return {
     personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
-    strengths: [
-      { heading: elementHeading[element], body: `${name} may prefer to understand what is expected before beginning. A clear example and one manageable first step can help them relax and show what they can do.`, basis: { factor: "Day Master", value: `${dayMaster} / ${element}` } },
-      { heading: "Purposeful persistence", body: `Once a task feels safe and meaningful, ${name} may stay with it longer than expected. Breaking homework or chores into visible steps helps determination grow without unnecessary pressure.`, basis: { factor: "Day Master expression", value: `${dayMaster} / ${element}` } },
-      { heading: "Learning through experience", body: `${name} is more than a chart. Notice when they are most engaged, calm, and curious; those real-life patterns are the best way to decide which parts of this reflection are useful.`, basis: { factor: "Seasonal balance", value: strength } },
-    ],
-    soft_spots: [
-      { heading: "Space after busy moments", body: `${name} may retreat when overwhelmed or when too many instructions arrive at once. A short pause, a drink of water, and one gentle question can help them return without feeling pushed.`, basis: { factor: "Seasonal balance", value: strength } },
-      { heading: "Confidence before correction", body: `Direct criticism may linger longer than it appears to. Begin with what worked, name one next step, and let ${name} try again privately when possible.`, basis: { factor: "Day Master expression", value: `${dayMaster} / ${element}` } },
-    ],
-    concern_response: concern ? `When you shared “${concern},” it showed how carefully you have been watching and trying to understand ${name}. There may be days when you wonder whether to step in, give more space, or handle things differently. You do not have to solve everything at once. In the next difficult moment, stay close, notice what ${name} seems to need, and try one small response. What helps your child settle and reconnect will tell you more than any single hard day.` : undefined,
+    strengths: themes.strengths.map(([heading, meaning], index) => ({ heading, body: index === 0 ? `${name}'s ${dayMaster} Day Master is linked with someone who ${meaning}. You may see this when he or she feels secure enough to act without being rushed.` : index === 1 ? `The ${element} quality in ${name}'s Day Master ${meaning}. It often becomes clearer when an activity feels purposeful rather than imposed.` : `Another expression of ${name}'s ${dayMaster} Day Master is that he or she ${meaning}. Encouragement helps this quality mature without becoming a source of pressure.`, basis: { factor: "Day Master", value: `${dayMaster} / ${element}` } })),
+    soft_spots: themes.softSpots.map(([heading, meaning], index) => ({ heading, body: index === 0 ? `With a ${dayMaster} Day Master, ${name} ${meaning}. This is not a flaw; calm support can help him or her regain balance.` : `${name}'s ${element} nature also means he or she ${meaning}. A little patience here can protect confidence while he or she learns a more flexible response.`, basis: { factor: strength === "Weak" ? "Day Master and seasonal balance" : "Day Master expression", value: `${dayMaster} / ${strength}` } })),
+    concern_response: concern ? `${concernReflection(concern, name)} There may be days when you wonder whether to step in, give more space, or handle things differently. You do not have to solve everything at once. In the next difficult moment, stay close, notice what ${name} seems to need, and try one small response. What helps your child settle and reconnect will tell you more than any single hard day.` : undefined,
     parenting_tips: [
       { heading: "Offer two clear choices", body: `Keep boundaries steady while allowing some ownership: “Would you like to start with reading or maths?” This reduces friction and helps ${name} practise decision-making safely.` },
       { heading: "Make progress visible", body: `Use short checklists and acknowledge effort specifically. Seeing small steps completed can be more motivating than a distant reward.` },
       { heading: "Connect before redirecting", body: `Reflect the feeling first, then guide the behaviour. A sentence such as “I can see this is frustrating; let’s find the first small step” keeps support and responsibility together.` },
     ],
-    closing_encouragement: `As ${name} grows, there will be moments when everything seems to make sense—and others when you are both finding your way. You do not need to understand every part of your child all at once, or respond perfectly every time. The fact that you are here, looking for a kinder way to see ${name}, already matters. Keep noticing, keep listening, and trust the relationship you are building together.`,
+    closing_encouragement: `${name} is ${themes.closing}. While he or she may not always show what is needed directly, this chart suggests a child who blossoms with steady mentorship and gentle accountability. By seeing sensitivity as a sign of depth—not weakness—you are already giving ${name} something powerful: the freedom to grow into a clear and resilient self.`,
   };
 }
 
