@@ -12,6 +12,7 @@ const seasonalState = {
   Winter: { Water:"Prosperous", Wood:"Strong", Metal:"Weak", Earth:"Trapped", Fire:"Dead" },
 } as const;
 const tenGodNames: Record<string, [string, string]> = { "比肩":["Bi Jian","Friend"], "劫财":["Jie Cai","Rob Wealth"], "食神":["Shi Shen","Eating God"], "伤官":["Shang Guan","Hurting Officer"], "偏财":["Pian Cai","Indirect Wealth"], "正财":["Zheng Cai","Direct Wealth"], "七杀":["Qi Sha","Seven Killings"], "正官":["Zheng Guan","Direct Officer"], "偏印":["Pian Yin","Indirect Resource"], "正印":["Zheng Yin","Direct Resource"] };
+const stemPolarity: Record<string, "Yang" | "Yin"> = { "甲":"Yang", "乙":"Yin", "丙":"Yang", "丁":"Yin", "戊":"Yang", "己":"Yin", "庚":"Yang", "辛":"Yin", "壬":"Yang", "癸":"Yin" };
 type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType };
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
@@ -39,6 +40,13 @@ const elementMoment: Record<string, string> = {
   Earth: "they look for familiar routines, quietly take care of others, or need time before feeling comfortable with change",
   Metal: "they notice when something is unfair, remember exactly how things should be done, or become hard on themselves after a mistake",
   Water: "they watch a room before joining in, ask questions that surprise you, or adjust quietly to what is happening around them",
+};
+const elementNature: Record<string, string> = {
+  Wood: "a purposeful, growth-minded nature that is drawn to progress, possibility, and finding a way forward",
+  Fire: "a warm, expressive nature that is drawn to connection, enthusiasm, and bringing energy into the room",
+  Earth: "a grounded, dependable nature that is drawn to stability, practical care, and creating a sense of security",
+  Metal: "a principled, clear-cut nature that gravitates toward fairness, order, and doing what feels right",
+  Water: "a perceptive, adaptable nature that is drawn to understanding, observing, and finding a path around obstacles",
 };
 
 function deterministicQc(reading: Reading, childName?: string): QcResult {
@@ -74,7 +82,7 @@ function groundedSummary(name: string, dayMaster: string, element: string, stren
   const support = strength === "Weak"
     ? `${name} may not show these sides straight away, especially in a new place or when they feel watched. Give them a little time, a clear idea of what will happen next, and the reassurance that they don't have to get everything right on the first try.`
     : `You may see these sides of ${name} quite readily. They may enjoy having some say in how they do things and respond well when their natural drive has a positive direction.`;
-  const seasonLink = `Meet ${name}'s ${dayMaster} Day Master. In everyday life, this can look like ${elementStyle[element]}. You might recognise it when ${elementMoment[element]}. ${support}`;
+  const seasonLink = `${name}, born under the ${dayMaster} Day Master, often carries ${elementNature[element]}. You might recognise this when ${elementMoment[element]}. ${support}`;
   return {
     personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
     strengths: [
@@ -104,15 +112,15 @@ export function calculateReading(input: Input): Reading {
   const lunar = Solar.fromYmdHms(year, month, day, hour, minute, 0).getLunar(); const rawGods = [...lunar.getBaZiShiShenGan(), ...lunar.getBaZiShiShenZhi()].filter((name: string) => name !== "日主");
   const tenGods = rawGods.map((name: string) => ({ name, pinyin: tenGodNames[name]?.[0] ?? name, english: tenGodNames[name]?.[1] ?? name }));
   const focus: Record<QuestionType, string> = { career: "work that rewards visible craft and patient leadership", wealth: "steady wealth-building through disciplined choices and clear boundaries", child_potential: "learning through curiosity, structure, and encouragement at an individual pace", relationship: "relationships built through direct communication and reciprocity" };
-  const dayMaster = `${stems[values.day[0]][0]} ${stems[values.day[0]][1]}`;
+  const dayMaster = `${values.day[0]} (${stemPolarity[values.day[0]]} ${stems[values.day[0]][1]})`;
   return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${dayMaster} Day Master — ${strength}. “Strength” describes seasonal energy balance, not strength of character.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v3", report_content: groundedSummary(input.subject_name, dayMaster, dayElement, strength, season, state, (input as Input & { parenting_concern?: string | null }).parenting_concern), chart_status: "verified", chart_data: { ...values, day_master: dayMaster, day_master_strength: strength, seasonal_state: state, season, strength_method: "season-first-v1", strength_review_status: state === "Prosperous" || state === "Dead" ? "high-confidence" : "review-recommended", ten_gods: tenGods } };
 }
 
 export async function generateReading(input: Input): Promise<Reading> {
   const calculated = calculateReading(input);
   const calculatedChart = calculated.chart_data as { day_master?: string };
-  const publicElement = calculatedChart.day_master?.split(" ").at(-1) ?? "element";
-  calculated.element_profile = `${input.subject_name}'s Day Master is ${calculatedChart.day_master}. You may recognise ${elementStyle[publicElement] ?? "their own distinctive way of responding to the world"} in the way they move through everyday life.`;
+  const publicElement = Object.keys(elementStyle).find((element) => calculatedChart.day_master?.includes(element)) ?? "element";
+  calculated.element_profile = `${input.subject_name}'s Day Master is ${calculatedChart.day_master}. This is associated with ${elementStyle[publicElement] ?? "their own distinctive way of responding to the world"}.`;
   const verified = withQc(calculated, deterministicQc(calculated, input.subject_name));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return verified;
   try {
