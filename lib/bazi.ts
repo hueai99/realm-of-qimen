@@ -16,9 +16,16 @@ type Input = { subject_name: string; birth_date: string; birth_time?: string | n
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
 type QcResult = { approved: boolean; issues: string[]; reviewer: string };
-const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven)\b/i;
+const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
+const elementStyle: Record<string, string> = {
+  Wood: "curiosity, growth, and a wish to keep moving forward",
+  Fire: "warmth, expression, and enthusiasm",
+  Earth: "steadiness, practicality, and care for what feels secure",
+  Metal: "clear standards, attention to detail, and a strong sense of what feels right",
+  Water: "observation, adaptability, and thoughtful curiosity",
+};
 
 function deterministicQc(reading: Reading): QcResult {
   const issues: string[] = [];
@@ -28,7 +35,6 @@ function deterministicQc(reading: Reading): QcResult {
   if (!reading.year_pillar || !reading.month_pillar || !reading.day_pillar || !chart.day_master || !chart.day_master_strength || !chart.season) issues.push("verified chart data is incomplete");
   if (!summary?.personality || summary.strengths?.length !== 3 || summary.soft_spots?.length < 2 || summary.parenting_tips?.length < 2 || !summary.closing_encouragement) issues.push("summary structure is incomplete");
   if (chart.day_master && !summary.personality.includes(chart.day_master)) issues.push("personality explanation does not identify the verified Day Master");
-  if (chart.day_master_strength && !summary.personality.toLowerCase().includes(chart.day_master_strength.toLowerCase())) issues.push("personality explanation does not identify verified strength");
   if (unsupportedClaims.test(prose)) issues.push("unsupported or over-certain claim detected");
   if (aiStylePhrases.test(prose)) issues.push("formulaic AI-style wording detected");
   const sections = [...(summary.strengths ?? []), ...(summary.soft_spots ?? []), ...(summary.parenting_tips ?? [])];
@@ -45,11 +51,11 @@ function withQc(reading: Reading, qc: QcResult): Reading {
   return { ...reading, insights_review_status: qc.approved ? "reviewed" : "rejected", chart_data: { ...reading.chart_data, expert_qc: { ...qc, reviewed_at: new Date().toISOString() } } };
 }
 
-function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", season: string, seasonalStateName: string, concern?: string | null): SummaryReport {
+function groundedSummary(name: string, dayMaster: string, element: string, strength: "Strong" | "Weak", _season: string, _seasonalStateName: string, concern?: string | null): SummaryReport {
   const support = strength === "Weak"
-    ? `In Bazi, “Weak” describes the balance of ${element} energy in this season—not a weak personality. ${name} may do best with preparation, reassurance, and time to settle before being asked to perform under pressure.`
-    : `In Bazi, “Strong” describes the balance of ${element} energy in this season—not a label for personality or behaviour. ${name} may have plenty of inner drive and benefit from choices, movement, and gentle help with flexibility.`;
-  const seasonLink = `${dayMaster} is the Day Master, the chart's simple reference point for temperament. Because ${name} was born in ${season}, ${element} is considered ${seasonalStateName.toLowerCase()} at that time. ${support}`;
+    ? `These qualities may come through most clearly when ${name} has time to prepare, feels reassured, and knows what comes next. This says nothing about being a strong or weak person.`
+    : `These qualities may be easy to see in ${name}. They may benefit from room to make choices, use their natural drive, and practise adapting when plans change.`;
+  const seasonLink = `${dayMaster} is ${name}'s Day Master—the chart's starting point for understanding temperament. In everyday terms, ${element} is associated with ${elementStyle[element]}. ${support}`;
   return {
     personality: `${seasonLink} You may notice this most clearly in how they approach new people, unfamiliar tasks, or moments when expectations feel high.`,
     strengths: [
@@ -85,6 +91,9 @@ export function calculateReading(input: Input): Reading {
 
 export async function generateReading(input: Input): Promise<Reading> {
   const calculated = calculateReading(input);
+  const calculatedChart = calculated.chart_data as { day_master?: string };
+  const publicElement = calculatedChart.day_master?.split(" ").at(-1) ?? "element";
+  calculated.element_profile = `${calculatedChart.day_master} Day Master — associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
   const verified = withQc(calculated, deterministicQc(calculated));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true") return verified;
   try {
