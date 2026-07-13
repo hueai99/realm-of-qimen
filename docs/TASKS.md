@@ -63,6 +63,12 @@ Week 2: Sprint 4 (Conversion Polish)       ← money in
 ## Sprint 4 — Conversion Polish
 **Goal:** Money can flow; paid users get premium content.
 
+- [ ] Summary-report upsell: offer the full personalised report at **SGD 98**
+- [ ] Keep the SGD 98 report purchase and optional online-consult add-on as two clear choices
+- [ ] Collect the approved full-report template and completed sample before building generation
+- [ ] Confirm consult duration, add-on price, booking method, rescheduling terms, and delivery turnaround before launch
+- [ ] Carry the verified chart, expert Bazi QC, editorial QC, and parent-friendly tone into the paid report
+- [ ] Email the purchaser a secure report link and clear next step for adding a consultation
 - [ ] Stripe payment link for "Premium Report" (manual product, no webhook complexity yet)
 - [ ] Stripe webhook → set `bazi_reports.is_premium = true` + `leads.conversion_status = 'paid'` + `leads.paid_at`
 - [ ] Premium report section (deeper insights, luck pillars) — visible only when `is_premium = true`
