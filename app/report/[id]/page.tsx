@@ -35,9 +35,9 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       {summary ? <div className="mt-12 space-y-12">
         <section>
           <p className="text-xs uppercase tracking-[.2em] text-[#9b3c2b]">Personality at a glance</p>
-          <h2 className="mt-3 text-3xl leading-tight">A gentle view of what comes naturally</h2>
+          <h2 className="mt-3 text-3xl leading-tight">Getting to know {report.subject_name}</h2>
           <p className="mt-5 max-w-3xl leading-8">{summary.personality}</p>
-          <p className="mt-4 max-w-3xl border-l border-[#b7422d] pl-4 text-sm leading-6 text-[#74685e]">The strengths and softer spots below are viewed through {report.subject_name}&apos;s {dayMasterStrength ? `${dayMasterStrength} Day Master` : "Day Master"}. In Bazi, a Weak Day Master means these natural qualities may be more subtle, take time to show, and unfold best with trust and encouragement. This is one meaningful part of the chart, rather than the child&apos;s whole story.</p>
+          <p className="mt-4 max-w-3xl border-l border-[#b7422d] pl-4 text-sm leading-6 text-[#74685e]">The strengths and softer spots below are viewed through {report.subject_name}&apos;s {dayMasterStrength ? `${dayMasterStrength} Day Master` : "Day Master"}. {dayMasterStrength === "Weak" ? "Here, ‘Weak’ simply means these natural qualities may be quieter at first and often unfold with time, trust, and encouragement." : dayMasterStrength === "Strong" ? "Here, ‘Strong’ means these natural qualities may come through more readily and become easier for the child to draw upon." : "These qualities can appear differently depending on the child and the situation."} This is one meaningful part of the chart, rather than the child&apos;s whole story.</p>
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Soft spots & gentle support" points={summary.soft_spots} />
