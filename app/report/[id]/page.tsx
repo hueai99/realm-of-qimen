@@ -18,7 +18,6 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
   const summary = report.report_content;
   const dayMasterStrength = report.chart_data?.day_master_strength ?? report.chart_data?.strength;
   const subjectPronoun = report.gender === "male" ? "he" : report.gender === "female" ? "she" : "they";
-  const objectPronoun = report.gender === "male" ? "him" : report.gender === "female" ? "her" : "them";
 
   return <main className="min-h-screen">
     <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
@@ -33,8 +32,8 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       </div>
       <section className="my-8 max-w-3xl border-l-2 border-[#b7422d] bg-[#fffaf0] px-6 py-5">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>
-        <p className="mt-3 leading-7 text-[#665a50]">This summary focuses on {report.subject_name}&apos;s Day Master. It offers a first look at how {subjectPronoun} may naturally think, feel, and respond to the world.</p>
-        <p className="mt-3 leading-7 text-[#665a50]">Inside, you will find three strengths, moments that may feel harder, and simple ways to support {objectPronoun} at home.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">Bazi is a traditional Chinese system that turns a person&apos;s birth details into Four Pillars. Each pillar offers a different view of personality, strengths, emotions, relationships, and growth.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">This short report focuses on one part: {report.subject_name}&apos;s Day Master. It gives a first look at how {subjectPronoun} may naturally respond to people, challenges, and everyday life.</p>
       </section>
       <div className="grid gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
         {pillars.map(([label, value]) => <div key={label} className="bg-[#fffaf0] p-6"><p className="text-xs uppercase tracking-widest text-[#9b3c2b]">{label}</p><p className="mt-6 text-xl leading-8">{value ?? "Analysis pending"}</p></div>)}

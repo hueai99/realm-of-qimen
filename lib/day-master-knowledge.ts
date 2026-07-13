@@ -32,8 +32,8 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
       { heading: "Protective loyalty", meaning: "may care deeply about people and commitments", everyday: "standing beside a friend or taking a family responsibility seriously", support: "show that caring for others can include asking for help and respecting personal limits" },
     ],
     softSpots: [
-      { heading: "Hard to change course", meaning: "may hold tightly to a plan once committed", everyday: "struggling when an outing, rule, or project changes unexpectedly", support: "give a little warning and invite the child to help choose the revised path" },
-      { heading: "Words can land strongly", meaning: "directness may sound sharper than intended", everyday: "correcting a sibling or classmate before noticing their feelings", support: "teach a pause and a gentler second sentence without shaming the honesty" },
+      { heading: "Hard to change course", meaning: "may hold tightly to a plan once committed", everyday: "struggling when an outing, rule, or project changes unexpectedly", support: "give a little warning and invite him or her to help choose the revised path" },
+      { heading: "Words can land strongly", meaning: "directness may sound sharper than intended", everyday: "correcting a sibling or classmate before noticing how the other person feels", support: "teach a pause and a gentler second sentence without shaming the honesty" },
     ],
     strongExpression: "The steadiness and directness may be easy to see; guidance helps determination stay flexible rather than rigid.",
     weakExpression: "The same qualities may appear more quietly and grow through reliable encouragement, manageable challenges, and time to establish trust.",
@@ -46,7 +46,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     motivations: ["connection", "room to approach things creatively", "encouragement that preserves dignity"],
     strengths: [
       { heading: "Flexible problem-solving", meaning: "can adjust intelligently when the first route is blocked", everyday: "finding a different way into a game, friendship, or school task", support: "ask what else might work before supplying the answer" },
-      { heading: "Social awareness", meaning: "may notice tone, timing, and how others are responding", everyday: "changing approach when a friend seems uncomfortable", support: "affirm consideration while reminding the child that personal needs also matter" },
+      { heading: "Social awareness", meaning: "may notice tone, timing, and how others are responding", everyday: "changing approach when a friend seems uncomfortable", support: "affirm this consideration while reminding him or her that personal needs also matter" },
       { heading: "Quiet resilience", meaning: "can keep growing through change without making a show of the effort", everyday: "settling into a new routine little by little", support: "name small signs of courage that might otherwise go unseen" },
     ],
     softSpots: [
@@ -63,13 +63,13 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     warmIntroduction: "an open, bright nature that often brings warmth, visibility, and life to what matters",
     motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
     strengths: [
-      { heading: "Natural warmth", meaning: "can make people feel included through an open presence", everyday: "welcoming someone into play or sharing enthusiasm freely", support: "appreciate the warmth without making the child responsible for everyone else's mood" },
+      { heading: "Natural warmth", meaning: "can make people feel included through an open presence", everyday: "welcoming someone into play or sharing enthusiasm freely", support: "appreciate the warmth without making him or her responsible for everyone else's mood" },
       { heading: "Hopeful energy", meaning: "often sees what could become possible", everyday: "bringing excitement back to a group after disappointment", support: "pair optimism with one realistic next step" },
       { heading: "Consistent spirit", meaning: "may prefer a clear direction and stay loyal to it", everyday: "returning to a familiar plan because it still feels right", support: "honour commitment while modelling that changing course can also be wise" },
     ],
     softSpots: [
       { heading: "Fixed on Plan A", meaning: "may find it difficult when reality does not match the expected picture", everyday: "feeling deflated when an event or project changes", support: "acknowledge the disappointment before exploring a new version together" },
-      { heading: "Needs room to recharge", meaning: "a bright outward presence can hide tiredness or discouragement", everyday: "seeming cheerful until reaching the safety of home", support: "allow quiet recovery without demanding an explanation immediately" },
+      { heading: "Needs room to recharge", meaning: "a bright outward presence can hide tiredness or discouragement", everyday: "staying cheerful around others, then becoming unusually quiet at home", support: "allow quiet recovery without demanding an explanation immediately" },
     ],
     strongExpression: "Warmth and enthusiasm may be immediately visible; calm limits help the child share the space rather than fill all of it.",
     weakExpression: "The brightness may appear selectively, often unfolding around trusted people, meaningful interests, and unhurried encouragement.",
@@ -81,13 +81,13 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     warmIntroduction: "a thoughtful, illuminating nature that may notice meaning and feeling beneath the surface",
     motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
     strengths: [
-      { heading: "Thoughtful insight", meaning: "may think deeply before revealing what has been noticed", everyday: "offering an observation that shows careful listening", support: "leave a pause after questions so the child's fuller answer has time to arrive" },
-      { heading: "Gentle consideration", meaning: "often cares about how words and choices affect others", everyday: "remembering a small detail that comforts someone", support: "appreciate the kindness while protecting the child from carrying every feeling in the room" },
-      { heading: "Quiet influence", meaning: "can guide through ideas and example rather than force", everyday: "helping a sibling or friend see a different way", support: "invite contribution without putting the child on display" },
+      { heading: "Thoughtful insight", meaning: "may think deeply before revealing what has been noticed", everyday: "offering an observation that shows careful listening", support: "leave a pause after questions so the fuller answer has time to arrive" },
+      { heading: "Gentle consideration", meaning: "often cares about how words and choices affect others", everyday: "remembering a small detail that comforts someone", support: "appreciate the kindness while reminding him or her that other people's feelings are not theirs to manage" },
+      { heading: "Quiet influence", meaning: "can guide through ideas and example rather than force", everyday: "helping a sibling or friend see a different way", support: "invite contribution without putting him or her on display" },
     ],
     softSpots: [
       { heading: "Thoughts keep circling", meaning: "careful reflection can turn into overthinking", everyday: "replaying a mistake or conversation long after it ended", support: "listen briefly, separate what can be changed from what can be released, then reconnect through a grounding activity" },
-      { heading: "Feelings may flicker", meaning: "inner confidence can vary with atmosphere and response", everyday: "feeling capable one day and doubtful the next", support: "offer calm consistency rather than arguing the child out of the feeling" },
+      { heading: "Feelings may flicker", meaning: "inner confidence can vary with atmosphere and response", everyday: "feeling capable one day and doubtful the next", support: "offer calm reassurance instead of trying to argue the feeling away" },
     ],
     strongExpression: "Insight and expressiveness may be easier to access; guidance helps conviction remain warm rather than becoming tense or exacting.",
     weakExpression: "The child's light may be more private, growing through reassurance, patient listening, and relationships where sensitivity is respected.",
@@ -99,13 +99,13 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     warmIntroduction: "a grounded, private nature that often values reliability, principles, and a secure foundation",
     motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
     strengths: [
-      { heading: "A dependable presence", meaning: "can bring steadiness when people or routines feel unsettled", everyday: "remembering what needs to be done or staying near someone who needs support", support: "thank the child specifically without making dependability an obligation" },
-      { heading: "Strong principles", meaning: "often takes promises and responsibilities seriously", everyday: "wanting rules to mean what adults said they mean", support: "explain exceptions honestly rather than dismissing the concern" },
+      { heading: "A dependable presence", meaning: "can bring steadiness when people or routines feel unsettled", everyday: "remembering what needs to be done or staying near someone who needs support", support: "thank him or her without making dependability an obligation" },
+      { heading: "Strong principles", meaning: "often takes promises and responsibilities seriously", everyday: "wanting adults to keep a rule or promise consistent", support: "explain exceptions honestly rather than dismissing the concern" },
       { heading: "Patient preparation", meaning: "may prefer to understand the ground before beginning", everyday: "checking materials or instructions before a new task", support: "allow preparation while agreeing on a gentle point to begin" },
     ],
     softSpots: [
       { heading: "Slow to shift", meaning: "may need time to absorb change or a different viewpoint", everyday: "going quiet or resisting when plans change suddenly", support: "share the reason, preserve one familiar element, and allow a little processing time" },
-      { heading: "Carries responsibility", meaning: "may take on worries that were never meant to belong to the child", everyday: "trying to keep peace or solve an adult's concern", support: "reassure the child clearly about what adults will handle" },
+      { heading: "Carries responsibility", meaning: "may take on worries that were never meant to be his or hers", everyday: "trying to keep peace or solve an adult's concern", support: "say clearly which worries the adults will handle" },
     ],
     strongExpression: "Reliability and conviction may be easy to see; support helps steadiness remain open to movement and other perspectives.",
     weakExpression: "The grounded qualities may emerge gradually and strengthen through predictable care, preparation, and confidence built one experience at a time.",
@@ -117,8 +117,8 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     warmIntroduction: "a nurturing, receptive nature that often gathers knowledge and helps people or ideas grow",
     motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
     strengths: [
-      { heading: "Nurtures growth", meaning: "may naturally help others feel supported", everyday: "showing a younger child how to do something or tending carefully to a shared project", support: "celebrate the care while making space for the child's own needs" },
-      { heading: "Gathers useful knowledge", meaning: "often remembers information that can help in real situations", everyday: "connecting a fact learned earlier to today's problem", support: "invite the child to explain discoveries without expecting an answer to everything" },
+      { heading: "Nurtures growth", meaning: "may naturally help others feel supported", everyday: "showing someone younger how to do something or tending carefully to a shared project", support: "celebrate the care while making space for his or her own needs" },
+      { heading: "Gathers useful knowledge", meaning: "often remembers information that can help in real situations", everyday: "connecting a fact learned earlier to today's problem", support: "invite him or her to explain discoveries without expecting an answer to everything" },
       { heading: "Resourceful care", meaning: "can find practical ways to make things better", everyday: "quietly organising materials or noticing what someone needs", support: "name the thought behind the action, not only the helpful result" },
     ],
     softSpots: [
@@ -131,12 +131,12 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a caring child whose practical wisdom can grow into generous, well-grounded confidence",
   },
   Geng: {
-    name: "Geng (Yang Metal)", image: "raw iron shaped through forging", story: "Raw iron becomes useful and enduring through patient shaping. In the same way, challenge can reveal courage, loyalty, and a strong willingness to act.",
+    name: "Geng (Yang Metal)", image: "raw iron", story: "Raw iron needs patient forging before it becomes strong and useful. In the same way, challenge may bring out courage, loyalty, and a willingness to act.",
     warmIntroduction: "a forthright, resilient nature that often meets challenges through action, loyalty, and determination",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
-      { heading: "Courage to act", meaning: "may step forward when something difficult needs doing", everyday: "trying the demanding part first or defending someone treated unfairly", support: "recognise courage while showing that asking for help is also strong" },
-      { heading: "Loyal follow-through", meaning: "often takes bonds and commitments seriously", everyday: "staying beside a friend or finishing a promised task", support: "show the child that loyalty does not mean carrying problems that belong to someone else" },
+      { heading: "Courage to act", meaning: "may be quick to step forward when a task feels difficult or someone needs support", everyday: "choosing the harder part of a task or speaking up when someone is treated unfairly", support: "praise the courage and remind him or her that asking for help can also be a brave choice" },
+      { heading: "Loyal follow-through", meaning: "often takes bonds and commitments seriously", everyday: "staying beside a friend or finishing a promised task", support: "remind him or her that caring for a friend does not mean having to solve every problem for that friend" },
       { heading: "Built through challenge", meaning: "can become more capable through practical effort and feedback", everyday: "improving after a mistake by trying again directly", support: "give clear, respectful feedback focused on the next attempt" },
     ],
     softSpots: [
@@ -185,11 +185,11 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "an imaginative child whose range and courage can mature into purposeful, adaptable confidence",
   },
   Gui: {
-    name: "Gui (Yin Water)", image: "rain, mist, or dew", story: "Rain and mist can be gentle yet reach everywhere. They gather quietly, respond to their surroundings, and bring life in ways that are easy to miss at first.",
+    name: "Gui (Yin Water)", image: "rain, mist, or dew", story: "Rain and mist can be gentle yet reach everywhere. They gather quietly, respond to the surrounding landscape, and bring life in ways that are easy to miss at first.",
     warmIntroduction: "a perceptive, subtle nature that often gathers impressions quietly and finds unexpected connections",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
     strengths: [
-      { heading: "Perceptive awareness", meaning: "may notice small shifts in mood, meaning, or environment", everyday: "sensing that someone is uncomfortable before anything is said", support: "confirm observations without asking the child to manage the situation" },
+      { heading: "Perceptive awareness", meaning: "may notice small shifts in mood, meaning, or environment", everyday: "sensing that someone is uncomfortable before anything is said", support: "confirm the observation without asking him or her to manage the situation" },
       { heading: "Flow of ideas", meaning: "can connect thoughts in original and surprising ways", everyday: "offering an unusual answer, story, or solution", support: "ask how the idea formed and help give it a simple shape" },
       { heading: "Gentle versatility", meaning: "often adjusts to different people and settings", everyday: "finding a place in varied groups or changing approach quietly", support: "provide a reliable home base where adaptation is not required" },
     ],
