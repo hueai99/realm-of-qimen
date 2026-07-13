@@ -8,6 +8,7 @@ export type DayMasterPoint = {
 export type DayMasterKnowledge = {
   name: string;
   image: string;
+  story: string;
   warmIntroduction: string;
   motivations: string[];
   strengths: [DayMasterPoint, DayMasterPoint, DayMasterPoint];
@@ -22,7 +23,7 @@ export type DayMasterKnowledge = {
 // reference set. Source names and adult-only claims must never be sent to users.
 export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   Jia: {
-    name: "Jia (Yang Wood)", image: "a tall, rooted tree",
+    name: "Jia (Yang Wood)", image: "a tall, rooted tree", story: "Like a tree that grows steadily towards the light, this nature often prefers a clear direction and something worthwhile to build over time.",
     warmIntroduction: "a steady, direct nature that often wants to grow towards something worthwhile",
     motivations: ["clear progress", "being trusted with responsibility", "protecting people or principles that matter"],
     strengths: [
@@ -40,7 +41,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a principled child whose persistence can mature into dependable, compassionate leadership",
   },
   Yi: {
-    name: "Yi (Yin Wood)", image: "a flexible vine or flowering plant",
+    name: "Yi (Yin Wood)", image: "a flexible vine or flowering plant", story: "A vine does not need to force a straight path; it notices what is around it, adapts, and still finds a way to grow.",
     warmIntroduction: "an adaptable, observant nature that often finds a way to grow around obstacles",
     motivations: ["connection", "room to approach things creatively", "encouragement that preserves dignity"],
     strengths: [
@@ -58,7 +59,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a resourceful child whose flexibility can grow into graceful confidence and thoughtful independence",
   },
   Bing: {
-    name: "Bing (Yang Fire)", image: "the sun",
+    name: "Bing (Yang Fire)", image: "the sun", story: "Like sunlight that naturally warms and brightens a space, this nature often brings visible energy to people, ideas, and experiences that matter.",
     warmIntroduction: "an open, bright nature that often brings warmth, visibility, and life to what matters",
     motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
     strengths: [
@@ -76,7 +77,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a warm-hearted child whose optimism can become a steady source of courage for self and others",
   },
   Ding: {
-    name: "Ding (Yin Fire)", image: "a lamp or guiding flame",
+    name: "Ding (Yin Fire)", image: "a lamp or guiding flame", story: "A lamp does not fill the whole sky. Its gift is quieter: helping people see what was hidden and bringing warmth close to home.",
     warmIntroduction: "a thoughtful, illuminating nature that may notice meaning and feeling beneath the surface",
     motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
     strengths: [
@@ -94,7 +95,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a perceptive child whose quiet light can mature into thoughtful confidence and compassionate influence",
   },
   Wu: {
-    name: "Wu (Yang Earth)", image: "a mountain",
+    name: "Wu (Yang Earth)", image: "a mountain", story: "A mountain offers a sense of steadiness and shelter. It does not rush to move, and its strength is often felt simply because it remains present.",
     warmIntroduction: "a grounded, private nature that often values reliability, principles, and a secure foundation",
     motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
     strengths: [
@@ -112,7 +113,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a grounded child whose steady values can mature into wise, reassuring strength",
   },
   Ji: {
-    name: "Ji (Yin Earth)", image: "cultivated soil",
+    name: "Ji (Yin Earth)", image: "cultivated soil", story: "Good soil quietly receives, nourishes, and helps many different things take root. Much of its work happens without asking to be seen.",
     warmIntroduction: "a nurturing, receptive nature that often gathers knowledge and helps people or ideas grow",
     motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
     strengths: [
@@ -130,12 +131,12 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a caring child whose practical wisdom can grow into generous, well-grounded confidence",
   },
   Geng: {
-    name: "Geng (Yang Metal)", image: "raw iron shaped through forging",
+    name: "Geng (Yang Metal)", image: "raw iron shaped through forging", story: "Raw iron becomes useful and enduring through patient shaping. In the same way, challenge can reveal courage, loyalty, and a strong willingness to act.",
     warmIntroduction: "a forthright, resilient nature that often meets challenges through action, loyalty, and determination",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
       { heading: "Courage to act", meaning: "may step forward when something difficult needs doing", everyday: "trying the demanding part first or defending someone treated unfairly", support: "recognise courage while showing that asking for help is also strong" },
-      { heading: "Loyal follow-through", meaning: "often takes bonds and commitments seriously", everyday: "staying beside a friend or finishing a promised task", support: "help distinguish healthy loyalty from carrying what belongs to someone else" },
+      { heading: "Loyal follow-through", meaning: "often takes bonds and commitments seriously", everyday: "staying beside a friend or finishing a promised task", support: "show the child that loyalty does not mean carrying problems that belong to someone else" },
       { heading: "Built through challenge", meaning: "can become more capable through practical effort and feedback", everyday: "improving after a mistake by trying again directly", support: "give clear, respectful feedback focused on the next attempt" },
     ],
     softSpots: [
@@ -148,7 +149,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a courageous child whose determination can mature into loyal, measured, and compassionate strength",
   },
   Xin: {
-    name: "Xin (Yin Metal)", image: "finely worked metal or jewellery",
+    name: "Xin (Yin Metal)", image: "finely worked metal or jewellery", story: "Finely worked metal is shaped with care and attention. Its beauty lies in refinement, precision, and the small details that others might overlook.",
     warmIntroduction: "a refined, discerning nature that often notices quality, meaning, and details others pass by",
     motivations: ["doing something well", "thoughtful appreciation", "time to understand before committing"],
     strengths: [
@@ -166,7 +167,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a discerning child whose careful mind and loyal heart can grow into quietly assured confidence",
   },
   Ren: {
-    name: "Ren (Yang Water)", image: "a broad river or ocean",
+    name: "Ren (Yang Water)", image: "a broad river or ocean", story: "A broad river keeps moving, gathers many streams, and discovers new routes. This nature often comes alive through movement, possibility, and a wider view.",
     warmIntroduction: "an active, imaginative nature that often moves towards possibility, experience, and a wider view",
     motivations: ["movement and discovery", "a meaningful challenge", "freedom within clear boundaries"],
     strengths: [
@@ -184,7 +185,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "an imaginative child whose range and courage can mature into purposeful, adaptable confidence",
   },
   Gui: {
-    name: "Gui (Yin Water)", image: "rain, mist, or dew",
+    name: "Gui (Yin Water)", image: "rain, mist, or dew", story: "Rain and mist can be gentle yet reach everywhere. They gather quietly, respond to their surroundings, and bring life in ways that are easy to miss at first.",
     warmIntroduction: "a perceptive, subtle nature that often gathers impressions quietly and finds unexpected connections",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
     strengths: [

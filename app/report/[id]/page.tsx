@@ -31,10 +31,8 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       </div>
       <section className="my-8 max-w-3xl border-l-2 border-[#b7422d] bg-[#fffaf0] px-6 py-5">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>
-        <p className="mt-3 leading-7 text-[#665a50]">This short reading begins with {report.subject_name}&apos;s Day Master—the part of the Bazi chart that offers a first glimpse of the child&apos;s natural temperament and way of meeting the world. It explores three strengths, a few tender spots, and practical ways to offer support at home.</p>
-        {dayMasterStrength === "Weak" && <p className="mt-3 leading-7 text-[#665a50]">The chart describes this as a Weak Day Master. In everyday life, this simply means some qualities may be quieter at first and often grow through time, trust, and encouragement.</p>}
-        {dayMasterStrength === "Strong" && <p className="mt-3 leading-7 text-[#665a50]">The chart describes this as a Strong Day Master, so some of these qualities may be easier to notice and draw upon.</p>}
-        <p className="mt-3 leading-7 text-[#665a50]">A full Bazi reading widens the lens to other parts of the chart, giving a richer view of how the child learns, relates, handles emotions, and grows through different stages of life.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">This summary focuses on {report.subject_name}&apos;s Day Master. It offers a first look at the child&apos;s natural way of thinking, feeling, and responding to the world.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">Inside, you will find three strengths, moments that may feel harder, and simple ways to offer support. The full report brings in the rest of the Bazi chart for a deeper view of learning, emotions, relationships, and growth.</p>
       </section>
       <div className="grid gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
         {pillars.map(([label, value]) => <div key={label} className="bg-[#fffaf0] p-6"><p className="text-xs uppercase tracking-widest text-[#9b3c2b]">{label}</p><p className="mt-6 text-xl leading-8">{value ?? "Analysis pending"}</p></div>)}
@@ -47,11 +45,11 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Soft spots & gentle support" points={summary.soft_spots} />
-        {summary.concern_response && <section><h2 className="text-3xl">Your parenting concern</h2><p className="mt-5 max-w-3xl leading-8">{summary.concern_response}</p></section>}
-        <PointSection title="Parenting tips overview" points={summary.parenting_tips} />
+        {summary.concern_response && <section><h2 className="text-3xl">What you&apos;re noticing</h2><p className="mt-5 max-w-3xl leading-8">{summary.concern_response}</p></section>}
+        <PointSection title={`Small ways to support ${report.subject_name}`} points={summary.parenting_tips} />
         <section className="border-l-2 border-[#b7422d] py-2 pl-6"><h2 className="text-3xl">Closing encouragement</h2><p className="mt-5 max-w-3xl leading-8">{summary.closing_encouragement}</p></section>
       </div> : report.insights ? <div className="mt-12"><h2 className="text-3xl">Three reflections</h2><ol className="mt-5 space-y-4">{insights.map((insight, i) => <li key={i} className="border-l border-[#b7422d] py-2 pl-5 leading-7">{insight.replace(/^\d+\.\s*/, "")}</li>)}</ol></div> : <div className="my-12 border border-amber-300 bg-amber-50 p-6"><h2 className="text-xl">Analysis pending</h2><p className="mt-2 text-sm">We saved this reading and will update it shortly.</p></div>}
-      <section className="mt-14 bg-[#211b16] p-8 text-[#f6f0e4] sm:flex sm:items-center sm:justify-between sm:gap-8"><div><p className="text-xs uppercase tracking-widest text-[#d99a85]">Go deeper</p><h2 className="mt-2 text-3xl">Turn understanding into everyday support.</h2><p className="mt-2 text-sm text-[#cfc5bd]">Explore the fuller report for deeper learning, emotional, and parenting guidance.</p></div><UpgradeButton reportId={report.id} /></section>
+      <section className="mt-14 bg-[#211b16] p-8 text-[#f6f0e4] sm:flex sm:items-center sm:justify-between sm:gap-8"><div><p className="text-xs uppercase tracking-widest text-[#d99a85]">The fuller picture</p><h2 className="mt-2 text-3xl">Understand more of what makes {report.subject_name} unique.</h2><p className="mt-2 text-sm text-[#cfc5bd]">The full report looks beyond the Day Master to explore learning, emotions, relationships, and the support that may help at each stage.</p></div><UpgradeButton reportId={report.id} /></section>
     </article>
   </main>;
 }
