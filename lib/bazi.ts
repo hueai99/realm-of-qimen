@@ -21,7 +21,7 @@ type QcResult = { approved: boolean; issues: string[]; reviewer: string };
 const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped|the subject|this individual|profile indicates|behavioural profile)\b/i;
 const sourceLeak = /\b(Joey Yap|Destiny\s*X|Power of X|uploaded (?:file|document|reference)|source material|reference document|knowledge base|internal prompt|training data)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
-const awkwardPhrases = /\b(needs doing|show he|show she|he often grow|she often grow|recognise courage while|this image offers|born under the .+ day master day|loyalty does not mean carrying|quality may not appear in every setting|decisive energy|success feels personal|emotions spill over|normalise breaks|hard days|one small response|boundary stays clear|leave room for an answer|relationships can remain safe)\b/i;
+const awkwardPhrases = /\b(needs doing|show he|show she|he often grow|she often grow|recognise courage while|praise the courage|practical effort and feedback|takes bonds|this image offers|born under the .+ day master day|loyalty does not mean carrying|quality may not appear in every setting|decisive energy|success feels personal|emotions spill over|normalise breaks|hard days|one small response|boundary stays clear|leave room for an answer|relationships can remain safe|try the conversation again)\b/i;
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 const capitalise = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 const elementStyle: Record<string, string> = {
@@ -175,13 +175,20 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. ${profile.weakExpression}`
     : `The chart also describes his or her Day Master as Strong. This means the qualities linked to the Day Master may be easier to see. It does not mean that he or she will feel strong or confident in every situation.`;
   const personality = [
-    `${name}'s Day Master is ${dayMaster}. In Bazi, it is compared to ${profile.image}. ${profile.story}`,
+    `${name}'s Day Master is ${dayMaster}, which Bazi compares to ${profile.image}. ${profile.story.replace("courage, loyalty, and determination", `${name}'s courage, loyalty, and determination`)}`,
     `${name} may have ${profile.warmIntroduction}. You may notice this in the way ${name} enters a new place, keeps a promise, or tries again after a disappointment.`,
     support,
   ].join("\n\n");
-  const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => point.examples
-    ? `${name} ${point.meaning}. ${point.examples.join(" ")}`
-    : `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`;
+  const wordingVariant = (heading: string) => [...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) % 2;
+  const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+    if (point.examples) {
+      const examples = wordingVariant(point.heading) ? [...point.examples].reverse() : point.examples;
+      return `${name} ${point.meaning}. ${examples.join(" ")}`;
+    }
+    return wordingVariant(point.heading)
+      ? `${name} ${point.meaning}. You may recognise this when you see ${name} ${point.everyday}.`
+      : `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`;
+  };
   return {
     personality,
     strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
@@ -189,11 +196,11 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     concern_response: concern ? concernReflection(concern, name) : undefined,
     concern_tips: concern ? concernGuidance(concern, name) : undefined,
     parenting_tips: [
-      { heading: `Let ${name} choose first`, body: `Let ${name} choose which task to do first. For example: “Would you like to start with reading or maths?” Both tasks still need to be completed, but choosing the order can make it easier to get started.` },
-      { heading: "Break long tasks into steps", body: `If a task feels too big, divide it into two or three smaller steps. Show ${name} the first step only. When it is finished, point out the effort: “You stayed with that even when it was difficult.” Then move to the next step.` },
-      { heading: "Talk when things are calmer", body: `If ${name} is upset, avoid explaining too much straight away. Say: “I can see that you are frustrated.” Give him or her time to calm down. When he or she is ready, discuss what happened using short, clear sentences.` },
+      { heading: "Offer him or her a choice", body: `You can offer ${name} a choice between two acceptable options. For example: “Would you like to do your reading or maths first?” Both tasks still need to be completed, but the choice gives him or her some say in how to begin.` },
+      { heading: "Break long tasks into steps", body: `When a task feels too big for ${name}, you can break it into two or three smaller steps. Show him or her only the first step so it feels easier to manage.\n\nWhen it is finished, you might say: “You stayed with that even when it was difficult.”` },
+      { heading: "Talk when things are calmer", body: `If ${name} is upset, avoid explaining too much straight away. Give him or her time to calm down.\n\nYou can say: “I can see that you are frustrated.” When he or she is ready, discuss what happened using short, clear sentences.` },
       { heading: "Notice changes in behaviour", body: `${name} may not always say when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Say: “You seem quieter than usual today.” If ${name} does not want to talk, let him or her know that you are ready to listen later.` },
-      { heading: "Give him or her another try", body: `If ${name} has spoken harshly or lost his or her temper, wait until everyone is calm. Briefly explain what went wrong, then let him or her try the conversation again in a kinder way. This shows ${name} that a mistake can be corrected.` },
+      { heading: "Help him or her reflect", body: `If a situation has gone badly, wait until everyone is calm. You can briefly explain what happened. Then guide ${name} to think of a better way to approach the situation next time.` },
     ],
     closing_encouragement: `${name} has ${profile.closing}. These qualities may not appear in the same way every day. With patient guidance, they can grow into strengths that feel natural and true to who ${name} is.\n\nThis summary focuses only on the Day Master in ${name}'s Bazi chart. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
   };
@@ -235,6 +242,8 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Use the child's name and selected he or she pronouns. Never call the person 'the child' or 'the subject'.",
       "Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases.",
       "Address parenting guidance directly to the reader using 'you'. State exactly what the parent can say or do. Never use vague words such as response, boundary, hard day, or difficult moment without explaining the situation.",
+      "Every parenting instruction must name who acts. Prefer 'you can' or 'you may' instead of relying on an implied subject.",
+      "Vary delivery through examples, sentence rhythm, and guidance while keeping every verified Bazi meaning unchanged. Reports with the same Day Master must not read like copied templates.",
       "After drafting each section, read it as spoken English. Rewrite any sentence that sounds translated, stiff, vague, or grammatically awkward.",
       "Then read the report from beginning to end. Remove repeated ideas, repeated examples, abrupt transitions, and advice that appears in more than one section.",
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
