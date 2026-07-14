@@ -62,19 +62,19 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
 
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
-  if (/school|study|homework|learn|grade|exam/.test(text)) return `The heart of this concern is understanding how ${name} learns best and how school demands can feel less discouraging.`;
-  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `It sounds as though ${name}'s strong reactions have been difficult to understand, especially when emotions rise quickly.`;
-  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `It sounds as though you have noticed ${name} holding back or worrying in situations that feel unfamiliar.`;
-  if (/friend|social|lonely|bully|fit in/.test(text)) return `This concern centres on how ${name} is finding connection and a sense of belonging with other children.`;
-  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `It sounds as though everyday requests can sometimes turn into an argument with ${name}.`;
-  return `It sounds as though you would like to understand what may be behind this change in ${name}'s behaviour.`;
+  if (/school|study|homework|learn|grade|exam/.test(text)) return `You would like to understand how ${name} is coping with learning and schoolwork.`;
+  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You have noticed that ${name} can become very upset, and you would like to understand these reactions better.`;
+  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You have noticed that ${name} may worry or hold back in some situations.`;
+  if (/friend|social|lonely|bully|fit in/.test(text)) return `You would like to understand how ${name} is getting along with other children.`;
+  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You have noticed that it can be difficult for ${name} to follow some everyday requests.`;
+  return `You would like to understand the change you have noticed in ${name}.`;
 }
 
 function concernGuidance(concern: string, name: string): string[] {
   const text = concern.toLowerCase();
   if (/school|study|homework|learn|grade|exam/.test(text)) return [`Ask ${name} which part of the work feels hardest, then help him or her choose one small step.`, `If frustration builds, suggest a short break before returning to that same step.`];
   if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return [`Give ${name} time to calm down before talking about what happened.`, `When he or she is ready, ask: “What upset you most?” Listen first, then explain clearly what needs to happen next.`];
-  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return [`Invite ${name} to take one small step instead of asking him or her to be brave all at once.`, `Notice the effort with a simple sentence such as: “You tried even though you were worried.”`];
+  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return [`Encourage ${name} to take one small step at a time, rather than expecting him or her to face everything at once.`, `Praise the effort: “You tried even though you were worried.”`];
   if (/friend|social|lonely|bully|fit in/.test(text)) return [`Ask about one specific moment rather than the whole day. Try: “Who did you spend time with today?”`, `Listen without rushing to solve the problem so ${name} has time to explain what happened.`];
   if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return [`Keep the request short and clear.`, `If there is room for a choice, offer two options. For example: “Would you like to do your reading or maths first?”`];
   return [`Notice what happens just before the behaviour changes.`, `Wait until ${name} is calm, then ask one clear question and listen before deciding what to try next.`];
@@ -113,6 +113,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   const sentences = prose.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).map((sentence) => sentence.trim().toLowerCase()).filter((sentence) => words(sentence) >= 7);
   const sentenceSignatures = sentences.map((sentence) => sentence.replace(/[^a-z0-9\s]/g, "").split(/\s+/).filter((word) => !/^(a|an|and|the|this|that|to|of|in|on|for|may|can|is|are|he|she|his|her)$/.test(word)).slice(0, 7).join(" "));
   if (new Set(sentenceSignatures).size !== sentenceSignatures.length) issues.push("the report repeats the same idea or sentence in more than one section");
+  if ((prose.match(/courage, loyalty, and determination/gi) ?? []).length > 1) issues.push("the same qualities are repeated across report sections");
   if (childName && prose.toLowerCase().split(childName.toLowerCase()).length - 1 < 4) issues.push("report is not personalised to the child often enough");
   if (!/\b(parent|family|home|care|support|understood)\b/i.test(prose)) issues.push("report does not acknowledge the parent or family experience");
   if ((prose.match(/\b(you|your)\b/gi) ?? []).length > 8) issues.push("report addresses the parent as 'you' too repeatedly");
@@ -199,7 +200,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       { heading: "Offer him or her a choice", body: `You can offer ${name} a choice between two acceptable options. For example: “Would you like to do your reading or maths first?” Both tasks still need to be completed, but the choice gives him or her some say in how to begin.` },
       { heading: "Break long tasks into steps", body: `When a task feels too big for ${name}, you can break it into two or three smaller steps. Show him or her only the first step so it feels easier to manage.\n\nWhen it is finished, you might say: “You stayed with that even when it was difficult.”` },
       { heading: "Talk when things are calmer", body: `If ${name} is upset, avoid explaining too much straight away. Give him or her time to calm down.\n\nYou can say: “I can see that you are frustrated.” When he or she is ready, discuss what happened using short, clear sentences.` },
-      { heading: "Notice changes in behaviour", body: `${name} may not always say when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Say: “You seem quieter than usual today.” If ${name} does not want to talk, let him or her know that you are ready to listen later.` },
+      { heading: "Notice changes in behaviour", body: `${name} may not always tell you when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Check in gently: “You seem quieter than usual today.” If ${name} does not want to talk, reassure him or her that you are ready to listen later.` },
       { heading: "Help him or her reflect", body: `If a situation has gone badly, wait until everyone is calm. You can briefly explain what happened. Then guide ${name} to think of a better way to approach the situation next time.` },
     ],
     closing_encouragement: `${name} has ${profile.closing}. These qualities may not appear in the same way every day. With patient guidance, they can grow into strengths that feel natural and true to who ${name} is.\n\nThis summary focuses only on the Day Master in ${name}'s Bazi chart. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
@@ -243,10 +244,14 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases.",
       "Address parenting guidance directly to the reader using 'you'. State exactly what the parent can say or do. Never use vague words such as response, boundary, hard day, or difficult moment without explaining the situation.",
       "Every parenting instruction must name who acts. Prefer 'you can' or 'you may' instead of relying on an implied subject.",
+      "Vary guidance verbs naturally. Use words such as ask, praise, encourage, reassure, check in, remind, invite, acknowledge, and guide where they fit; do not repeatedly introduce advice with 'say'.",
       "Vary delivery through examples, sentence rhythm, and guidance while keeping every verified Bazi meaning unchanged. Reports with the same Day Master must not read like copied templates.",
       "After drafting each section, read it as spoken English. Rewrite any sentence that sounds translated, stiff, vague, or grammatically awkward.",
       "Then read the report from beginning to end. Remove repeated ideas, repeated examples, abrupt transitions, and advice that appears in more than one section.",
+      "Do not repeat the same list of qualities in the opening and closing. Express the verified meaning differently and naturally when summarising.",
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
+      "For concern_response, paraphrase only the concern the parent supplied. Do not invent a cause, setting, pattern, feeling, or behaviour that the parent did not mention.",
+      "Concern guidance must be simple, concrete, and easy to understand. Never ask a child to 'be brave all at once' or use similarly unnatural phrasing.",
       "For every strength and support area, put the child observation in body and the direct parent action in guidance. Never mix them in one paragraph.",
       "If there is a parenting concern, paraphrase only what the parent wrote in concern_response. Put two short, concrete actions in concern_tips. Do not infer fear, safety, or hidden motives.",
       "Write exactly five parenting tips of 35-60 words. Explain why each may help and include a realistic example or phrase.",
