@@ -25,7 +25,7 @@ export type DayMasterKnowledge = {
 // reference set. Source names and adult-only claims must never be sent to users.
 export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   Jia: {
-    name: "Jia Wood", image: "a tall, rooted tree", story: "Bazi uses a rooted tree to show how Jia Wood may grow steadily towards a clear goal.",
+    name: "Jia Wood", image: "a tall, rooted tree", story: "Jia Wood is often compared to a tall, rooted tree. The metaphor helps explain its steady wish to grow towards a clear goal.",
     warmIntroduction: "a steady, direct nature that often wants to grow towards something worthwhile",
     motivations: ["clear progress", "being trusted with responsibility", "protecting people or principles that matter"],
     strengths: [
@@ -43,7 +43,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "persistence, strong principles, and a protective sense of loyalty",
   },
   Yi: {
-    name: "Yi Wood", image: "a flexible vine", story: "Bazi uses a flexible vine to show how Yi Wood may adapt and keep growing when the path changes.",
+    name: "Yi Wood", image: "a flexible vine", story: "Yi Wood is often compared to a flexible vine. The metaphor helps explain how it may adapt and keep growing when the path changes.",
     warmIntroduction: "an adaptable, observant nature that often finds a way to grow around obstacles",
     motivations: ["connection", "room to approach things creatively", "encouragement that preserves dignity"],
     strengths: [
@@ -61,7 +61,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "flexibility, resourcefulness, and a thoughtful way of noticing other people",
   },
   Bing: {
-    name: "Bing Fire", image: "the sun", story: "Bazi uses the sun to show the warmth and open energy often linked to Bing Fire.",
+    name: "Bing Fire", image: "the sun", story: "Bing Fire is often compared to the sun. The metaphor helps explain the warmth and open energy linked to this Day Master.",
     warmIntroduction: "an open, bright nature that often brings warmth, visibility, and life to what matters",
     motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
     strengths: [
@@ -79,7 +79,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "warmth, optimism, and an ability to bring energy to the people and activities that matter",
   },
   Ding: {
-    name: "Ding Fire", image: "a lamp", story: "Bazi uses a lamp to show the quieter warmth and careful insight often linked to Ding Fire.",
+    name: "Ding Fire", image: "a lamp", story: "Ding Fire is often compared to a lamp. The metaphor helps explain the quieter warmth and careful insight linked to this Day Master.",
     warmIntroduction: "a thoughtful, illuminating nature that may notice meaning and feeling beneath the surface",
     motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
     strengths: [
@@ -97,7 +97,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "thoughtful insight, quiet influence, and care for how other people feel",
   },
   Wu: {
-    name: "Wu Earth", image: "a mountain", story: "Bazi uses a mountain to show the steady and dependable nature often linked to Wu Earth.",
+    name: "Wu Earth", image: "a mountain", story: "Wu Earth is often compared to a mountain. The metaphor helps explain the steady and dependable qualities linked to this Day Master.",
     warmIntroduction: "a grounded, private nature that often values reliability, principles, and a secure foundation",
     motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
     strengths: [
@@ -115,7 +115,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "steadiness, strong values, and a dependable way of caring for people",
   },
   Ji: {
-    name: "Ji Earth", image: "garden soil", story: "Bazi uses garden soil to show the practical and nurturing care often linked to Ji Earth.",
+    name: "Ji Earth", image: "garden soil", story: "Ji Earth is often compared to garden soil. The metaphor helps explain the practical care and nurturing qualities linked to this Day Master.",
     warmIntroduction: "a nurturing, receptive nature that often gathers knowledge and helps people or ideas grow",
     motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
     strengths: [
@@ -133,7 +133,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a caring nature, practical thinking, and a wish to help people or ideas grow",
   },
   Geng: {
-    name: "Geng Metal", image: "raw iron", story: "Bazi uses raw iron to show how Geng Metal's determination may become clearer through experience and guidance.",
+    name: "Geng Metal", image: "raw iron", story: "Geng Metal is often compared to raw iron. The metaphor helps explain how determination may be shaped through experience and guidance.",
     warmIntroduction: "a straightforward nature. When something matters, he or she may speak plainly about what feels right. Determination may show when he or she stays with a difficult task or returns to it after a setback",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
@@ -151,7 +151,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "courage, determination, and a strong sense of loyalty",
   },
   Xin: {
-    name: "Xin Metal", image: "finely made jewellery", story: "Bazi uses finely made jewellery to show Xin Metal's care for quality and small details.",
+    name: "Xin Metal", image: "finely made jewellery", story: "Xin Metal is often compared to finely made jewellery. The metaphor helps explain its care for quality and small details.",
     warmIntroduction: "a refined, discerning nature that often notices quality, meaning, and details others pass by",
     motivations: ["doing something well", "thoughtful appreciation", "time to understand before committing"],
     strengths: [
@@ -169,7 +169,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a careful mind, a loyal heart, and an eye for details that other people may miss",
   },
   Ren: {
-    name: "Ren Water", image: "a flowing river", story: "Bazi uses a flowing river to show how Ren Water may keep moving and find another route when something gets in the way.",
+    name: "Ren Water", image: "a flowing river", story: "Ren Water is often compared to a flowing river. The metaphor helps explain how it may keep moving and find another route around an obstacle.",
     warmIntroduction: "a love of discovering new things and trying different activities. If the first idea does not work, he or she may think of another way to solve the problem",
     motivations: ["movement and discovery", "a meaningful challenge", "freedom within clear boundaries"],
     strengths: [
@@ -187,7 +187,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "imagination, courage, and an ability to find another way when plans change",
   },
   Gui: {
-    name: "Gui Water", image: "gentle rain", story: "Bazi uses gentle rain to show the quiet sensitivity and awareness often linked to Gui Water.",
+    name: "Gui Water", image: "gentle rain", story: "Gui Water is often compared to gentle rain. The metaphor helps explain the quiet sensitivity and awareness linked to this Day Master.",
     warmIntroduction: "a perceptive, subtle nature that often gathers impressions quietly and finds unexpected connections",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
     strengths: [

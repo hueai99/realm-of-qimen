@@ -69,14 +69,17 @@ function concernReflection(concern: string, name: string): string {
   return `You would like to understand the change you have noticed in ${name}.`;
 }
 
-function concernGuidance(concern: string, name: string): string[] {
+function concernGuidance(concern: string, name: string, profile: ReturnType<typeof getDayMasterKnowledge>): string[] {
   const text = concern.toLowerCase();
-  if (/school|study|homework|learn|grade|exam/.test(text)) return [`Ask ${name} which part of the work feels hardest, then help him or her choose one small step.`, `If frustration builds, suggest a short break before returning to that same step.`];
-  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return [`Give ${name} time to calm down before talking about what happened.`, `When he or she is ready, ask: “What upset you most?” Listen first, then explain clearly what needs to happen next.`];
-  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return [`Encourage ${name} to take one small step at a time, rather than expecting him or her to face everything at once.`, `Praise the effort: “You tried even though you were worried.”`];
-  if (/friend|social|lonely|bully|fit in/.test(text)) return [`Ask about one specific moment rather than the whole day. Try: “Who did you spend time with today?”`, `Listen without rushing to solve the problem so ${name} has time to explain what happened.`];
-  if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return [`Keep the request short and clear.`, `If there is room for a choice, offer two options. For example: “Would you like to do your reading or maths first?”`];
-  return [`Notice what happens just before the behaviour changes.`, `Wait until ${name} is calm, then ask one clear question and listen before deciding what to try next.`];
+  let tips: string[];
+  if (/school|study|homework|learn|grade|exam/.test(text)) tips = [`Ask ${name} which part of the work feels hardest. Help him or her choose one small step, so the whole task feels easier to approach.`, `If frustration builds, suggest a short break. Return to the same step afterwards so the break feels like support, not giving up.`];
+  else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. He or she will find it easier to listen once the strongest feelings have passed.`, `When ${name} is ready, ask what upset him or her most. Listen to the answer before explaining clearly what needs to happen next.`];
+  else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than being pushed to do everything immediately.`, `Notice the effort, even when the result is imperfect. A simple “You tried even though you felt worried” shows ${name} that courage can grow gradually.`];
+  else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier to answer than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support he or she actually wants.`];
+  else if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step first instead of giving several instructions together.`, `Where possible, offer two acceptable choices. This gives ${name} some say while the responsibility itself remains clear.`];
+  else tips = [`Notice what happens just before the behaviour changes. The situation immediately beforehand may offer a useful clue without assuming why ${name} reacted that way.`, `Wait until ${name} is calm. Ask one clear question and listen to the answer before deciding together what may help next time.`];
+  const dayMasterTip = profile.softSpots[0];
+  return [...tips, `${capitalise(dayMasterTip.support)}. This suggestion comes from the ${profile.name} quality described as “${dayMasterTip.heading}”, so it is offered as something to try rather than a fixed answer.`];
 }
 
 function deterministicQc(reading: Reading, childName?: string, gender?: string): QcResult {
@@ -179,9 +182,9 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. ${profile.weakExpression}`
     : `The chart also describes his or her Day Master as Strong. This means the qualities linked to the Day Master may be easier to see. It does not mean that he or she will feel strong or confident in every situation.`;
   const personalityOpenings = [
-    `${name}'s Day Master is ${dayMaster}, which Bazi compares to ${profile.image}. ${profile.story}`,
-    `At the centre of this summary is ${name}'s ${dayMaster} Day Master. Its Bazi image is ${profile.image}. ${profile.story}`,
-    `In ${name}'s chart, the Day Master is ${dayMaster}. Bazi represents it through ${profile.image}. ${profile.story}`,
+    `${name}'s Day Master is ${dayMaster}. ${profile.story}`,
+    `At the centre of this summary is ${name}'s ${dayMaster} Day Master. ${profile.story}`,
+    `In ${name}'s chart, the Day Master is ${dayMaster}. ${profile.story}`,
   ];
   const personality = [
     personalityOpenings[variant],
@@ -202,29 +205,17 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     ];
     return versions[wordingVariant(point.heading)];
   };
-  const parentingVersions = [
-    [
-      { heading: "Offer him or her a choice", body: `You can offer ${name} a choice between two acceptable options. For example: “Would you like to do your reading or maths first?” Both tasks still need to be completed, but the choice gives him or her some say in how to begin.` },
-      { heading: "Break long tasks into steps", body: `When a task feels too big for ${name}, break it into two or three smaller steps. Show him or her only the first step so it feels easier to manage.\n\nAfterwards, acknowledge the effort: “You stayed with that even when it was difficult.”` },
-      { heading: "Talk when things are calmer", body: `If ${name} is upset, avoid explaining too much straight away. Give him or her time to settle.\n\nWhen he or she is ready, check in with a short sentence: “I can see that you were frustrated.”` },
-      { heading: "Notice changes in behaviour", body: `${name} may not always tell you when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Check in gently: “You seem quieter than usual today.” Reassure him or her that you are ready to listen later.` },
-      { heading: "Help him or her reflect", body: `If a situation has gone badly, wait until everyone is calm. Briefly explain what happened. Then guide ${name} to think of a better way to approach the situation next time.` },
-    ],
-    [
-      { heading: "Give him or her two options", body: `Two clear options can help ${name} feel involved without changing what needs to be done. Ask whether he or she would prefer to begin with reading or maths. Keep both choices simple and acceptable.` },
-      { heading: "Make the first step smaller", body: `A long task may feel easier once ${name} can see where to start. Divide it into a few short steps and focus only on the first one. When it is done, praise him or her for staying with it.` },
-      { heading: "Wait for a calmer moment", body: `${name} may find it hard to listen while emotions are high. Allow a little time for him or her to settle before discussing what happened. A calm check-in will usually be easier to hear than a long explanation.` },
-      { heading: "Look beyond the words", body: `Changes in appetite, energy, or interest may tell you that something is bothering ${name} before he or she is ready to explain it. Mention what you have noticed without pressing for an immediate answer. Remind him or her that the conversation can happen later.` },
-      { heading: "Try a different approach", body: `Once everyone feels calmer, help ${name} look back at what happened. Encourage him or her to think of one different choice for next time. The aim is reflection, not blame.` },
-    ],
-    [
-      { heading: "Let him or her choose the order", body: `${name} may cooperate more readily when he or she has a little choice. Offer two suitable tasks and let him or her decide which comes first. The expectation stays clear while the starting point feels less imposed.` },
-      { heading: "Keep the next step clear", body: `Instead of presenting the whole task at once, show ${name} one manageable step. Add the next step only after the first is complete. Encourage the effort he or she is making, especially when the work feels demanding.` },
-      { heading: "Pause before discussing it", body: `When ${name} is overwhelmed, fewer words may help. Give him or her space to settle before returning to the conversation. Later, ask one clear question and listen before offering guidance.` },
-      { heading: "Check in gently", body: `${name}'s behaviour may change before he or she can explain what is wrong. If he or she seems unusually quiet or withdrawn, mention the change with care. Leave the door open by reassuring ${name} that you are available when he or she is ready.` },
-      { heading: "Turn mistakes into learning", body: `A difficult interaction can be revisited after everyone has calmed down. Ask ${name} what he or she might do differently next time. Guide the conversation towards a clearer choice rather than dwelling on the mistake.` },
-    ],
-  ];
+  const parentingTips = [...profile.strengths, ...profile.softSpots].map((point, index) => {
+    const supportText = capitalise(point.support);
+    const bodies = [
+      `${supportText}. This can help ${name} build confidence in this quality without turning it into pressure. Keep it in mind during moments such as ${point.everyday}.`,
+      `A helpful approach is to ${point.support}. This gives ${name} room to develop the quality in a natural way. It may be useful during moments such as ${point.everyday}.`,
+      `${supportText}. The aim is to guide ${name} while still leaving room for his or her own personality. This may help during moments such as ${point.everyday}.`,
+      `During moments such as ${point.everyday}, try to ${point.support}. This responds to what may be happening without making ${name} feel that something is wrong with him or her.`,
+      `${supportText}. This offers ${name} a clear next step while keeping the conversation calm and respectful. It may help during moments such as ${point.everyday}.`,
+    ];
+    return { heading: index < 3 ? `Nurture ${point.heading.toLowerCase()}` : point.heading, body: bodies[index] };
+  });
   const closingStarts = [
     `${name} has ${profile.closing}. These qualities may not appear in the same way every day. With patient guidance, they can become a steady part of how ${name} meets the world.`,
     `${name}'s ${profile.closing} may unfold gradually. Notice the small moments when these qualities appear, because they often show how he or she is learning to trust his or her own abilities.`,
@@ -235,8 +226,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
     soft_spots: profile.softSpots.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     concern_response: concern ? concernReflection(concern, name) : undefined,
-    concern_tips: concern ? concernGuidance(concern, name) : undefined,
-    parenting_tips: parentingVersions[variant],
+    concern_tips: concern ? concernGuidance(concern, name, profile) : undefined,
+    parenting_tips: parentingTips,
     closing_encouragement: `${closingStarts[variant]}\n\nThis summary focuses only on the Day Master in ${name}'s Bazi chart. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
   };
 }
