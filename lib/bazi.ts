@@ -13,7 +13,6 @@ const seasonalState = {
   Winter: { Water:"Prosperous", Wood:"Strong", Metal:"Weak", Earth:"Trapped", Fire:"Dead" },
 } as const;
 const tenGodNames: Record<string, [string, string]> = { "比肩":["Bi Jian","Friend"], "劫财":["Jie Cai","Rob Wealth"], "食神":["Shi Shen","Eating God"], "伤官":["Shang Guan","Hurting Officer"], "偏财":["Pian Cai","Indirect Wealth"], "正财":["Zheng Cai","Direct Wealth"], "七杀":["Qi Sha","Seven Killings"], "正官":["Zheng Guan","Direct Officer"], "偏印":["Pian Yin","Indirect Resource"], "正印":["Zheng Yin","Direct Resource"] };
-const stemPolarity: Record<string, "Yang" | "Yin"> = { "甲":"Yang", "乙":"Yin", "丙":"Yang", "丁":"Yin", "戊":"Yang", "己":"Yin", "庚":"Yang", "辛":"Yin", "壬":"Yang", "癸":"Yin" };
 type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType };
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
@@ -21,7 +20,7 @@ type QcResult = { approved: boolean; issues: string[]; reviewer: string };
 const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped|the subject|this individual|profile indicates|behavioural profile)\b/i;
 const sourceLeak = /\b(Joey Yap|Destiny\s*X|Power of X|uploaded (?:file|document|reference)|source material|reference document|knowledge base|internal prompt|training data)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
-const awkwardPhrases = /\b(needs doing|show he|show she|he often grow|she often grow|recognise courage while|praise the courage|practical effort and feedback|takes bonds|this image offers|born under the .+ day master day|loyalty does not mean carrying|quality may not appear in every setting|decisive energy|success feels personal|emotions spill over|normalise breaks|hard days|one small response|boundary stays clear|leave room for an answer|relationships can remain safe|try the conversation again)\b/i;
+const awkwardPhrases = /\b(needs doing|show he|show she|he often grow|she often grow|recognise courage while|praise the courage|practical effort and feedback|takes bonds|this image offers|born under the .+ day master day|loyalty does not mean carrying|quality may not appear in every setting|decisive energy|success feels personal|emotions spill over|normalise breaks|hard days|one small response|boundary stays clear|leave room for an answer|relationships can remain safe|try the conversation again|scatter attention|now, next, later|pause ritual|point for checking back)\b/i;
 const words = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
 const capitalise = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 const elementStyle: Record<string, string> = {
@@ -191,12 +190,9 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
     if (point.examples) {
       const examples = wordingVariant(point.heading) === 1 ? [...point.examples].reverse() : point.examples;
-      if (wordingVariant(point.heading) === 2) return `${name} ${point.meaning}. One example is easy to spot: ${examples[0].replace(/^You may see him or her /, "he or she may ").replace(/^He or she /, "he or she ")} ${examples[1]}`;
       return `${name} ${point.meaning}. ${examples.join(" ")}`;
     }
-    if (wordingVariant(point.heading) === 1) return `${name} ${point.meaning}. A familiar example may be ${point.everyday}.`;
-    if (wordingVariant(point.heading) === 2) return `You may recognise this quality when ${name} is ${point.everyday}. It reflects how ${name} ${point.meaning}.`;
-    return `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`;
+    return `${name} ${point.meaning}. One example is ${point.everyday}.`;
   };
   const parentingVersions = [
     [
@@ -245,7 +241,7 @@ export function calculateReading(input: Input): Reading {
   const lunar = Solar.fromYmdHms(year, month, day, hour, minute, 0).getLunar(); const rawGods = [...lunar.getBaZiShiShenGan(), ...lunar.getBaZiShiShenZhi()].filter((name: string) => name !== "日主");
   const tenGods = rawGods.map((name: string) => ({ name, pinyin: tenGodNames[name]?.[0] ?? name, english: tenGodNames[name]?.[1] ?? name }));
   const focus: Record<QuestionType, string> = { career: "work that rewards visible craft and patient leadership", wealth: "steady wealth-building through disciplined choices and clear boundaries", child_potential: "learning through curiosity, structure, and encouragement at an individual pace", relationship: "relationships built through direct communication and reciprocity" };
-  const dayMaster = `${values.day[0]} (${stemPolarity[values.day[0]]} ${stems[values.day[0]][1]})`;
+  const dayMaster = `${values.day[0]} · ${stems[values.day[0]][0]} ${stems[values.day[0]][1]}`;
   const dayMasterName = stems[values.day[0]][0];
   return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${dayMaster} Day Master — ${strength}. “Strength” describes energetic expression, not strength of character.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v4", report_content: groundedSummary(input.subject_name, dayMasterName, dayMaster, strength, (input as Input & { parenting_concern?: string | null }).parenting_concern), chart_status: "verified", chart_data: { ...values, day_master: dayMaster, day_master_name: dayMasterName, day_master_strength: strength, seasonal_state: state, season, strength_method: "season-first-v1", strength_review_status: state === "Prosperous" || state === "Dead" ? "high-confidence" : "review-recommended", knowledge_profile: `day-master-v1/${dayMasterName}`, ten_gods: tenGods } };
 }
@@ -272,6 +268,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Apply this test to every point: could a parent picture it and think, 'Yes, I have seen that in my child'? If not, rewrite it.",
       "Use the child's name and selected he or she pronouns. Never call the person 'the child' or 'the subject'.",
       "Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases.",
+      "Do not string several qualities or examples together as a comma-separated list. Explain one idea, then use a separate sentence for the example that supports it.",
       "Address parenting guidance directly to the reader using 'you'. State exactly what the parent can say or do. Never use vague words such as response, boundary, hard day, or difficult moment without explaining the situation.",
       "Every parenting instruction must name who acts. Prefer 'you can' or 'you may' instead of relying on an implied subject.",
       "Vary guidance verbs naturally. Use words such as ask, praise, encourage, reassure, check in, remind, invite, acknowledge, and guide where they fit; do not repeatedly introduce advice with 'say'.",

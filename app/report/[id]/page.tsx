@@ -32,7 +32,8 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       </div>
       <section className="my-8 max-w-3xl border-l-2 border-[#b7422d] bg-[#fffaf0] px-6 py-5">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>
-        <p className="mt-3 leading-7 text-[#665a50]">This summary begins with {report.subject_name}&apos;s Day Master, which represents the core temperament within {subjectPronoun === "they" ? "their" : subjectPronoun === "he" ? "his" : "her"} Bazi chart. It offers an introduction to what may come naturally to {subjectPronoun === "they" ? "them" : subjectPronoun}, where {subjectPronoun} may benefit from support, and how these qualities may appear in everyday life.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">In Bazi, the Day Master represents the person at the centre of the reading. It comes from the element connected to the day someone was born and offers a first look at natural temperament—how that person may respond, make decisions, and approach everyday situations.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">This summary looks at {report.subject_name}&apos;s Day Master. It is a starting point rather than the whole story of {subjectPronoun === "they" ? "their" : subjectPronoun === "he" ? "his" : "her"} personality.</p>
       </section>
       <div className="grid grid-cols-2 gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
         {pillars.map(([label, value]) => <PillarCard key={label} label={label} value={value} />)}
