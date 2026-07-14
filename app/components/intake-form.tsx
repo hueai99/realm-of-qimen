@@ -20,6 +20,11 @@ export default function IntakeForm() {
   const [phoneCode, setPhoneCode] = useState("Singapore|+65");
   async function submit(formData: FormData) {
     const enteredName = String(formData.get("subject_name") ?? "").trim();
+    const enteredPhone = String(formData.get("phone_number") ?? "").trim();
+    if (!/^[\d\s()-]{6,24}$/.test(enteredPhone)) { setError("Please enter a valid mobile number using numbers only."); return; }
+    const year = Number(formData.get("birth_year")); const month = Number(formData.get("birth_month")); const day = Number(formData.get("birth_day"));
+    const enteredDate = new Date(Date.UTC(year, month - 1, day));
+    if (enteredDate.getUTCFullYear() !== year || enteredDate.getUTCMonth() !== month - 1 || enteredDate.getUTCDate() !== day) { setError("Please enter a valid date of birth."); return; }
     const childName = enteredName === enteredName.toLowerCase() ? enteredName.replace(/[A-Za-z]/, (letter) => letter.toUpperCase()) : enteredName;
     setSubmittedName(childName); setReadyReportId(""); setBusy(true); setError("");
     try {
@@ -33,12 +38,12 @@ export default function IntakeForm() {
   const cls = "mt-2 w-full rounded-sm border border-[#c9bcad] bg-[#fffdf8] px-4 py-3 outline-none focus:border-[#9b3c2b]";
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const thisYear = new Date().getFullYear();
-  return <form onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[#d7cbbd] bg-[#fffaf0] p-6 shadow-[0_20px_50px_rgba(71,49,32,.09)] sm:p-9">
+  return <form onInput={() => error && setError("")} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[#d7cbbd] bg-[#fffaf0] p-6 shadow-[0_20px_50px_rgba(71,49,32,.09)] sm:p-9">
     <p className="text-xs font-bold uppercase tracking-[.25em] text-[#9b3c2b]">Create a reading</p><h2 className="mb-7 mt-2 text-3xl">Child details</h2>
     <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Child&apos;s name<input required name="subject_name" maxLength={80} className={cls} /></label>
       <label className="text-sm sm:col-span-2">Parent&apos;s email<input required type="email" name="email" className={cls} /></label>
-      <fieldset className="text-sm sm:col-span-2"><legend>Parent&apos;s mobile number</legend><div className="grid grid-cols-[8.5rem_1fr] gap-2"><select required name="phone_code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} aria-label="Mobile country code" className={cls}>{countries.map(([country, code]) => <option key={`${country}-${code}`} value={`${country}|${code}`}>{country} {code}</option>)}</select><input required type="tel" name="phone_number" inputMode="tel" maxLength={24} aria-label="Mobile number" className={cls} placeholder="9123 4567" /></div></fieldset>
+      <fieldset className="text-sm sm:col-span-2"><legend>Parent&apos;s mobile number</legend><div className="grid grid-cols-[8.5rem_1fr] gap-2"><select required name="phone_code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} aria-label="Mobile country code" className={cls}>{countries.map(([country, code]) => <option key={`${country}-${code}`} value={`${country}|${code}`}>{country} {code}</option>)}</select><input required type="tel" name="phone_number" inputMode="tel" minLength={6} maxLength={24} pattern="[0-9 ()-]{6,24}" title="Enter a valid mobile number using numbers only" aria-label="Mobile number" className={cls} placeholder="9123 4567" /></div></fieldset>
       <fieldset className="text-sm"><legend>Date of birth</legend><div className="grid grid-cols-[.7fr_1fr_1.1fr] gap-2"><select required name="birth_day" defaultValue="" aria-label="Birth day" className={cls}><option value="" disabled>DD</option>{Array.from({length:31},(_,i)=><option key={i+1} value={String(i+1).padStart(2,"0")}>{String(i+1).padStart(2,"0")}</option>)}</select><select required name="birth_month" defaultValue="" aria-label="Birth month" className={cls}><option value="" disabled>MMM</option>{months.map((month,i)=><option key={month} value={String(i+1).padStart(2,"0")}>{month}</option>)}</select><select required name="birth_year" defaultValue="" aria-label="Birth year" className={cls}><option value="" disabled>YYYY</option>{Array.from({length:100},(_,i)=>thisYear-i).map(year=><option key={year} value={year}>{year}</option>)}</select></div></fieldset>
       <label className="text-sm">Local time of birth<input required type="time" name="birth_time" className={cls} /></label>
       <label className="text-sm">City of birth<input required name="birth_city" maxLength={80} className={cls} placeholder="e.g. Singapore" /></label>
