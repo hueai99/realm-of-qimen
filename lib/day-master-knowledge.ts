@@ -4,6 +4,7 @@ export type DayMasterPoint = {
   everyday: string;
   support: string;
   examples?: [string, string];
+  description?: string;
 };
 
 export type DayMasterKnowledge = {
@@ -24,7 +25,7 @@ export type DayMasterKnowledge = {
 // reference set. Source names and adult-only claims must never be sent to users.
 export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   Jia: {
-    name: "Jia Wood", image: "a tall, rooted tree", story: "A tree grows slowly, but it keeps reaching towards the light. Jia Wood is associated with that same wish to move towards a clear and worthwhile goal.",
+    name: "Jia Wood", image: "a tall, rooted tree", story: "Bazi uses a rooted tree to show how Jia Wood may grow steadily towards a clear goal.",
     warmIntroduction: "a steady, direct nature that often wants to grow towards something worthwhile",
     motivations: ["clear progress", "being trusted with responsibility", "protecting people or principles that matter"],
     strengths: [
@@ -42,7 +43,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "persistence, strong principles, and a protective sense of loyalty",
   },
   Yi: {
-    name: "Yi Wood", image: "a flexible vine", story: "A vine grows by responding to what is around it. It bends, finds support, and continues forward without needing a straight path. Yi Wood is associated with this adaptable way of growing.",
+    name: "Yi Wood", image: "a flexible vine", story: "Bazi uses a flexible vine to show how Yi Wood may adapt and keep growing when the path changes.",
     warmIntroduction: "an adaptable, observant nature that often finds a way to grow around obstacles",
     motivations: ["connection", "room to approach things creatively", "encouragement that preserves dignity"],
     strengths: [
@@ -60,7 +61,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "flexibility, resourcefulness, and a thoughtful way of noticing other people",
   },
   Bing: {
-    name: "Bing Fire", image: "the sun", story: "Sunlight brings warmth and makes things easier to see. Bing Fire is associated with a similarly open energy that may brighten the people and activities that matter.",
+    name: "Bing Fire", image: "the sun", story: "Bazi uses the sun to show the warmth and open energy often linked to Bing Fire.",
     warmIntroduction: "an open, bright nature that often brings warmth, visibility, and life to what matters",
     motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
     strengths: [
@@ -78,7 +79,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "warmth, optimism, and an ability to bring energy to the people and activities that matter",
   },
   Ding: {
-    name: "Ding Fire", image: "a lamp", story: "A lamp offers light within a smaller space. It helps people notice what was hidden and brings warmth close to home. Ding Fire is associated with this quieter kind of insight.",
+    name: "Ding Fire", image: "a lamp", story: "Bazi uses a lamp to show the quieter warmth and careful insight often linked to Ding Fire.",
     warmIntroduction: "a thoughtful, illuminating nature that may notice meaning and feeling beneath the surface",
     motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
     strengths: [
@@ -96,7 +97,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "thoughtful insight, quiet influence, and care for how other people feel",
   },
   Wu: {
-    name: "Wu Earth", image: "a mountain", story: "A mountain gives a sense of shelter because it remains steady. Wu Earth is associated with this dependable presence and a preference for firm ground before moving forward.",
+    name: "Wu Earth", image: "a mountain", story: "Bazi uses a mountain to show the steady and dependable nature often linked to Wu Earth.",
     warmIntroduction: "a grounded, private nature that often values reliability, principles, and a secure foundation",
     motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
     strengths: [
@@ -114,7 +115,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "steadiness, strong values, and a dependable way of caring for people",
   },
   Ji: {
-    name: "Ji Earth", image: "garden soil", story: "Healthy soil quietly gives plants what they need to grow. Much of this work happens out of sight. Ji Earth is associated with a similarly practical and nurturing form of care.",
+    name: "Ji Earth", image: "garden soil", story: "Bazi uses garden soil to show the practical and nurturing care often linked to Ji Earth.",
     warmIntroduction: "a nurturing, receptive nature that often gathers knowledge and helps people or ideas grow",
     motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
     strengths: [
@@ -132,7 +133,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a caring nature, practical thinking, and a wish to help people or ideas grow",
   },
   Geng: {
-    name: "Geng Metal", image: "raw iron", story: "Raw iron needs time and careful shaping before it becomes a useful tool. Geng Metal is associated with this process. Experience can help its natural determination become clearer and more purposeful.",
+    name: "Geng Metal", image: "raw iron", story: "Bazi uses raw iron to show how Geng Metal's determination may become clearer through experience and guidance.",
     warmIntroduction: "a straightforward nature. When something matters, he or she may speak plainly about what feels right. Determination may show when he or she stays with a difficult task or returns to it after a setback",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
@@ -150,7 +151,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "courage, determination, and a strong sense of loyalty",
   },
   Xin: {
-    name: "Xin Metal", image: "finely made jewellery", story: "Jewellery takes careful work to shape and polish. Xin Metal is associated with the same attention to quality and the small details that other people may overlook.",
+    name: "Xin Metal", image: "finely made jewellery", story: "Bazi uses finely made jewellery to show Xin Metal's care for quality and small details.",
     warmIntroduction: "a refined, discerning nature that often notices quality, meaning, and details others pass by",
     motivations: ["doing something well", "thoughtful appreciation", "time to understand before committing"],
     strengths: [
@@ -168,17 +169,17 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a careful mind, a loyal heart, and an eye for details that other people may miss",
   },
   Ren: {
-    name: "Ren Water", image: "a wide, flowing river", story: "A river keeps moving and finds a way around obstacles. It may change direction, but it continues towards its destination. Ren Water is associated with that same sense of movement and possibility.",
-    warmIntroduction: "an active imagination and a strong interest in new experiences. He or she may quickly see more than one way forward",
+    name: "Ren Water", image: "a flowing river", story: "Bazi uses a flowing river to show how Ren Water may keep moving and find another route when something gets in the way.",
+    warmIntroduction: "a love of discovering new things and trying different activities. If the first idea does not work, he or she may think of another way to solve the problem",
     motivations: ["movement and discovery", "a meaningful challenge", "freedom within clear boundaries"],
     strengths: [
-      { heading: "Big-picture thinking", meaning: "may connect ideas quickly and imagine possibilities beyond the immediate task", everyday: "turning one question into a larger story or inventive plan", support: "enjoy the vision, then help choose the first workable step" },
-      { heading: "Adapts when plans change", meaning: "may look for another way forward when the original plan no longer works", everyday: "trying a different approach after a setback", support: "give him or her room to explore, then agree on a time to check in again" },
-      { heading: "Learns by taking part", meaning: "may understand something more easily through direct experience", everyday: "wanting to join the activity, test the idea, or build something", support: "include movement and hands-on discovery where possible" },
+      { heading: "Big-picture thinking", meaning: "may start with one simple question and quickly imagine a much bigger story or project", everyday: "turning a classroom topic into an idea for something new to make", description: "{name} may start with one simple question and quickly imagine a much bigger story or project. A lesson about space, for instance, could spark an idea for a model rocket or a story about another planet.", support: "listen to the idea first, then help him or her choose one small step to begin with" },
+      { heading: "Finds another way", meaning: "may look for another way forward when the original plan no longer works", everyday: "trying a different approach after a setback", description: "{name} may enjoy discovering new things and trying different activities. If the first idea does not work, he or she may think of another way to solve the problem. If a model will not stand, for example, he or she may change the design and try again.", support: "give him or her room to explore, then agree on a time to check in again" },
+      { heading: "Learns by taking part", meaning: "may learn better when able to try something instead of only reading or listening", everyday: "understanding a lesson more easily after testing an idea or building something", description: "{name} may understand something more easily when he or she can try it personally. Testing an idea, building something, or joining an activity can make the lesson feel clearer.", support: "give him or her opportunities to learn by doing whenever possible" },
     ],
     softSpots: [
-      { heading: "Many interests at once", meaning: "may become excited by several ideas and find it hard to decide which one to finish first", everyday: "starting a new activity before completing the one already underway", support: "write down the other ideas so they are not forgotten, then help him or her choose one thing to finish first" },
-      { heading: "Needs time to think it through", meaning: "may respond before considering what could happen next", everyday: "answering or agreeing too quickly", support: "invite him or her to pause, then ask, 'What might happen next?' before a decision is made" },
+      { heading: "Drawn to many interests", meaning: "may become excited by several ideas and find it hard to decide which one to finish first", everyday: "starting a new activity before completing the one already underway", description: "Several ideas may catch {name}'s interest at the same time. He or she may begin a new activity while another is still unfinished, simply because the new idea feels exciting.", support: "write down the other ideas so they are not forgotten, then help him or her choose one thing to finish first" },
+      { heading: "Benefits from a pause", meaning: "may respond before considering what could happen next", everyday: "answering or agreeing too quickly", description: "{name} may sometimes answer or agree before thinking about what could happen next. A short pause can give him or her time to understand the choice more fully.", support: "invite him or her to pause, then ask, 'What might happen next?' before a decision is made" },
     ],
     strongExpression: "Imagination and independence may be easy to notice. Clear limits can help that energy stay focused on something meaningful.",
     weakExpression: "Imagination may remain private before confidence grows. Safe opportunities to explore can help him or her take one achievable step at a time.",
@@ -186,7 +187,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "imagination, courage, and an ability to find another way when plans change",
   },
   Gui: {
-    name: "Gui Water", image: "gentle rain", story: "Gentle rain reaches many places without drawing attention to itself. Gui Water is associated with this quiet sensitivity and an ability to notice what is happening nearby.",
+    name: "Gui Water", image: "gentle rain", story: "Bazi uses gentle rain to show the quiet sensitivity and awareness often linked to Gui Water.",
     warmIntroduction: "a perceptive, subtle nature that often gathers impressions quietly and finds unexpected connections",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
     strengths: [

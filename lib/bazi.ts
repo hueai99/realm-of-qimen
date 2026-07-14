@@ -112,6 +112,8 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   const sentences = prose.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).map((sentence) => sentence.trim().toLowerCase()).filter((sentence) => words(sentence) >= 7);
   const sentenceSignatures = sentences.map((sentence) => sentence.replace(/[^a-z0-9\s]/g, "").split(/\s+/).filter((word) => !/^(a|an|and|the|this|that|to|of|in|on|for|may|can|is|are|he|she|his|her)$/.test(word)).slice(0, 7).join(" "));
   if (new Set(sentenceSignatures).size !== sentenceSignatures.length) issues.push("the report repeats the same idea or sentence in more than one section");
+  if ((prose.match(/one example is/gi) ?? []).length > 1) issues.push("the report overuses the same example sentence structure");
+  if ((prose.match(/\byou can\b/gi) ?? []).length > 2) issues.push("parent guidance repeats the same sentence structure");
   if ((prose.match(/courage, loyalty, and determination/gi) ?? []).length > 1) issues.push("the same qualities are repeated across report sections");
   if (childName && prose.toLowerCase().split(childName.toLowerCase()).length - 1 < 4) issues.push("report is not personalised to the child often enough");
   if (!/\b(parent|family|home|care|support|understood)\b/i.test(prose)) issues.push("report does not acknowledge the parent or family experience");
@@ -188,11 +190,17 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   ].join("\n\n");
   const wordingVariant = (heading: string) => ([...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) + variant) % 3;
   const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+    if (point.description) return point.description.replaceAll("{name}", name);
     if (point.examples) {
       const examples = wordingVariant(point.heading) === 1 ? [...point.examples].reverse() : point.examples;
       return `${name} ${point.meaning}. ${examples.join(" ")}`;
     }
-    return `${name} ${point.meaning}. One example is ${point.everyday}.`;
+    const versions = [
+      `${name} ${point.meaning}. This may show up as ${point.everyday}.`,
+      `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`,
+      `${name} ${point.meaning}. Parents may recognise this through ${point.everyday}.`,
+    ];
+    return versions[wordingVariant(point.heading)];
   };
   const parentingVersions = [
     [
@@ -268,13 +276,16 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Apply this test to every point: could a parent picture it and think, 'Yes, I have seen that in my child'? If not, rewrite it.",
       "Use the child's name and selected he or she pronouns. Never call the person 'the child' or 'the subject'.",
       "Use direct verbs and concrete examples. Avoid long clauses, abstract nouns, generic disclaimers, repeated conclusions, and stock phrases.",
+      "Write so a 12-year-old can understand every sentence on the first reading. Prefer familiar words and short, natural sentences.",
       "Do not string several qualities or examples together as a comma-separated list. Explain one idea, then use a separate sentence for the example that supports it.",
+      "Imagery is optional. Use no more than one short comparison, keep the child as the focus, and remove the image if it does not make the behaviour easier to understand.",
       "Address parenting guidance directly to the reader using 'you'. State exactly what the parent can say or do. Never use vague words such as response, boundary, hard day, or difficult moment without explaining the situation.",
       "Every parenting instruction must name who acts. Prefer 'you can' or 'you may' instead of relying on an implied subject.",
       "Vary guidance verbs naturally. Use words such as ask, praise, encourage, reassure, check in, remind, invite, acknowledge, and guide where they fit; do not repeatedly introduce advice with 'say'.",
       "Vary delivery through examples, sentence rhythm, and guidance while keeping every verified Bazi meaning unchanged. Reports with the same Day Master must not read like copied templates.",
       "After drafting each section, read it as spoken English. Rewrite any sentence that sounds translated, stiff, vague, or grammatically awkward.",
       "Then read the report from beginning to end. Remove repeated ideas, repeated examples, abrupt transitions, and advice that appears in more than one section.",
+      "Vary complete sentence structures across cards. Do not repeatedly begin with 'One example is', 'You may notice', or 'You can'.",
       "Do not repeat the same list of qualities in the opening and closing. Express the verified meaning differently and naturally when summarising.",
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
       "For concern_response, paraphrase only the concern the parent supplied. Do not invent a cause, setting, pattern, feeling, or behaviour that the parent did not mention.",
