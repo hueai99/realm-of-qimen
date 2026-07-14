@@ -64,7 +64,7 @@ function PillarCard({ label, value }: { label: string; value: string | null | un
   return <div className="bg-[#fffaf0] px-4 py-5 sm:p-6">
     <p className="text-xs uppercase tracking-widest text-[#9b3c2b]">{label}</p>
     {stem ? <div className="mt-5 space-y-3 text-lg leading-7 sm:text-xl">
-      <p>{stem}</p>
+      {label === "Day" ? <div className="rounded-sm bg-[#f1d8ce] px-3 py-3 ring-1 ring-inset ring-[#c97966]"><p className="font-semibold text-[#7f2f20]">{stem}</p><p className="mt-1 text-[9px] font-bold uppercase tracking-[.16em] text-[#9b3c2b]">Day Master</p></div> : <p>{stem}</p>}
       {branch && <p>{branch}</p>}
     </div> : <p className="mt-5 text-lg leading-7 text-[#74685e]">Analysis pending</p>}
   </div>;
