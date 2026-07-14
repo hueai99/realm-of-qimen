@@ -173,38 +173,67 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
 
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Weak", concern?: string | null): SummaryReport {
   const profile = getDayMasterKnowledge(dayMasterName);
+  const variant = Math.floor(Math.random() * 3);
   const support = strength === "Weak"
     ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. ${profile.weakExpression}`
     : `The chart also describes his or her Day Master as Strong. This means the qualities linked to the Day Master may be easier to see. It does not mean that he or she will feel strong or confident in every situation.`;
+  const personalityOpenings = [
+    `${name}'s Day Master is ${dayMaster}, which Bazi compares to ${profile.image}. ${profile.story}`,
+    `At the centre of this summary is ${name}'s ${dayMaster} Day Master. Its Bazi image is ${profile.image}. ${profile.story}`,
+    `In ${name}'s chart, the Day Master is ${dayMaster}. Bazi represents it through ${profile.image}. ${profile.story}`,
+  ];
   const personality = [
-    `${name}'s Day Master is ${dayMaster}, which Bazi compares to ${profile.image}. ${profile.story.replace("courage, loyalty, and determination", `${name}'s courage, loyalty, and determination`)}`,
-    `${name} may have ${profile.warmIntroduction}. You may notice this in the way ${name} enters a new place, keeps a promise, or tries again after a disappointment.`,
+    personalityOpenings[variant],
+    `${name} may have ${profile.warmIntroduction}.`,
     support,
   ].join("\n\n");
-  const wordingVariant = (heading: string) => [...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) % 2;
+  const wordingVariant = (heading: string) => ([...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) + variant) % 3;
   const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
     if (point.examples) {
-      const examples = wordingVariant(point.heading) ? [...point.examples].reverse() : point.examples;
+      const examples = wordingVariant(point.heading) === 1 ? [...point.examples].reverse() : point.examples;
+      if (wordingVariant(point.heading) === 2) return `${name} ${point.meaning}. One example is easy to spot: ${examples[0].replace(/^You may see him or her /, "he or she may ").replace(/^He or she /, "he or she ")} ${examples[1]}`;
       return `${name} ${point.meaning}. ${examples.join(" ")}`;
     }
-    return wordingVariant(point.heading)
-      ? `${name} ${point.meaning}. You may recognise this when you see ${name} ${point.everyday}.`
-      : `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`;
+    if (wordingVariant(point.heading) === 1) return `${name} ${point.meaning}. A familiar example may be ${point.everyday}.`;
+    if (wordingVariant(point.heading) === 2) return `You may recognise this quality when ${name} is ${point.everyday}. It reflects how ${name} ${point.meaning}.`;
+    return `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`;
   };
+  const parentingVersions = [
+    [
+      { heading: "Offer him or her a choice", body: `You can offer ${name} a choice between two acceptable options. For example: “Would you like to do your reading or maths first?” Both tasks still need to be completed, but the choice gives him or her some say in how to begin.` },
+      { heading: "Break long tasks into steps", body: `When a task feels too big for ${name}, break it into two or three smaller steps. Show him or her only the first step so it feels easier to manage.\n\nAfterwards, acknowledge the effort: “You stayed with that even when it was difficult.”` },
+      { heading: "Talk when things are calmer", body: `If ${name} is upset, avoid explaining too much straight away. Give him or her time to settle.\n\nWhen he or she is ready, check in with a short sentence: “I can see that you were frustrated.”` },
+      { heading: "Notice changes in behaviour", body: `${name} may not always tell you when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Check in gently: “You seem quieter than usual today.” Reassure him or her that you are ready to listen later.` },
+      { heading: "Help him or her reflect", body: `If a situation has gone badly, wait until everyone is calm. Briefly explain what happened. Then guide ${name} to think of a better way to approach the situation next time.` },
+    ],
+    [
+      { heading: "Give him or her two options", body: `Two clear options can help ${name} feel involved without changing what needs to be done. Ask whether he or she would prefer to begin with reading or maths. Keep both choices simple and acceptable.` },
+      { heading: "Make the first step smaller", body: `A long task may feel easier once ${name} can see where to start. Divide it into a few short steps and focus only on the first one. When it is done, praise him or her for staying with it.` },
+      { heading: "Wait for a calmer moment", body: `${name} may find it hard to listen while emotions are high. Allow a little time for him or her to settle before discussing what happened. A calm check-in will usually be easier to hear than a long explanation.` },
+      { heading: "Look beyond the words", body: `Changes in appetite, energy, or interest may tell you that something is bothering ${name} before he or she is ready to explain it. Mention what you have noticed without pressing for an immediate answer. Remind him or her that the conversation can happen later.` },
+      { heading: "Try a different approach", body: `Once everyone feels calmer, help ${name} look back at what happened. Encourage him or her to think of one different choice for next time. The aim is reflection, not blame.` },
+    ],
+    [
+      { heading: "Let him or her choose the order", body: `${name} may cooperate more readily when he or she has a little choice. Offer two suitable tasks and let him or her decide which comes first. The expectation stays clear while the starting point feels less imposed.` },
+      { heading: "Keep the next step clear", body: `Instead of presenting the whole task at once, show ${name} one manageable step. Add the next step only after the first is complete. Encourage the effort he or she is making, especially when the work feels demanding.` },
+      { heading: "Pause before discussing it", body: `When ${name} is overwhelmed, fewer words may help. Give him or her space to settle before returning to the conversation. Later, ask one clear question and listen before offering guidance.` },
+      { heading: "Check in gently", body: `${name}'s behaviour may change before he or she can explain what is wrong. If he or she seems unusually quiet or withdrawn, mention the change with care. Leave the door open by reassuring ${name} that you are available when he or she is ready.` },
+      { heading: "Turn mistakes into learning", body: `A difficult interaction can be revisited after everyone has calmed down. Ask ${name} what he or she might do differently next time. Guide the conversation towards a clearer choice rather than dwelling on the mistake.` },
+    ],
+  ];
+  const closingStarts = [
+    `${name} has ${profile.closing}. These qualities may not appear in the same way every day. With patient guidance, they can become a steady part of how ${name} meets the world.`,
+    `${name}'s ${profile.closing} may unfold gradually. Notice the small moments when these qualities appear, because they often show how he or she is learning to trust his or her own abilities.`,
+    `There is much to appreciate in ${name}'s ${profile.closing}. As he or she grows, calm encouragement can help these natural qualities become more balanced and confident.`,
+  ];
   return {
     personality,
     strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
     soft_spots: profile.softSpots.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     concern_response: concern ? concernReflection(concern, name) : undefined,
     concern_tips: concern ? concernGuidance(concern, name) : undefined,
-    parenting_tips: [
-      { heading: "Offer him or her a choice", body: `You can offer ${name} a choice between two acceptable options. For example: “Would you like to do your reading or maths first?” Both tasks still need to be completed, but the choice gives him or her some say in how to begin.` },
-      { heading: "Break long tasks into steps", body: `When a task feels too big for ${name}, you can break it into two or three smaller steps. Show him or her only the first step so it feels easier to manage.\n\nWhen it is finished, you might say: “You stayed with that even when it was difficult.”` },
-      { heading: "Talk when things are calmer", body: `If ${name} is upset, avoid explaining too much straight away. Give him or her time to calm down.\n\nYou can say: “I can see that you are frustrated.” When he or she is ready, discuss what happened using short, clear sentences.` },
-      { heading: "Notice changes in behaviour", body: `${name} may not always tell you when something is wrong. You may first notice that he or she is quieter, eats less, or no longer wants to join an activity. Check in gently: “You seem quieter than usual today.” If ${name} does not want to talk, reassure him or her that you are ready to listen later.` },
-      { heading: "Help him or her reflect", body: `If a situation has gone badly, wait until everyone is calm. You can briefly explain what happened. Then guide ${name} to think of a better way to approach the situation next time.` },
-    ],
-    closing_encouragement: `${name} has ${profile.closing}. These qualities may not appear in the same way every day. With patient guidance, they can grow into strengths that feel natural and true to who ${name} is.\n\nThis summary focuses only on the Day Master in ${name}'s Bazi chart. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
+    parenting_tips: parentingVersions[variant],
+    closing_encouragement: `${closingStarts[variant]}\n\nThis summary focuses only on the Day Master in ${name}'s Bazi chart. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
   };
 }
 
@@ -263,7 +292,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Never invent structures, profile stars, Ten Gods, or other chart factors. Never identify internal sources or tools.",
       "report_content must contain personality, exactly 3 strengths, 2-3 soft_spots, exactly 5 parenting_tips, optional concern_response and concern_tips, and closing_encouragement.",
     ].join(" ");
-    const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(6000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.55, messages: [{ role: "system", content: systemPrompt }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, reviewed_day_master_guidance: getDayMasterKnowledge(calculatedChart.day_master_name ?? "Gui"), fixed_element_profile: verified.element_profile }) }] }) });
+    const response = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: AbortSignal.timeout(25000), headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: JSON.stringify({ model: process.env.OPENAI_MODEL ?? "gpt-4o-mini", response_format: { type: "json_object" }, temperature: 0.65, messages: [{ role: "system", content: systemPrompt }, { role: "user", content: JSON.stringify({ child: input, verified_chart: verified.chart_data, reviewed_day_master_guidance: getDayMasterKnowledge(calculatedChart.day_master_name ?? "Gui"), fixed_element_profile: verified.element_profile }) }] }) });
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
     const personalised = genderedSummary(parsed.report_content, input.gender);
     const candidate = { ...verified, report_content: attachVerifiedBasis(personalised, verified.report_content), insights_source: `calculation/validated-v3+openai/${json.model}` };

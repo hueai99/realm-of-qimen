@@ -132,8 +132,8 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     closing: "a caring nature, practical thinking, and a wish to help people or ideas grow",
   },
   Geng: {
-    name: "Geng (Yang Metal)", image: "raw iron", story: "Raw iron takes shape through steady forging. In a similar way, Geng Metal qualities often become clearer through experience, honest feedback, and chances to try again.",
-    warmIntroduction: "a direct and determined nature. He or she may prefer to act instead of standing back when something matters",
+    name: "Geng (Yang Metal)", image: "raw iron", story: "Raw iron does not become a useful tool in a single strike. It is heated, shaped, and tested over time. Geng Metal is understood in much the same way: experience helps its natural resolve take a clearer form.",
+    warmIntroduction: "a straightforward nature. When something matters, he or she may speak plainly about what feels right. Determination may show when he or she stays with a difficult task or returns to it after a setback",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
       { heading: "Courage to act", meaning: "may be willing to step forward when something feels difficult", everyday: "choosing the harder part of a task", examples: ["You may see him or her choose the harder part of a task instead of avoiding it.", "He or she may also speak up when someone is treated unfairly."], support: "Say, ‘That was brave of you.’ Let him or her know that asking for help can be brave too" },
