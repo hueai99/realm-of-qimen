@@ -13,7 +13,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
   if (error || !data) notFound();
   const report = data as BaziReport;
   await db.from("audit_logs").insert({ actor: "visitor", action: "report.viewed", target_table: "bazi_reports", target_id: id, payload: {} });
-  const pillars = [["Hour", report.hour_pillar ?? "Birth time unknown"], ["Day", report.day_pillar], ["Month", report.month_pillar], ["Year", report.year_pillar]];
+  const pillars: Array<[string, string | null | undefined]> = [["Hour", report.hour_pillar ?? "Birth time unknown"], ["Day", report.day_pillar], ["Month", report.month_pillar], ["Year", report.year_pillar]];
   const insights = report.insights?.split("\n").filter(Boolean) ?? [];
   const summary = report.report_content;
   const dayMasterStrength = report.chart_data?.day_master_strength ?? report.chart_data?.strength;
@@ -34,8 +34,8 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>
         <p className="mt-3 leading-7 text-[#665a50]">This summary begins with {report.subject_name}&apos;s Day Master, which represents the core temperament within {subjectPronoun === "they" ? "their" : subjectPronoun === "he" ? "his" : "her"} Bazi chart. It offers an introduction to what may come naturally to {subjectPronoun === "they" ? "them" : subjectPronoun}, where {subjectPronoun} may benefit from support, and how these qualities may appear in everyday life.</p>
       </section>
-      <div className="grid gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
-        {pillars.map(([label, value]) => <div key={label} className="bg-[#fffaf0] p-6"><p className="text-xs uppercase tracking-widest text-[#9b3c2b]">{label}</p><p className="mt-6 text-xl leading-8">{value ?? "Analysis pending"}</p></div>)}
+      <div className="grid grid-cols-2 gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
+        {pillars.map(([label, value]) => <PillarCard key={label} label={label} value={value} />)}
       </div>
       {summary ? <div className="mt-12 space-y-12">
         <section>
@@ -56,6 +56,17 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
 
 function GuidanceIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-1 h-5 w-5 shrink-0 fill-none stroke-[#9b3c2b]" strokeWidth="1.7"><path d="M9 18h6M10 22h4M8.2 14.5A7 7 0 1 1 15.8 14.5C14.8 15.3 14.5 16 14.5 17h-5c0-1-.3-1.7-1.3-2.5Z" /></svg>;
+}
+
+function PillarCard({ label, value }: { label: string; value: string | null | undefined }) {
+  const [stem, branch] = value?.split(/\s*\/\s*/, 2) ?? [];
+  return <div className="bg-[#fffaf0] px-4 py-5 sm:p-6">
+    <p className="text-xs uppercase tracking-widest text-[#9b3c2b]">{label}</p>
+    {stem ? <div className="mt-5 space-y-3 text-lg leading-7 sm:text-xl">
+      <p>{stem}</p>
+      {branch && <p>{branch}</p>}
+    </div> : <p className="mt-5 text-lg leading-7 text-[#74685e]">Analysis pending</p>}
+  </div>;
 }
 
 function PointSection({ title, points }: { title: string; points: { heading: string; body: string; guidance?: string }[] }) {
