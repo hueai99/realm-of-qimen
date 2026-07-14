@@ -1,2 +1,21 @@
 "use client";
-export default function UpgradeButton({ reportId }: { reportId: string }) { const url = process.env.NEXT_PUBLIC_BOOKING_URL || "https://wa.me/?text=I%27d%20like%20to%20know%20more%20about%20the%20full%20Bazi%20report"; async function click() { await fetch("/api/events", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ report_id: reportId, event: "upgrade_cta.clicked" }) }).catch(()=>{}); window.open(url, "_blank", "noopener,noreferrer"); } return <button onClick={click} className="mt-6 shrink-0 bg-[#b7422d] px-7 py-4 font-semibold text-white sm:mt-0">Explore the full report ↗</button>; }
+import { useState } from "react";
+
+export default function UpgradeButton({ reportId }: { reportId: string }) {
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  async function click() {
+    setState("sending");
+    try {
+      const response = await fetch("/api/events", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ report_id: reportId, event: "premium_report.requested" }) });
+      if (!response.ok) throw new Error("request failed");
+      setState("sent");
+    } catch {
+      setState("error");
+    }
+  }
+  return <div className="mt-6 shrink-0 text-center sm:mt-0">
+    <button onClick={click} disabled={state === "sending" || state === "sent"} className="bg-[#b7422d] px-7 py-4 font-semibold text-white disabled:opacity-70">{state === "sending" ? "Sending request…" : state === "sent" ? "Request received" : "Request the full report"}</button>
+    {state === "sent" && <p className="mt-2 max-w-xs text-xs leading-5 text-[#cfc5bd]">Thank you. We will contact you about the Premium Report.</p>}
+    {state === "error" && <p role="alert" className="mt-2 max-w-xs text-xs leading-5 text-[#f1b5a8]">We could not send the request. Please try again.</p>}
+  </div>;
+}
