@@ -166,7 +166,8 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
     ...candidate,
     strengths: candidate.strengths.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.strengths[index]?.guidance, basis: verified.strengths[index]?.basis })),
     soft_spots: candidate.soft_spots.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.soft_spots[index]?.guidance, basis: verified.soft_spots[index]?.basis })),
-    concern_tips: candidate.concern_tips ?? verified.concern_tips,
+    concern_response: verified.concern_response ?? candidate.concern_response,
+    concern_tips: verified.concern_tips ?? candidate.concern_tips,
   };
 }
 
