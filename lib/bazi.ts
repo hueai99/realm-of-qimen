@@ -175,12 +175,14 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
   };
 }
 
-function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Weak", concern?: string | null): SummaryReport {
+function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null): SummaryReport {
   const profile = getDayMasterKnowledge(dayMasterName);
   const variant = Math.floor(Math.random() * 3);
   const support = strength === "Weak"
-    ? `The chart also describes his or her Day Master as Weak. In Bazi, this does not mean that he or she is weak. ${profile.weakExpression}`
-    : `The chart also describes his or her Day Master as Strong. This means the qualities linked to the Day Master may be easier to see. It does not mean that he or she will feel strong or confident in every situation.`;
+    ? `${name}'s Day Master receives less support within the balance of this chart. Bazi traditionally calls this a Weak Day Master, but the word does not describe his or her character or ability. ${profile.weakExpression}`
+    : strength === "Balanced"
+      ? `${name}'s Day Master has a more even balance of support within the chart. Bazi describes this as Balanced. It does not mean that every quality will appear equally in every situation.`
+      : `${name}'s Day Master receives stronger support within the balance of this chart. Bazi describes this as a Strong Day Master. It does not mean that he or she will feel strong or confident in every situation.`;
   const personalityOpenings = [
     `${name}'s Day Master is ${dayMaster}. ${profile.story}`,
     `At the centre of this summary is ${name}'s ${dayMaster} Day Master. ${profile.story}`,
@@ -261,7 +263,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Write so that a 12-year-old can understand every sentence. Replace abstract phrases with actions a parent can see.",
       "Use only the supplied reviewed Day Master guidance and verified strong/weak state. Do not add traits or calculation details.",
       "Introduce the child by name first. Then use the Day Master's natural image to help tell the story.",
-      "Write personality as three short paragraphs: the Day Master image; how it may appear in this child; then a separate explanation of Strong or Weak.",
+      "Write personality as three short paragraphs: the Day Master metaphor; how it may appear in this child; then a separate explanation of Strong, Balanced, or Weak.",
       "Every strength and soft spot must include a scene from homework, play, friendship, family routines, transitions, mistakes, or emotional moments.",
       "When a point has two examples, write them as two separate sentences. Never compress two examples into one list.",
       "Apply this test to every point: could a parent picture it and think, 'Yes, I have seen that in my child'? If not, rewrite it.",

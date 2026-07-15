@@ -14,5 +14,8 @@ next-env.d.ts
 /work/
 /outputs/
 /tmp/
+/references/**
+!/references/
+!/references/README.md
 
 .env*
