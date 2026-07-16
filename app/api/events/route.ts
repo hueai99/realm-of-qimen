@@ -6,8 +6,8 @@ export async function POST(request: Request) {
   if (event !== "premium_report.requested" || !/^[0-9a-f-]{36}$/i.test(report_id ?? "")) return NextResponse.json({ error: "Invalid event" }, { status: 400 });
   const db = createAdminClient();
   const [{ data: report }, { data: lead }] = await Promise.all([
-    db.from("bazi_reports").select("id, subject_name, birth_date, birth_time, birth_place, email").eq("id", report_id).maybeSingle(),
-    db.from("leads").select("email, phone").eq("report_id", report_id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+    db.from("bazi_reports").select("id, subject_name, parent_name, birth_date, birth_time, birth_place, email").eq("id", report_id).maybeSingle(),
+    db.from("leads").select("parent_name, email, phone").eq("report_id", report_id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
   if (!report) return NextResponse.json({ error: "Report not found" }, { status: 404 });
   await db.from("audit_logs").insert({ actor: "visitor", action: event, target_table: "bazi_reports", target_id: report_id, payload: { email_notification: Boolean(process.env.RESEND_API_KEY && process.env.NOTIFICATION_FROM_EMAIL) } });
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://realm-of-qimen.vercel.app";
     const body = [
       `Child: ${report.subject_name}`,
+      `Parent: ${lead?.parent_name ?? report.parent_name ?? "Not provided"}`,
       `Birth date: ${report.birth_date}`,
       `Birth time: ${report.birth_time ?? "Not provided"}`,
       `Birth place: ${report.birth_place ?? "Not provided"}`,

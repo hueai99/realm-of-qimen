@@ -4,7 +4,7 @@ export type ChartData = { hour: string | null; day: string; month: string; year:
 export type SummaryReport = { personality: string; strengths: ReportPoint[]; soft_spots: ReportPoint[]; concern_response?: string; concern_tips?: string[]; parenting_tips: ReportPoint[]; closing_encouragement: string };
 export type BaziReport = {
   id: string; subject_name: string; birth_date: string; birth_time: string | null;
-  birth_place: string | null; parenting_concern: string | null;
+  birth_place: string | null; parenting_concern: string | null; parent_name: string | null;
   gender: string | null; question_type: QuestionType; email: string;
   day_pillar: string | null; month_pillar: string | null; year_pillar: string | null;
   hour_pillar: string | null; element_profile: string | null; insights: string | null;
