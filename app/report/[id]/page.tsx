@@ -18,6 +18,8 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
   const summary = report.report_content;
   const dayMasterStrength = report.chart_data?.day_master_strength ?? report.chart_data?.strength;
   const subjectPronoun = report.gender === "male" ? "he" : report.gender === "female" ? "she" : "they";
+  const possessivePronoun = report.gender === "male" ? "his" : report.gender === "female" ? "her" : "their";
+  const genderLabel = report.gender ? report.gender.charAt(0).toUpperCase() + report.gender.slice(1) : "Not specified";
 
   return <main className="min-h-screen">
     <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
@@ -28,12 +30,12 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       <div className="border-b border-[#cfc2b4] pb-10">
         <p className="text-xs font-bold uppercase tracking-[.25em] text-[#9b3c2b]">Your Child&apos;s Bazi Personality Blueprint · Summary Report</p>
         <h1 className="mt-3 text-5xl">{report.subject_name}</h1>
-        <p className="mt-4 text-[#74685e]">Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{report.birth_place ? ` · ${report.birth_place}` : ""}</p>
+        <p className="mt-4 text-[#74685e]">Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{report.birth_place ? ` · ${report.birth_place}` : ""} · {genderLabel}</p>
       </div>
       <section className="my-8 max-w-3xl border-l-2 border-[#b7422d] bg-[#fffaf0] px-6 py-5">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>
-        <p className="mt-3 leading-7 text-[#665a50]">In Bazi, the Day Master represents the person at the centre of the reading. It comes from the element connected to the day someone was born and offers a first look at natural temperament—how that person may respond, make decisions, and approach everyday situations.</p>
-        <p className="mt-3 leading-7 text-[#665a50]">This summary looks at {report.subject_name}&apos;s Day Master. It is a starting point rather than the whole story of {subjectPronoun === "they" ? "their" : subjectPronoun === "he" ? "his" : "her"} personality.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">In Bazi, the Day Master represents the person at the centre of the reading. It comes from the element connected to the day {subjectPronoun} was born and offers a first look at {possessivePronoun} natural temperament—how {subjectPronoun} may respond, make decisions, and approach everyday situations.</p>
+        <p className="mt-3 leading-7 text-[#665a50]">This summary looks at {report.subject_name}&apos;s Day Master. It is a starting point rather than the whole story of {possessivePronoun} personality.</p>
       </section>
       <div className="grid grid-cols-2 gap-px overflow-hidden border border-[#cfc2b4] bg-[#cfc2b4] sm:grid-cols-4">
         {pillars.map(([label, value]) => <PillarCard key={label} label={label} value={value} />)}

@@ -51,22 +51,22 @@ export default function IntakeForm() {
       <label className="text-sm">Country of birth<select required name="birth_country" value={birthCountry} onChange={(event) => setBirthCountry(event.target.value)} className={cls}>{countries.map(([country]) => <option key={country} value={country}>{country}</option>)}</select></label>
       <label className="text-sm">Gender<select required name="gender" defaultValue="" className={cls}><option value="" disabled>Select</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></label>
       <input type="hidden" name="question_type" value="child_potential" />
-      <label className="text-sm sm:col-span-2">What would you most like help with? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} /></label>
+      <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
     </div>
     {(busy || readyReportId) && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#211b16]/75 px-5 py-8 backdrop-blur-sm" role="status" aria-live="polite">
       <div className="w-full max-w-2xl rounded-sm bg-[#fffaf0] p-7 shadow-2xl sm:p-10">
         <div>
+          <div className="mb-7 border-b border-[#d7cbbd] pb-6 text-center">
+            {busy && <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#d7cbbd] border-t-[#9b3c2b]" aria-hidden="true" />}
+            <p className={`${busy ? "mt-4" : ""} text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]`}>{busy ? "Preparing report" : "Report is now ready"}</p>
+            <h2 className="mt-2 text-2xl">{busy ? `Preparing ${submittedName}'s personality summary…` : `${submittedName}'s personality summary is ready.`}</h2>
+            <button type="button" disabled={busy} onClick={() => readyReportId && router.push(`/report/${readyReportId}`)} className="mt-5 bg-[#9b3c2b] px-8 py-4 font-semibold text-white disabled:cursor-wait disabled:bg-[#b9afa5]">{busy ? "Preparing report…" : "Click to read"}</button>
+          </div>
           <div className="space-y-4 text-left leading-7 text-[#665a50]">
             <p>Bazi is a traditional Chinese system practised for more than 1,000 years. It uses the year, month, day, and hour of birth to form four pillars. Each pillar contains two Chinese characters, creating the eight characters known as Bazi. Together, the four pillars offer insights into a person&apos;s natural qualities, emotions, relationships, learning, and growth.</p>
             <p>A Bazi chart may not describe everything seen in a child today. Age, upbringing, experiences, surroundings, and personal choices all influence how these qualities appear. Bazi offers another way to understand a child—not a fixed description of who he or she must become.</p>
           </div>
           <SampleBaziChart />
-          <div className="mt-7 border-t border-[#d7cbbd] pt-6 text-center">
-            {busy && <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#d7cbbd] border-t-[#9b3c2b]" aria-hidden="true" />}
-            <p className={`${busy ? "mt-4" : ""} text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]`}>{busy ? "Preparing report" : "Report prepared"}</p>
-            <h2 className="mt-2 text-2xl">{busy ? `Preparing ${submittedName}'s personality summary…` : `${submittedName}'s personality summary is ready.`}</h2>
-            <button type="button" disabled={busy} onClick={() => readyReportId && router.push(`/report/${readyReportId}`)} className="mt-5 bg-[#9b3c2b] px-8 py-4 font-semibold text-white disabled:cursor-wait disabled:bg-[#b9afa5]">{busy ? "Preparing report…" : "Click to read"}</button>
-          </div>
         </div>
       </div>
     </div>}

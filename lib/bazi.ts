@@ -61,7 +61,9 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
 
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
-  if (/school|study|homework|learn|grade|exam/.test(text)) return `You would like to understand how ${name} is coping with learning and schoolwork.`;
+  if (/connect|reconnect|reach out|closer|bond|communicat/.test(text)) return `You would like to find a way to reach out and feel more connected with ${name}.`;
+  if (/exam|test stress|revision stress/.test(text)) return `You would like to help ${name} manage the stress he or she feels around exams.`;
+  if (/school|study|homework|learn|grade/.test(text)) return `You would like to understand how ${name} is coping with learning and schoolwork.`;
   if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You have noticed that ${name} can become very upset, and you would like to understand these reactions better.`;
   if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You have noticed that ${name} may worry or hold back in some situations.`;
   if (/friend|social|lonely|bully|fit in/.test(text)) return `You would like to understand how ${name} is getting along with other children.`;
@@ -72,14 +74,17 @@ function concernReflection(concern: string, name: string): string {
 function concernGuidance(concern: string, name: string, profile: ReturnType<typeof getDayMasterKnowledge>): string[] {
   const text = concern.toLowerCase();
   let tips: string[];
-  if (/school|study|homework|learn|grade|exam/.test(text)) tips = [`Ask ${name} which part of the work feels hardest. Help him or her choose one small step, so the whole task feels easier to approach.`, `If frustration builds, suggest a short break. Return to the same step afterwards so the break feels like support, not giving up.`];
+  if (/connect|reconnect|reach out|closer|bond|communicat/.test(text)) tips = [`Begin with something ${name} already enjoys. Showing genuine interest in his or her music, games, hobbies, or daily experiences can create an easier opening for conversation.`, `Choose a relaxed moment when neither of you is rushed. Spending time together side by side may feel more natural than beginning with a serious face-to-face conversation.`, `When ${name} shares something, listen before offering advice. If he or she is not ready to talk, gently let him or her know that you are available whenever needed.`];
+  else if (/exam|test stress|revision stress/.test(text)) tips = [`Ask ${name} which part of the exam feels most worrying. Naming one concern can make it easier to decide what would help.`, `Help ${name} divide revision into short, manageable sessions. A clear plan can make the work feel less overwhelming.`, `Before discussing results, acknowledge the effort already made. This reminds ${name} that one exam does not define his or her ability.`];
+  else if (/school|study|homework|learn|grade/.test(text)) tips = [`Ask ${name} which part of the work feels hardest. Help him or her choose one small step, so the whole task feels easier to approach.`, `If frustration builds, suggest a short break. Return to the same step afterwards so the break feels like support, not giving up.`];
   else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. He or she will find it easier to listen once the strongest feelings have passed.`, `When ${name} is ready, ask what upset him or her most. Listen to the answer before explaining clearly what needs to happen next.`];
   else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than being pushed to do everything immediately.`, `Notice the effort, even when the result is imperfect. A simple “You tried even though you felt worried” shows ${name} that courage can grow gradually.`];
   else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier to answer than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support he or she actually wants.`];
   else if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step first instead of giving several instructions together.`, `Where possible, offer two acceptable choices. This gives ${name} some say while the responsibility itself remains clear.`];
   else tips = [`Notice what happens just before the behaviour changes. The situation immediately beforehand may offer a useful clue without assuming why ${name} reacted that way.`, `Wait until ${name} is calm. Ask one clear question and listen to the answer before deciding together what may help next time.`];
+  if (tips.length >= 3) return tips;
   const dayMasterTip = profile.softSpots[0];
-  return [...tips, `${capitalise(dayMasterTip.support)}. This suggestion comes from the ${profile.name} quality described as “${dayMasterTip.heading}”, so it is offered as something to try rather than a fixed answer.`];
+  return [...tips, `${capitalise(dayMasterTip.support)}. Consider this only where it fits the concern you have described.`];
 }
 
 function deterministicQc(reading: Reading, childName?: string, gender?: string): QcResult {
@@ -179,18 +184,23 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const profile = getDayMasterKnowledge(dayMasterName);
   const variant = Math.floor(Math.random() * 3);
   const support = strength === "Weak"
-    ? `${name}'s Day Master receives less support within the balance of this chart. Bazi traditionally calls this a Weak Day Master, but the word does not describe his or her character or ability. ${profile.weakExpression}`
+    ? `A Day Master may show itself clearly or more quietly, depending on how it works with the other characters in the Bazi chart. For ${name}, these qualities may emerge gradually as he or she feels secure and grows in confidence. In Bazi, this is known as a Weak Day Master. It does not mean that he or she lacks strength or ability.`
     : strength === "Balanced"
       ? `${name}'s Day Master has a more even balance of support within the chart. Bazi describes this as Balanced. It does not mean that every quality will appear equally in every situation.`
       : `${name}'s Day Master receives stronger support within the balance of this chart. Bazi describes this as a Strong Day Master. It does not mean that he or she will feel strong or confident in every situation.`;
   const personalityOpenings = [
-    `${name}'s Day Master is ${dayMaster}. ${profile.story}`,
-    `At the centre of this summary is ${name}'s ${dayMaster} Day Master. ${profile.story}`,
-    `In ${name}'s chart, the Day Master is ${dayMaster}. ${profile.story}`,
+    `${name} was born under the ${dayMaster} Day Master. ${profile.name} is often compared to ${profile.image}.`,
+    `${name}'s Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
+    `The Day Master at the centre of ${name}'s summary is ${dayMaster}, often compared to ${profile.image}.`,
+  ];
+  const childConnections = [
+    `Likewise, you may see this in ${name} through ${profile.warmIntroduction}.`,
+    `Likewise, this may appear in ${name} as ${profile.warmIntroduction}.`,
+    `Likewise, you may recognise in ${name} ${profile.warmIntroduction}.`,
   ];
   const personality = [
     personalityOpenings[variant],
-    `${name} may have ${profile.warmIntroduction}.`,
+    childConnections[variant],
     support,
   ].join("\n\n");
   const wordingVariant = (heading: string) => ([...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) + variant) % 3;
@@ -210,18 +220,22 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const parentingTips = [...profile.strengths, ...profile.softSpots].map((point, index) => {
     const supportText = capitalise(point.support);
     const bodies = [
-      `${supportText}. This can help ${name} build confidence in this quality without turning it into pressure. Keep it in mind during moments such as ${point.everyday}.`,
-      `A helpful approach is to ${point.support}. This gives ${name} room to develop the quality in a natural way. It may be useful during moments such as ${point.everyday}.`,
-      `${supportText}. The aim is to guide ${name} while still leaving room for his or her own personality. This may help during moments such as ${point.everyday}.`,
-      `During moments such as ${point.everyday}, try to ${point.support}. This responds to what may be happening without making ${name} feel that something is wrong with him or her.`,
-      `${supportText}. This offers ${name} a clear next step while keeping the conversation calm and respectful. It may help during moments such as ${point.everyday}.`,
+      `${supportText}. This may be especially helpful in situations such as ${point.everyday}. Keep the guidance simple, then give ${name} time to respond in his or her own way.`,
+      `In situations such as ${point.everyday}, ${point.support}. A calm approach gives ${name} support without taking over the experience.`,
+      `${supportText}. Use this when you notice moments such as ${point.everyday}. It can help ${name} understand what to try next.`,
+      `If a situation involves ${point.everyday}, ${point.support}. Give ${name} time to take in the guidance before expecting an answer.`,
+      `${supportText}. This can make situations such as ${point.everyday} feel more manageable for ${name}.`,
     ];
     return { heading: index < 3 ? `Nurture ${point.heading.toLowerCase()}` : point.heading, body: bodies[index] };
   });
-  const closingStarts = [
-    `${name} has ${profile.closing}. These qualities may not appear in the same way every day. With patient guidance, they can become a steady part of how ${name} meets the world.`,
-    `${name}'s ${profile.closing} may unfold gradually. Notice the small moments when these qualities appear, because they often show how he or she is learning to trust his or her own abilities.`,
-    `There is much to appreciate in ${name}'s ${profile.closing}. As he or she grows, calm encouragement can help these natural qualities become more balanced and confident.`,
+  const closingStarts = dayMasterName === "Ren" ? [
+    `As ${name} grows in confidence, his or her imagination may shine through the ideas he or she shares. Courage may appear in the way ${name} adjusts and tries again when plans change. These everyday moments show that he or she is beginning to trust what he or she can do.`,
+    `${name}'s imagination may become easier to see as confidence grows. When a plan changes, the willingness to adapt and try again can reveal quiet courage. These moments show ${name} learning to trust his or her own abilities.`,
+    `As confidence develops, ${name} may share more of the ideas that were once kept private. The way he or she adapts when something goes wrong can also show growing courage and self-belief.`,
+  ] : [
+    `As ${name} grows in confidence, his or her natural qualities may become easier to recognise in everyday life. Each small step offers another chance for ${name} to trust his or her own judgement.`,
+    `Some of ${name}'s strengths may emerge gradually. Notice the ideas he or she shares and the moments when he or she adjusts after a setback. These are meaningful signs of growing self-belief.`,
+    `${name} may not show every strength in the same way each day. Patient encouragement can help him or her express these qualities with greater confidence over time.`,
   ];
   return {
     personality,
@@ -263,6 +277,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Write so that a 12-year-old can understand every sentence. Replace abstract phrases with actions a parent can see.",
       "Use only the supplied reviewed Day Master guidance and verified strong/weak state. Do not add traits or calculation details.",
       "Introduce the child by name first. Then use the Day Master's natural image to help tell the story.",
+      "After the Day Master image, explicitly connect it to the child with a sentence such as 'Likewise, you may see this in [name] when...'. The metaphor must explain a behaviour a parent can recognise.",
       "Write personality as three short paragraphs: the Day Master metaphor; how it may appear in this child; then a separate explanation of Strong, Balanced, or Weak.",
       "Every strength and soft spot must include a scene from homework, play, friendship, family routines, transitions, mistakes, or emotional moments.",
       "When a point has two examples, write them as two separate sentences. Never compress two examples into one list.",
@@ -282,6 +297,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Do not repeat the same list of qualities in the opening and closing. Express the verified meaning differently and naturally when summarising.",
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
       "For concern_response, paraphrase only the concern the parent supplied. Do not invent a cause, setting, pattern, feeling, or behaviour that the parent did not mention.",
+      "Identify the parent's intent before writing concern guidance. A request about connecting must receive connection guidance; exam stress must not be turned into a general schoolwork concern.",
       "Concern guidance must be simple, concrete, and easy to understand. Never ask a child to 'be brave all at once' or use similarly unnatural phrasing.",
       "For every strength and support area, put the child observation in body and the direct parent action in guidance. Never mix them in one paragraph.",
       "If there is a parenting concern, paraphrase only what the parent wrote in concern_response. Put two short, concrete actions in concern_tips. Do not infer fear, safety, or hidden motives.",
