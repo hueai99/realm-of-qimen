@@ -20,6 +20,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
   const subjectPronoun = report.gender === "male" ? "he" : report.gender === "female" ? "she" : "they";
   const possessivePronoun = report.gender === "male" ? "his" : report.gender === "female" ? "her" : "their";
   const genderLabel = report.gender ? report.gender.charAt(0).toUpperCase() + report.gender.slice(1) : "Not specified";
+  const birthCountry = report.birth_place?.split(",").map((part) => part.trim()).filter(Boolean).at(-1);
 
   return <main className="min-h-screen">
     <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
@@ -30,7 +31,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       <div className="border-b border-[#cfc2b4] pb-10">
         <p className="text-xs font-bold uppercase tracking-[.25em] text-[#9b3c2b]">Your Child&apos;s Bazi Personality Blueprint · Summary Report</p>
         <h1 className="mt-3 text-5xl">{report.subject_name}</h1>
-        <p className="mt-4 text-[#74685e]">Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{report.birth_place ? ` · ${report.birth_place}` : ""} · {genderLabel}</p>
+        <p className="mt-4 text-[#74685e]">{genderLabel} · Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{birthCountry ? ` · ${birthCountry}` : ""}</p>
       </div>
       <section className="my-8 max-w-3xl border-l-2 border-[#b7422d] bg-[#fffaf0] px-6 py-5">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">About this summary</p>

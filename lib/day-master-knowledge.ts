@@ -5,6 +5,7 @@ export type DayMasterPoint = {
   support: string;
   examples?: [string, string];
   description?: string;
+  descriptions?: [string, string, string];
 };
 
 export type DayMasterKnowledge = {
@@ -17,6 +18,7 @@ export type DayMasterKnowledge = {
   softSpots: [DayMasterPoint, DayMasterPoint];
   strongExpression: string;
   weakExpression: string;
+  expressionExample: string;
   limits: string;
   closing: string;
 };
@@ -39,6 +41,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "His or her steady and direct qualities may be easy to notice. Support can help that determination remain flexible when plans change.",
     weakExpression: "These qualities may be quieter at first. They often become clearer through encouragement, manageable challenges, and time to build trust.",
+    expressionExample: "In a new activity, he or she may watch quietly at first. Once comfortable, he or she may choose a goal and stay with it even when progress takes time.",
     limits: "The Day Master alone cannot establish sociability, academic ability, emotional health, or a fixed future.",
     closing: "persistence, strong principles, and a protective sense of loyalty",
   },
@@ -57,6 +60,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "His or her adaptability may be easy to see around people and changing situations. Gentle guidance can help personal preferences remain clear too.",
     weakExpression: "This resourcefulness may be less obvious at first. It often appears more clearly in relationships and settings where he or she feels safe.",
+    expressionExample: "In a new group, he or she may take time to find a place. Once settled, he or she may begin connecting people or ideas in a thoughtful way.",
     limits: "The Day Master alone cannot prove confidence, popularity, manipulation, or learning style.",
     closing: "flexibility, resourcefulness, and a thoughtful way of noticing other people",
   },
@@ -75,6 +79,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Warmth and enthusiasm may be easy to notice. Calm guidance can help him or her share that energy while also leaving room for others.",
     weakExpression: "This brightness may appear only in certain settings. It often comes forward around trusted people and activities that feel meaningful.",
+    expressionExample: "At a new gathering, he or she may seem quiet at first. Around familiar people, warmth and enthusiasm may become much easier to see.",
     limits: "The Day Master alone cannot determine extroversion, popularity, emotional regulation, or leadership ability.",
     closing: "warmth, optimism, and an ability to bring energy to the people and activities that matter",
   },
@@ -93,6 +98,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Thoughts and feelings may be expressed quite clearly. Support can help strong opinions remain warm and considerate.",
     weakExpression: "These qualities may remain private until he or she feels understood. Reassurance and patient listening can help them emerge.",
+    expressionExample: "He or she may keep an observation private at first. During a calm conversation, a thoughtful idea or feeling may be shared with surprising clarity.",
     limits: "The Day Master alone cannot establish anxiety, instability, intelligence, or mental health.",
     closing: "thoughtful insight, quiet influence, and care for how other people feel",
   },
@@ -111,6 +117,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Reliability and strong principles may be easy to notice. Support can help him or her remain open to change and other points of view.",
     weakExpression: "These grounded qualities may take time to appear. Predictable care and preparation can help confidence grow through experience.",
+    expressionExample: "A sudden change may make him or her cautious at first. With time to prepare, he or she may become the person who helps everyone stay steady.",
     limits: "The Day Master alone cannot establish stubbornness, charisma, maturity, or family role.",
     closing: "steadiness, strong values, and a dependable way of caring for people",
   },
@@ -129,6 +136,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Care and practical ability may be easy to notice. Guidance can help him or her support others without forgetting personal limits.",
     weakExpression: "This caring nature may appear through small, private gestures. It grows best when appreciation does not depend on always being useful.",
+    expressionExample: "He or she may not announce a wish to help. Instead, care may appear through remembering a small need or quietly making something easier for someone.",
     limits: "The Day Master alone cannot define maternal behaviour, dependence, pessimism, or intellectual ability.",
     closing: "a caring nature, practical thinking, and a wish to help people or ideas grow",
   },
@@ -147,6 +155,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Determination may be easy to notice. Guidance can help him or her pause, listen, and stay flexible instead of pushing ahead too quickly.",
     weakExpression: "Determination may appear clearly in one situation but remain quiet in another. Clear goals and encouragement can help it become more consistent.",
+    expressionExample: "He or she may stay quiet when a challenge first appears. Once the goal feels clear, he or she may step forward and keep trying after a setback.",
     limits: "The Day Master alone cannot establish aggression, authority, competitiveness, or ability to handle pressure.",
     closing: "courage, determination, and a strong sense of loyalty",
   },
@@ -165,6 +174,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Careful judgement and high standards may be easy to notice. Support can help him or her know when the work is already good enough.",
     weakExpression: "These careful qualities may be more private or become unsettled under pressure. Trust and manageable expectations can help them appear more confidently.",
+    expressionExample: "He or she may notice a small mistake without mentioning it at first. When invited to share, the careful observation may help improve the finished work.",
     limits: "The Day Master alone cannot establish vanity, status-seeking, manipulation, perseverance, or stress tolerance.",
     closing: "a careful mind, a loyal heart, and an eye for details that other people may miss",
   },
@@ -173,16 +183,17 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     warmIntroduction: "an adaptable nature. When something does not go according to plan, he or she may try a different approach instead of giving up",
     motivations: ["movement and discovery", "a meaningful challenge", "freedom within clear boundaries"],
     strengths: [
-      { heading: "Big-picture thinking", meaning: "may start with one simple question and quickly imagine a much bigger story or project", everyday: "turning a classroom topic into an idea for something new to make", description: "{name} may begin with a simple question and imagine a much larger project. A lesson about space could inspire a model rocket or a story about another planet.", support: "listen to the idea first, then help him or her choose one small step to try" },
-      { heading: "Finds another way", meaning: "may look for another way forward when the original plan no longer works", everyday: "trying a different approach after a setback", description: "{name} may enjoy discovering new things and trying different activities. If the first idea does not work, he or she may think of another way to solve the problem. If a model will not stand, for example, he or she may change the design and try again.", support: "give him or her room to explore, then agree on a time to check in again" },
-      { heading: "Learns by taking part", meaning: "may learn better when able to try something instead of only reading or listening", everyday: "understanding a lesson more easily after testing an idea or building something", description: "{name} may understand something more easily when he or she can try it personally. Testing an idea, building something, or joining an activity can make the lesson feel clearer.", support: "give him or her opportunities to learn by doing whenever possible" },
+      { heading: "Big-picture thinking", meaning: "may start with one simple question and quickly imagine a much bigger story or project", everyday: "turning a classroom topic into an idea for something new to make", descriptions: ["{name} may begin with a simple question and imagine a much larger project. A lesson about space could inspire a model rocket or a story about another planet.", "A small idea may quickly grow in {name}'s mind. A weekend outing, for example, could inspire a map, a story, or a plan for a future adventure.", "When a topic catches {name}'s interest, he or she may see possibilities beyond the original task. A simple art activity could become an idea for a larger display or handmade gift."], support: "listen to the idea first, then help him or her choose one small step to try" },
+      { heading: "Finds another way", meaning: "may look for another way forward when the original plan no longer works", everyday: "trying a different approach after a setback", descriptions: ["{name} may enjoy discovering new things and trying different activities. If a model will not stand, he or she may change the design and try again.", "When the first plan does not work, {name} may be willing to adjust it. During a game, he or she might change strategy instead of giving up.", "An unexpected problem may lead {name} to test another approach. If a craft does not turn out as planned, he or she may use the materials in a different way."], support: "give him or her room to explore, then agree on a time to check in again" },
+      { heading: "Learns by taking part", meaning: "may learn better when able to try something instead of only reading or listening", everyday: "understanding a lesson more easily after testing an idea or building something", descriptions: ["{name} may understand something more easily when he or she can try it personally. Building, testing, or joining an activity can make the lesson clearer.", "Hands-on experience may help an idea make sense to {name}. Measuring ingredients or building a simple model may be easier to remember than instructions alone.", "{name} may learn best by becoming involved. Trying the first step personally can make a new skill feel clearer and less distant."], support: "give him or her opportunities to learn by doing whenever possible" },
     ],
     softSpots: [
-      { heading: "Drawn to many interests", meaning: "may become excited by several ideas and find it hard to decide which one to finish first", everyday: "starting a new activity before completing the one already underway", description: "Several ideas may catch {name}'s interest at the same time. He or she may begin a new activity while another is still unfinished, simply because the new idea feels exciting.", support: "write down the other ideas so they are not forgotten, then help him or her choose one thing to finish first" },
-      { heading: "Benefits from a pause", meaning: "may respond before considering what could happen next", everyday: "answering or agreeing too quickly", description: "{name} may sometimes answer or agree before thinking about what could happen next. A short pause can give him or her time to understand the choice more fully.", support: "invite him or her to pause, then ask, 'What might happen next?' before a decision is made" },
+      { heading: "Drawn to many interests", meaning: "may become excited by several ideas and find it hard to decide which one to finish first", everyday: "starting a new activity before completing the one already underway", descriptions: ["Several ideas may catch {name}'s interest at the same time. He or she may begin a new activity while another is still unfinished because the new idea feels exciting.", "{name} may become interested in something new before the current activity is complete. This is often excitement rather than a lack of effort.", "When several activities look appealing, {name} may find it difficult to choose which one deserves attention first. The newest idea may quickly pull focus away from an earlier one."], support: "keep a short list of the other ideas, then help him or her choose one thing to finish first" },
+      { heading: "Benefits from a pause", meaning: "may respond before considering what could happen next", everyday: "answering or agreeing too quickly", descriptions: ["{name} may sometimes answer or agree before thinking about what could happen next. A short pause can give him or her time to understand the choice more fully.", "Excitement may lead {name} to decide quickly. Taking a moment before answering can make the next step easier to understand.", "{name} may be ready to act before all the details are clear. A brief pause can help him or her notice what the decision may involve."], support: "invite him or her to pause, then ask, 'What might happen next?' before a decision is made" },
     ],
     strongExpression: "Imagination and independence may be easy to notice. Clear limits can help that energy stay focused on something meaningful.",
     weakExpression: "Imagination may remain private before confidence grows. Safe opportunities to explore can help him or her take one achievable step at a time.",
+    expressionExample: "He or she may stay quiet when joining a new activity. Once comfortable, he or she may begin sharing ideas or suggest a different approach when something does not work.",
     limits: "The Day Master alone cannot establish extroversion, intelligence, realism, distractibility, or risk-taking.",
     closing: "imagination, courage, and an ability to find another way when plans change",
   },
@@ -201,6 +212,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Sensitivity and adaptability may be easy to notice. Gentle structure can help him or her stay consistent without feeling restricted.",
     weakExpression: "This insight may be especially quiet at first. Trust, patience, and freedom from immediate pressure can help it emerge.",
+    expressionExample: "He or she may watch quietly before joining a conversation. Once comfortable, an unexpected observation or creative connection may be shared.",
     limits: "The Day Master alone cannot establish mood disorder, secrecy, manipulation, wisdom, or consistency.",
     closing: "sensitivity, original ideas, and a quiet ability to notice what is happening around him or her",
   },

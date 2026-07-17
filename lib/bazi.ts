@@ -61,33 +61,31 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
 
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
-  if (/connect|reconnect|reach out|closer|bond|communicat/.test(text)) return `You would like to find a way to reach out and feel more connected with ${name}.`;
+  if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return `You would like to feel closer to ${name} and find an easier way to connect.`;
   if (/exam|test stress|revision stress/.test(text)) return `You would like to help ${name} manage the stress he or she feels around exams.`;
   if (/school|study|homework|learn|grade/.test(text)) return `You would like to understand how ${name} is coping with learning and schoolwork.`;
   if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You have noticed that ${name} can become very upset, and you would like to understand these reactions better.`;
   if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You have noticed that ${name} may worry or hold back in some situations.`;
   if (/friend|social|lonely|bully|fit in/.test(text)) return `You would like to understand how ${name} is getting along with other children.`;
   if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You have noticed that it can be difficult for ${name} to follow some everyday requests.`;
-  return `You would like to understand the change you have noticed in ${name}.`;
+  return `You would like some guidance on something that currently matters for ${name}.`;
 }
 
-function concernGuidance(concern: string, name: string, profile: ReturnType<typeof getDayMasterKnowledge>): string[] {
+function concernGuidance(concern: string, name: string): string[] {
   const text = concern.toLowerCase();
   let tips: string[];
-  if (/connect|reconnect|reach out|closer|bond|communicat/.test(text)) tips = [`Begin with something ${name} already enjoys. Showing genuine interest in his or her music, games, hobbies, or daily experiences can create an easier opening for conversation.`, `Choose a relaxed moment when neither of you is rushed. Spending time together side by side may feel more natural than beginning with a serious face-to-face conversation.`, `When ${name} shares something, listen before offering advice. If he or she is not ready to talk, gently let him or her know that you are available whenever needed.`];
+  if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) tips = [`Begin with something ${name} already enjoys. Genuine interest in his or her music, games, hobbies, or daily experiences can create an easier opening for conversation.`, `Choose a relaxed moment when neither of you is rushed. Spending time side by side may feel more natural than beginning with a serious face-to-face conversation.`, `When ${name} shares something, listen before offering advice. If he or she is not ready to talk, gently make it clear that the invitation remains open.`];
   else if (/exam|test stress|revision stress/.test(text)) tips = [`Ask ${name} which part of the exam feels most worrying. Naming one concern can make it easier to decide what would help.`, `Help ${name} divide revision into short, manageable sessions. A clear plan can make the work feel less overwhelming.`, `Before discussing results, acknowledge the effort already made. This reminds ${name} that one exam does not define his or her ability.`];
-  else if (/school|study|homework|learn|grade/.test(text)) tips = [`Ask ${name} which part of the work feels hardest. Help him or her choose one small step, so the whole task feels easier to approach.`, `If frustration builds, suggest a short break. Return to the same step afterwards so the break feels like support, not giving up.`];
-  else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. He or she will find it easier to listen once the strongest feelings have passed.`, `When ${name} is ready, ask what upset him or her most. Listen to the answer before explaining clearly what needs to happen next.`];
-  else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than being pushed to do everything immediately.`, `Notice the effort, even when the result is imperfect. A simple “You tried even though you felt worried” shows ${name} that courage can grow gradually.`];
-  else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier to answer than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support he or she actually wants.`];
-  else if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step first instead of giving several instructions together.`, `Where possible, offer two acceptable choices. This gives ${name} some say while the responsibility itself remains clear.`];
-  else tips = [`Notice what happens just before the behaviour changes. The situation immediately beforehand may offer a useful clue without assuming why ${name} reacted that way.`, `Wait until ${name} is calm. Ask one clear question and listen to the answer before deciding together what may help next time.`];
-  if (tips.length >= 3) return tips;
-  const dayMasterTip = profile.softSpots[0];
-  return [...tips, `${capitalise(dayMasterTip.support)}. Consider this only where it fits the concern you have described.`];
+  else if (/school|study|homework|learn|grade/.test(text)) tips = [`Ask ${name} which part of the work feels hardest. Help him or her choose one small step so the task feels easier to approach.`, `If frustration builds, suggest a short break. Return to the same step afterwards so the break supports progress.`, `Notice whether a particular time, subject, or type of task feels easier. That pattern may reveal where a small change could help.`];
+  else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. Listening is easier once the strongest feelings have passed.`, `When ${name} is ready, ask what felt most upsetting. Listen before explaining clearly what needs to happen next.`, `Afterwards, agree on one simple way to handle a similar moment. Keep the plan short enough for ${name} to remember.`];
+  else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than immediate pressure.`, `Notice the effort even when the result is imperfect. A simple “You tried even though you felt worried” can mean a great deal.`, `Give ${name} time to become familiar with a new situation. Confidence may grow after watching first and joining when ready.`];
+  else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support is actually wanted.`, `Check whether ${name} would prefer advice, practical help, or simply someone to listen. The answer may differ from one situation to another.`];
+  else if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step before adding another.`, `Where possible, offer two acceptable choices. This gives ${name} some say while keeping the responsibility clear.`, `After the task is complete, acknowledge the cooperation. Brief, specific appreciation is easier to understand than a general compliment.`];
+  else tips = [`Choose a calm moment and ask ${name} what would feel most helpful. Keep the question simple and allow time for an answer.`, `Listen before offering a solution. The first need may be understanding rather than immediate advice.`, `Try one small change, then check in again later. This makes it easier to notice what genuinely helps ${name}.`];
+  return tips;
 }
 
-function deterministicQc(reading: Reading, childName?: string, gender?: string): QcResult {
+function deterministicQc(reading: Reading, childName?: string, gender?: string, concern?: string | null): QcResult {
   const issues: string[] = [];
   const summary = reading.report_content;
   const prose = JSON.stringify(summary);
@@ -106,14 +104,15 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   const sections = [...(summary.strengths ?? []), ...(summary.soft_spots ?? []), ...(summary.parenting_tips ?? [])];
   if (sections.some(({ heading }) => !heading || words(heading) > 6)) issues.push("section heading format is inconsistent");
   if (sections.some(({ body }) => words(body) < 12 || words(body) > 85)) issues.push("section length is outside the parent-friendly range");
-  if ((summary.parenting_tips ?? []).some(({ body }) => words(body) < 32)) issues.push("a parenting tip needs more warmth, context, and practical explanation");
+  if ((summary.parenting_tips ?? []).some(({ body }) => words(body) < 20)) issues.push("a parenting tip needs more warmth, context, and practical explanation");
+  if ((summary.parenting_tips ?? []).some(({ heading }) => /^nurture\b/i.test(heading))) issues.push("a support heading repeats a trait instead of describing a recognisable situation");
   const childInsights = [...(summary.strengths ?? []), ...(summary.soft_spots ?? [])];
   if (childInsights.some(({ body }) => !/\b(when|homework|school|friend|play|task|plan|mistake|routine|change|try|notice|moment|start|finish|join|speak|help)\b/i.test(body))) issues.push("an insight lacks a recognisable moment from the child's daily life");
   if ([...(summary.strengths ?? []), ...(summary.soft_spots ?? [])].some(({ basis }) => !basis?.factor || !basis?.value)) issues.push("a strength or soft spot is not traceable to verified Bazi data");
   if (childInsights.some(({ guidance }) => !guidance)) issues.push("parent guidance is not separated from a child observation");
   if (words(summary.personality ?? "") < 45 || words(summary.personality ?? "") > 180) issues.push("opening explanation is too brief or overwhelming");
   if ((summary.personality ?? "").split(/\n\s*\n/).filter(Boolean).length < 3) issues.push("personality explanation does not separate the image, the child, and Day Master strength clearly");
-  if (words(summary.closing_encouragement ?? "") < 25 || words(summary.closing_encouragement ?? "") > 90) issues.push("closing encouragement is too brief or overwhelming");
+  if (words(summary.closing_encouragement ?? "") < 75 || words(summary.closing_encouragement ?? "") > 220) issues.push("closing encouragement is too brief or overwhelming");
   if ((summary.closing_encouragement ?? "").split(/\n\s*\n/).filter(Boolean).length < 2) issues.push("closing encouragement does not separate encouragement from the wider Bazi invitation");
   const repeatedOpenings = sections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
   if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
@@ -121,6 +120,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   const sentenceSignatures = sentences.map((sentence) => sentence.replace(/[^a-z0-9\s]/g, "").split(/\s+/).filter((word) => !/^(a|an|and|the|this|that|to|of|in|on|for|may|can|is|are|he|she|his|her)$/.test(word)).slice(0, 7).join(" "));
   if (new Set(sentenceSignatures).size !== sentenceSignatures.length) issues.push("the report repeats the same idea or sentence in more than one section");
   if ((prose.match(/one example is/gi) ?? []).length > 1) issues.push("the report overuses the same example sentence structure");
+  if ((prose.match(/such as/gi) ?? []).length > 2) issues.push("the report overuses the same example sentence structure");
   if ((prose.match(/\byou can\b/gi) ?? []).length > 2) issues.push("parent guidance repeats the same sentence structure");
   if ((prose.match(/courage, loyalty, and determination/gi) ?? []).length > 1) issues.push("the same qualities are repeated across report sections");
   if (childName && prose.toLowerCase().split(childName.toLowerCase()).length - 1 < 4) issues.push("report is not personalised to the child often enough");
@@ -129,13 +129,14 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string):
   const relatableMoments = prose.match(/\b(when|before|after|homework|chores|school|mistake|routine|first step|choice|difficult day)\b/gi) ?? [];
   if (relatableMoments.length < 4) issues.push("report lacks enough recognisable everyday moments");
   if (!/\b(you may|you can|at the heart|feel understood|with calm guidance|ready to listen)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
-  if (gender && gender !== "other" && /\b(they|them|their|theirs|themselves)\b/i.test(prose)) issues.push("report does not use the selected he or she pronouns consistently");
+  if (/\b(?:he|she) (?:are|were|have|do)\b|ideas so (?:he|she) is not forgotten/i.test(prose)) issues.push("a pronoun creates an ungrammatical or unintended meaning");
   if (gender && gender !== "other" && /\bthe child(?:['’]s)?\b/i.test(prose)) issues.push("report refers generically to 'the child' instead of using personal pronouns");
   if (summary.concern_response) {
     if (childName && !summary.concern_response.includes(childName)) issues.push("parenting concern response is not personal to the child");
     if (words(summary.concern_response) < 8 || words(summary.concern_response) > 45) issues.push("parenting concern reflection is unclear or too long");
     if (/\b(start by|look for the situations|consistent observation|deserves a calm|offer one manageable choice)\b/i.test(summary.concern_response)) issues.push("parenting concern response sounds procedural or templated");
     if (!summary.concern_tips?.length) issues.push("parenting concern guidance is not separated from the observation");
+    if (concern && /connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/i.test(concern) && !/connect|closer|talk|listen|time together/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("connection concern was not answered with connection guidance");
   }
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
   if (!/\b(summary|day master|one part|fuller|more)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement does not gently place the summary in the wider Bazi picture");
@@ -149,24 +150,12 @@ function withQc(reading: Reading, qc: QcResult): Reading {
 
 function genderedSummary(summary: SummaryReport, gender: string): SummaryReport {
   if (gender !== "male" && gender !== "female") return summary;
-  const pronouns = gender === "male"
-    ? { they: "he", them: "him", their: "his", theirs: "his", themselves: "himself" }
-    : { they: "she", them: "her", their: "her", theirs: "hers", themselves: "herself" };
   const matchCase = (source: string, replacement: string) => source[0] === source[0].toUpperCase() ? capitalise(replacement) : replacement;
   const replace = (value: string) => value
     .replace(/\bhimself or herself\b/gi, (word) => matchCase(word, gender === "male" ? "himself" : "herself"))
     .replace(/\bhim or her\b/gi, (word) => matchCase(word, gender === "male" ? "him" : "her"))
     .replace(/\bhis or her\b/gi, (word) => matchCase(word, gender === "male" ? "his" : "her"))
-    .replace(/\bhe or she\b/gi, (word) => matchCase(word, gender === "male" ? "he" : "she"))
-    .replace(/\bthey don't\b/gi, gender === "male" ? "he doesn't" : "she doesn't")
-    .replace(/\bthey are\b/gi, gender === "male" ? "he is" : "she is")
-    .replace(/\bthey have\b/gi, gender === "male" ? "he has" : "she has")
-    .replace(/\bthey do\b/gi, gender === "male" ? "he does" : "she does")
-    .replace(/\bthemselves\b/gi, (word) => word[0] === "T" ? pronouns.themselves[0].toUpperCase() + pronouns.themselves.slice(1) : pronouns.themselves)
-    .replace(/\btheirs\b/gi, (word) => word[0] === "T" ? pronouns.theirs[0].toUpperCase() + pronouns.theirs.slice(1) : pronouns.theirs)
-    .replace(/\btheir\b/gi, (word) => word[0] === "T" ? pronouns.their[0].toUpperCase() + pronouns.their.slice(1) : pronouns.their)
-    .replace(/\bthem\b/gi, (word) => word[0] === "T" ? pronouns.them[0].toUpperCase() + pronouns.them.slice(1) : pronouns.them)
-    .replace(/\bthey\b/gi, (word) => word[0] === "T" ? pronouns.they[0].toUpperCase() + pronouns.they.slice(1) : pronouns.they);
+    .replace(/\bhe or she\b/gi, (word) => matchCase(word, gender === "male" ? "he" : "she"));
   return JSON.parse(JSON.stringify(summary), (_key, value) => typeof value === "string" ? replace(value) : value) as SummaryReport;
 }
 
@@ -184,10 +173,10 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const profile = getDayMasterKnowledge(dayMasterName);
   const variant = Math.floor(Math.random() * 3);
   const support = strength === "Weak"
-    ? `A Day Master may show itself clearly or more quietly, depending on how it works with the other characters in the Bazi chart. For ${name}, these qualities may emerge gradually as he or she feels secure and grows in confidence. In Bazi, this is known as a Weak Day Master. It does not mean that he or she lacks strength or ability.`
+    ? `In Bazi, ${name} has what is known as a Weak Day Master. This does not mean that he or she lacks strength or ability. Whether a Day Master is strong or weak depends on how it works with the other characters in the Bazi chart. For ${name}, having a Weak Day Master means that these qualities may emerge gradually as he or she feels secure and grows in confidence. ${profile.expressionExample}`
     : strength === "Balanced"
-      ? `${name}'s Day Master has a more even balance of support within the chart. Bazi describes this as Balanced. It does not mean that every quality will appear equally in every situation.`
-      : `${name}'s Day Master receives stronger support within the balance of this chart. Bazi describes this as a Strong Day Master. It does not mean that he or she will feel strong or confident in every situation.`;
+      ? `In Bazi, ${name} has what is known as a Balanced Day Master. This does not mean that every quality appears equally in every situation. The label describes how the Day Master works with the other characters in the chart. For ${name}, these qualities may appear more readily in some settings than others. ${profile.expressionExample}`
+      : `In Bazi, ${name} has what is known as a Strong Day Master. This does not mean that he or she will feel strong or confident in every situation. The label describes how the Day Master works with the other characters in the chart. For ${name}, these qualities may be easier to notice, while still benefiting from guidance and balance. ${profile.expressionExample}`;
   const personalityOpenings = [
     `${name} was born under the ${dayMaster} Day Master. ${profile.name} is often compared to ${profile.image}.`,
     `${name}'s Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
@@ -205,6 +194,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   ].join("\n\n");
   const wordingVariant = (heading: string) => ([...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) + variant) % 3;
   const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+    if (point.descriptions) return point.descriptions[wordingVariant(point.heading)].replaceAll("{name}", name);
     if (point.description) return point.description.replaceAll("{name}", name);
     if (point.examples) {
       const examples = wordingVariant(point.heading) === 1 ? [...point.examples].reverse() : point.examples;
@@ -226,25 +216,45 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       `If a situation involves ${point.everyday}, ${point.support}. Give ${name} time to take in the guidance before expecting an answer.`,
       `${supportText}. This can make situations such as ${point.everyday} feel more manageable for ${name}.`,
     ];
-    return { heading: index < 3 ? `Nurture ${point.heading.toLowerCase()}` : point.heading, body: bodies[index] };
+    return { heading: index < 3 ? ["When this quality appears", "Helping this strength grow", "Making learning feel natural"][index] : ["When things feel harder", "Finding a steadier response"][index - 3], body: bodies[index] };
   });
+  if (dayMasterName === "Ren") parentingTips.splice(0, parentingTips.length,
+    { heading: "When big ideas grow quickly", body: `A big idea may feel exciting but difficult to begin. Listen to ${name}'s idea first, then help him or her choose one small step to try.` },
+    { heading: "When a plan needs changing", body: `A setback may lead ${name} to test several possibilities. Give him or her room to explore, then agree on a calm time to check in.` },
+    { heading: "Learning through experience", body: `Instructions may make more sense after ${name} has tried the first step personally. Whenever possible, let him or her learn by building, testing, or taking part.` },
+    { heading: "When ideas compete", body: `${name} may become excited by a new activity before finishing the current one. Keep a short list of the new ideas, then help him or her choose one thing to complete first.` },
+    { heading: "Before making a decision", body: `Excitement may lead ${name} to answer before all the details are clear. Invite him or her to pause, then ask, “What might happen next?”` },
+  );
   const closingStarts = dayMasterName === "Ren" ? [
-    `As ${name} grows in confidence, his or her imagination may shine through the ideas he or she shares. Courage may appear in the way ${name} adjusts and tries again when plans change. These everyday moments show that he or she is beginning to trust what he or she can do.`,
-    `${name}'s imagination may become easier to see as confidence grows. When a plan changes, the willingness to adapt and try again can reveal quiet courage. These moments show ${name} learning to trust his or her own abilities.`,
-    `As confidence develops, ${name} may share more of the ideas that were once kept private. The way he or she adapts when something goes wrong can also show growing courage and self-belief.`,
+    `${name} may not always share every idea or feeling straight away. As confidence grows, imagination may become easier to see in the questions he or she asks and the solutions he or she tries. When plans change, ${name} may gradually learn to adjust and try again instead of feeling stuck.`,
+    `${name}'s ideas may first appear quietly. With growing confidence, he or she may begin asking more questions and testing possible solutions. The willingness to adjust after a setback can become a valuable source of self-belief.`,
+    `${name} may take time to reveal what is happening inside. As he or she feels more secure, creative ideas and different ways of solving problems may become easier to share.`,
   ] : [
     `As ${name} grows in confidence, his or her natural qualities may become easier to recognise in everyday life. Each small step offers another chance for ${name} to trust his or her own judgement.`,
     `Some of ${name}'s strengths may emerge gradually. Notice the ideas he or she shares and the moments when he or she adjusts after a setback. These are meaningful signs of growing self-belief.`,
     `${name} may not show every strength in the same way each day. Patient encouragement can help him or her express these qualities with greater confidence over time.`,
   ];
+  const futureByDayMaster: Record<string, string> = {
+    Jia: `As ${name} grows older, a wish to improve may become a steady sense of purpose. Patient guidance can show him or her that progress also includes resting, changing course, and asking for help.`,
+    Yi: `As ${name} grows older, quiet flexibility may help him or her work well with different people and changing situations. Clear boundaries can help this thoughtfulness grow without losing sight of personal needs.`,
+    Bing: `As ${name} grows older, natural warmth may help him or her bring people together and speak with confidence. Learning to pause when feelings run high can make that warmth even more reassuring to others.`,
+    Ding: `As ${name} grows older, careful observation may develop into thoughtful judgement and a calm way of supporting others. A safe place to share feelings can help those quiet insights find a voice.`,
+    Wu: `As ${name} grows older, steadiness may become a dependable source of support for family and friends. Learning that change can be handled one step at a time will help that reliability remain flexible.`,
+    Ji: `As ${name} grows older, practical care may become a quiet ability to help people and ideas flourish. Encouragement to name personal needs will help him or her care for others without disappearing into the background.`,
+    Geng: `As ${name} grows older, determination may mature into clear judgement and the courage to stand up for what matters. Learning when to pause and listen will help that strength become measured as well as brave.`,
+    Xin: `As ${name} grows older, a careful eye may develop into excellent judgement and thoughtful self-expression. Gentle reminders that work can be worthwhile without being perfect will protect the confidence behind that care.`,
+    Ren: `As ${name} grows older, the ability to adapt may help him or her approach unfamiliar situations with greater confidence. Learning to pause, ask for support, and try a different approach can provide a steady foundation for the years ahead.`,
+    Gui: `As ${name} grows older, quiet sensitivity may grow into a thoughtful understanding of people and situations. Reliable routines and room to reflect can help him or her share those observations with confidence.`,
+  };
+  const parentEncouragement = `By paying attention to these everyday moments, you help ${name} feel seen and understood. The care you are taking to understand him or her is already meaningful support. You do not need every answer immediately. Your patience and willingness to keep connecting can make a lasting difference.`;
   return {
     personality,
     strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
     soft_spots: profile.softSpots.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     concern_response: concern ? concernReflection(concern, name) : undefined,
-    concern_tips: concern ? concernGuidance(concern, name, profile) : undefined,
+    concern_tips: concern ? concernGuidance(concern, name) : undefined,
     parenting_tips: parentingTips,
-    closing_encouragement: `${closingStarts[variant]}\n\nThis summary focuses only on the Day Master in ${name}'s Bazi chart. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
+    closing_encouragement: `${closingStarts[variant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. It is only a small part of what Bazi can offer because the focus here is the Day Master. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
   };
 }
 
@@ -267,7 +277,8 @@ export async function generateReading(input: Input): Promise<Reading> {
   const calculatedChart = calculated.chart_data as { day_master?: string; day_master_name?: string };
   const publicElement = Object.keys(elementStyle).find((element) => calculatedChart.day_master?.includes(element)) ?? "element";
   calculated.element_profile = `This summary focuses on one important part of the chart: ${input.subject_name}'s ${calculatedChart.day_master} Day Master. It is associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
-  const verified = withQc(calculated, deterministicQc(calculated, input.subject_name, input.gender));
+  const concern = (input as Input & { parenting_concern?: string | null }).parenting_concern;
+  const verified = withQc(calculated, deterministicQc(calculated, input.subject_name, input.gender, concern));
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true" || process.env.FREE_SUMMARY_AI_ENABLED === "false") return verified;
   try {
     const systemPrompt = [
@@ -313,7 +324,7 @@ export async function generateReading(input: Input): Promise<Reading> {
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
     const personalised = genderedSummary(parsed.report_content, input.gender);
     const candidate = { ...verified, report_content: attachVerifiedBasis(personalised, verified.report_content), insights_source: `calculation/validated-v3+openai/${json.model}` };
-    const qc = deterministicQc(candidate, input.subject_name, input.gender);
+    const qc = deterministicQc(candidate, input.subject_name, input.gender, concern);
     return qc.approved ? withQc(candidate, qc) : withQc(verified, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
   } catch (error) { console.error("AI generation fallback", error); return verified; }
 }
