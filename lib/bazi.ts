@@ -164,9 +164,25 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
     ...candidate,
     strengths: candidate.strengths.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.strengths[index]?.guidance, basis: verified.strengths[index]?.basis })),
     soft_spots: candidate.soft_spots.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.soft_spots[index]?.guidance, basis: verified.soft_spots[index]?.basis })),
-    concern_response: verified.concern_response ?? candidate.concern_response,
-    concern_tips: verified.concern_tips ?? candidate.concern_tips,
+    concern_response: candidate.concern_response ?? verified.concern_response,
+    concern_tips: candidate.concern_tips?.length ? candidate.concern_tips : verified.concern_tips,
   };
+}
+
+function hasSafeConcernAnswer(summary: SummaryReport, name: string): boolean {
+  const response = summary.concern_response?.trim() ?? "";
+  const tips = summary.concern_tips ?? [];
+  const text = `${response} ${tips.join(" ")}`;
+  return response.includes(name)
+    && words(response) >= 8
+    && words(response) <= 55
+    && tips.length >= 2
+    && tips.length <= 3
+    && tips.every((tip) => words(tip) >= 8 && words(tip) <= 55)
+    && !unsupportedClaims.test(text)
+    && !sourceLeak.test(text)
+    && !aiStylePhrases.test(text)
+    && !awkwardPhrases.test(text);
 }
 
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null): SummaryReport {
@@ -311,7 +327,8 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Identify the parent's intent before writing concern guidance. A request about connecting must receive connection guidance; exam stress must not be turned into a general schoolwork concern.",
       "Concern guidance must be simple, concrete, and easy to understand. Never ask a child to 'be brave all at once' or use similarly unnatural phrasing.",
       "For every strength and support area, put the child observation in body and the direct parent action in guidance. Never mix them in one paragraph.",
-      "If there is a parenting concern, paraphrase only what the parent wrote in concern_response. Put two short, concrete actions in concern_tips. Do not infer fear, safety, or hidden motives.",
+      "If there is a parenting concern, answer that exact concern rather than giving broad parenting advice. Paraphrase it warmly in concern_response, then give exactly three short and practical concern_tips. Do not infer fear, safety, motives, behaviour, or a different problem that the parent did not mention.",
+      "Each concern tip must clearly connect to the concern supplied. A parent should be able to see why that particular suggestion answers the question.",
       "Write exactly five parenting tips of 35-60 words. Explain why each may help and include a realistic example or phrase.",
       "The closing must warmly summarise the child's main qualities, encourage the parent, and mention that the Day Master summary is only one part of what Bazi can reveal.",
       "Write the closing as two paragraphs. Keep the encouragement separate from the gentle invitation to explore the full chart.",
@@ -325,6 +342,10 @@ export async function generateReading(input: Input): Promise<Reading> {
     const personalised = genderedSummary(parsed.report_content, input.gender);
     const candidate = { ...verified, report_content: attachVerifiedBasis(personalised, verified.report_content), insights_source: `calculation/validated-v3+openai/${json.model}` };
     const qc = deterministicQc(candidate, input.subject_name, input.gender, concern);
-    return qc.approved ? withQc(candidate, qc) : withQc(verified, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
+    if (qc.approved) return withQc(candidate, qc);
+    const fallback = hasSafeConcernAnswer(candidate.report_content, input.subject_name)
+      ? { ...verified, report_content: { ...verified.report_content, concern_response: candidate.report_content.concern_response, concern_tips: candidate.report_content.concern_tips } }
+      : verified;
+    return withQc(fallback, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
   } catch (error) { console.error("AI generation fallback", error); return verified; }
 }
