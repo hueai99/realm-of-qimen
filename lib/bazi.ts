@@ -62,6 +62,7 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
   if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return `You would like to feel closer to ${name} and find an easier way to connect.`;
+  if (/perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/.test(text)) return `You would like to support ${name} when the need to get things exactly right creates pressure or makes mistakes difficult to accept.`;
   if (/exam|test stress|revision stress/.test(text)) return `You would like to help ${name} manage the stress he or she feels around exams.`;
   if (/school|study|homework|learn|grade/.test(text)) return `You would like to understand how ${name} is coping with learning and schoolwork.`;
   if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You have noticed that ${name} can become very upset, and you would like to understand these reactions better.`;
@@ -75,6 +76,7 @@ function concernGuidance(concern: string, name: string): string[] {
   const text = concern.toLowerCase();
   let tips: string[];
   if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) tips = [`Begin with something ${name} already enjoys. Genuine interest in his or her music, games, hobbies, or daily experiences can create an easier opening for conversation.`, `Choose a relaxed moment when neither of you is rushed. Spending time side by side may feel more natural than beginning with a serious face-to-face conversation.`, `When ${name} shares something, listen before offering advice. If he or she is not ready to talk, gently make it clear that the invitation remains open.`];
+  else if (/perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/.test(text)) tips = [`Praise ${name} for the care and effort shown, not only for a flawless result. Point out one thing that improved so progress feels worth noticing too.`, `Before a task begins, agree together on what “good enough” will look like. A clear finishing point can help ${name} stop without feeling that more checking is always necessary.`, `When a mistake happens, keep your response calm and matter-of-fact. Help ${name} identify what can be learned or adjusted, then remind him or her that making a mistake does not erase the effort already made.`];
   else if (/exam|test stress|revision stress/.test(text)) tips = [`Ask ${name} which part of the exam feels most worrying. Naming one concern can make it easier to decide what would help.`, `Help ${name} divide revision into short, manageable sessions. A clear plan can make the work feel less overwhelming.`, `Before discussing results, acknowledge the effort already made. This reminds ${name} that one exam does not define his or her ability.`];
   else if (/school|study|homework|learn|grade/.test(text)) tips = [`Ask ${name} which part of the work feels hardest. Help him or her choose one small step so the task feels easier to approach.`, `If frustration builds, suggest a short break. Return to the same step afterwards so the break supports progress.`, `Notice whether a particular time, subject, or type of task feels easier. That pattern may reveal where a small change could help.`];
   else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. Listening is easier once the strongest feelings have passed.`, `When ${name} is ready, ask what felt most upsetting. Listen before explaining clearly what needs to happen next.`, `Afterwards, agree on one simple way to handle a similar moment. Keep the plan short enough for ${name} to remember.`];
@@ -137,6 +139,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
     if (/\b(start by|look for the situations|consistent observation|deserves a calm|offer one manageable choice)\b/i.test(summary.concern_response)) issues.push("parenting concern response sounds procedural or templated");
     if (!summary.concern_tips?.length) issues.push("parenting concern guidance is not separated from the observation");
     if (concern && /connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/i.test(concern) && !/connect|closer|talk|listen|time together/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("connection concern was not answered with connection guidance");
+    if (concern && /perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/i.test(concern) && !/effort|progress|good enough|mistake|pressure|checking/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("perfectionism concern was not answered with relevant support");
   }
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
   if (!/\b(summary|day master|one part|fuller|more)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement does not gently place the summary in the wider Bazi picture");
@@ -173,12 +176,12 @@ function hasSafeConcernAnswer(summary: SummaryReport, name: string): boolean {
   const response = summary.concern_response?.trim() ?? "";
   const tips = summary.concern_tips ?? [];
   const text = `${response} ${tips.join(" ")}`;
-  return response.includes(name)
+  return response.toLowerCase().includes(name.toLowerCase())
     && words(response) >= 8
     && words(response) <= 55
     && tips.length >= 2
     && tips.length <= 3
-    && tips.every((tip) => words(tip) >= 8 && words(tip) <= 55)
+    && tips.every((tip) => words(tip) >= 8 && words(tip) <= 75)
     && !unsupportedClaims.test(text)
     && !sourceLeak.test(text)
     && !aiStylePhrases.test(text)
@@ -325,6 +328,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
       "For concern_response, paraphrase only the concern the parent supplied. Do not invent a cause, setting, pattern, feeling, or behaviour that the parent did not mention.",
       "Identify the parent's intent before writing concern guidance. A request about connecting must receive connection guidance; exam stress must not be turned into a general schoolwork concern.",
+      "A concern about perfectionism must address pressure, fear of mistakes, knowing when work is good enough, and recognising effort or progress. Do not replace it with generic advice.",
       "Concern guidance must be simple, concrete, and easy to understand. Never ask a child to 'be brave all at once' or use similarly unnatural phrasing.",
       "For every strength and support area, put the child observation in body and the direct parent action in guidance. Never mix them in one paragraph.",
       "If there is a parenting concern, answer that exact concern rather than giving broad parenting advice. Paraphrase it warmly in concern_response, then give exactly three short and practical concern_tips. Do not infer fear, safety, motives, behaviour, or a different problem that the parent did not mention.",
