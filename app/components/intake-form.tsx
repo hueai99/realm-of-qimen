@@ -16,6 +16,7 @@ export default function IntakeForm() {
   const [error, setError] = useState("");
   const [submittedName, setSubmittedName] = useState("");
   const [readyReportId, setReadyReportId] = useState("");
+  const [emailDelivery, setEmailDelivery] = useState<"not_requested" | "sent" | "failed" | "not_configured">("not_requested");
   const [birthCountry, setBirthCountry] = useState("Singapore");
   const [phoneCode, setPhoneCode] = useState("Singapore|+65");
   async function submit(formData: FormData) {
@@ -26,13 +27,13 @@ export default function IntakeForm() {
     const enteredDate = new Date(Date.UTC(year, month - 1, day));
     if (enteredDate.getUTCFullYear() !== year || enteredDate.getUTCMonth() !== month - 1 || enteredDate.getUTCDate() !== day) { setError("Please enter a valid date of birth."); return; }
     const childName = enteredName === enteredName.toLowerCase() ? enteredName.replace(/[A-Za-z]/, (letter) => letter.toUpperCase()) : enteredName;
-    setSubmittedName(childName); setReadyReportId(""); setBusy(true); setError("");
+    setSubmittedName(childName); setReadyReportId(""); setEmailDelivery("not_requested"); setBusy(true); setError("");
     try {
       const response = await fetch("/api/generate-report", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(formData.entries())) });
       const raw = await response.text();
       const result = raw ? JSON.parse(raw) : {};
       if (!response.ok) throw new Error(result.error ?? "Could not create your report");
-      setReadyReportId(result.report_id); setBusy(false);
+      setReadyReportId(result.report_id); setEmailDelivery(result.email_delivery ?? "not_requested"); setBusy(false);
     } catch (e) { setError(e instanceof Error ? e.message : "Something went wrong"); setBusy(false); }
   }
   const cls = "mt-2 w-full rounded-sm border border-[#c9bcad] bg-[#fffdf8] px-4 py-3 outline-none focus:border-[#9b3c2b]";
@@ -52,6 +53,8 @@ export default function IntakeForm() {
       <label className="text-sm">Gender<select required name="gender" defaultValue="" className={cls}><option value="" disabled>Select</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></label>
       <input type="hidden" name="question_type" value="child_potential" />
       <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
+      <label className="flex items-start gap-3 text-sm sm:col-span-2"><input type="checkbox" name="email_summary_requested" value="true" className="mt-1 h-4 w-4 accent-[#9b3c2b]" /><span>Email me a copy of this Bazi summary.</span></label>
+      <label className="flex items-start gap-3 text-sm sm:col-span-2"><input type="checkbox" name="marketing_consent" value="true" className="mt-1 h-4 w-4 accent-[#9b3c2b]" /><span>Keep me updated with helpful parenting insights and report options. <span className="text-[#877b70]">(optional)</span></span></label>
     </div>
     {(busy || readyReportId) && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#211b16]/75 px-5 py-8 backdrop-blur-sm" role="status" aria-live="polite">
       <div className="w-full max-w-2xl rounded-sm bg-[#fffaf0] p-7 shadow-2xl sm:p-10">
@@ -67,6 +70,9 @@ export default function IntakeForm() {
           <SampleBaziChart />
           <div className="mt-7 border-t border-[#d7cbbd] pt-6 text-center">
             <h2 className="text-2xl">{busy ? `Preparing ${submittedName}'s personality summary…` : `${submittedName}'s personality summary is ready.`}</h2>
+            {!busy && emailDelivery === "sent" && <p className="mt-3 text-sm text-[#665a50]">A copy has also been sent to your email.</p>}
+            {!busy && emailDelivery === "not_configured" && <p className="mt-3 text-sm text-[#8a4b3c]">Your online summary is ready, but email delivery is not available yet.</p>}
+            {!busy && emailDelivery === "failed" && <p className="mt-3 text-sm text-[#8a4b3c]">We could not email the copy, but you can still read it online.</p>}
             <button type="button" disabled={busy} onClick={() => readyReportId && router.push(`/report/${readyReportId}`)} className="mt-5 bg-[#9b3c2b] px-8 py-4 font-semibold text-white disabled:cursor-wait disabled:bg-[#b9afa5]">{busy ? "Preparing report…" : "Click to read"}</button>
           </div>
         </div>

@@ -154,6 +154,9 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
     if (concern && /connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/i.test(concern) && !/connect|closer|talk|listen|time together/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("connection concern was not answered with connection guidance");
     if (concern && /perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/i.test(concern) && !/effort|progress|good enough|mistake|pressure|checking/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("perfectionism concern was not answered with relevant support");
   }
+  if (!summary.day_master_support?.introduction || !summary.day_master_support.secure || !summary.day_master_support.example || !summary.day_master_support.pressure || !summary.day_master_support.support) {
+    issues.push("Day Master support portrait is incomplete");
+  }
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
   if (!/\b(summary|day master|one part|fuller|more)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement does not gently place the summary in the wider Bazi picture");
   if (/\b(traditional reflective framework|not a fixed label|set aside anything|keep what helps|this blueprint)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement sounds like a disclaimer or template");
@@ -181,6 +184,7 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
     strengths: candidate.strengths.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.strengths[index]?.guidance, basis: verified.strengths[index]?.basis })),
     soft_spots: candidate.soft_spots.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.soft_spots[index]?.guidance, basis: verified.soft_spots[index]?.basis })),
     day_master_support: verified.day_master_support,
+    concern_original: verified.concern_original,
     concern_response: candidate.concern_response ?? verified.concern_response,
     concern_tips: candidate.concern_tips?.length ? candidate.concern_tips : verified.concern_tips,
   };
@@ -282,6 +286,12 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const parentEncouragement = `By paying attention to these everyday moments, you help ${name} feel seen and understood. The care you are taking to understand him or her is already meaningful support. You do not need every answer immediately. Your patience and willingness to keep connecting can make a lasting difference.`;
   const supportPortrait = dayMasterSupportPortraits[dayMasterName];
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
+  const portraitExamplePoint = profile.strengths[variant];
+  const portraitExamples = [
+    `You may notice this when ${portraitExamplePoint.everyday}.`,
+    `In everyday life, this could appear through ${portraitExamplePoint.everyday}.`,
+    `A small sign of this may be ${portraitExamplePoint.everyday}.`,
+  ];
   const expressionContext = strength === "Weak"
     ? `For ${name}, these qualities may emerge gradually as confidence grows.`
     : strength === "Strong"
@@ -294,9 +304,11 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     day_master_support: {
       introduction: `${supportPortrait.introduction} ${expressionContext}`,
       secure: personalisePortrait(supportPortrait.secure),
+      example: portraitExamples[variant],
       pressure: personalisePortrait(supportPortrait.pressure),
       support: personalisePortrait(supportPortrait.support),
     },
+    concern_original: concern ?? undefined,
     concern_response: concern ? concernReflection(concern, name) : undefined,
     concern_tips: concern ? concernGuidance(concern, name) : undefined,
     parenting_tips: parentingTips,
@@ -353,7 +365,8 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Vary complete sentence structures across cards. Do not repeatedly begin with 'One example is', 'You may notice', or 'You can'.",
       "Do not repeat the same list of qualities in the opening and closing. Express the verified meaning differently and naturally when summarising.",
       "Strengths should feel specific and affirming. Soft spots should explain what may sit beneath the behaviour without sounding negative.",
-      "For concern_response, paraphrase only the concern the parent supplied. Do not invent a cause, setting, pattern, feeling, or behaviour that the parent did not mention.",
+      "Copy the parent's concern exactly into concern_original. Do not edit, summarise, or reinterpret it.",
+      "For concern_response, address only the concern the parent supplied. Do not invent a cause, setting, pattern, feeling, or behaviour that the parent did not mention.",
       "Identify the parent's intent before writing concern guidance. A request about connecting must receive connection guidance; exam stress must not be turned into a general schoolwork concern.",
       "A concern about perfectionism must address pressure, fear of mistakes, knowing when work is good enough, and recognising effort or progress. Do not replace it with generic advice.",
       "Concern guidance must be simple, concrete, and easy to understand. Never ask a child to 'be brave all at once' or use similarly unnatural phrasing.",
@@ -372,6 +385,7 @@ export async function generateReading(input: Input): Promise<Reading> {
     if (!response.ok) throw new Error(`OpenAI ${response.status}`); const json = await response.json(); const parsed = JSON.parse(json.choices[0].message.content);
     const personalised = genderedSummary(parsed.report_content, input.gender);
     if (!concern) {
+      personalised.concern_original = undefined;
       personalised.concern_response = undefined;
       personalised.concern_tips = undefined;
     }
