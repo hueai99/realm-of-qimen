@@ -59,6 +59,19 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
   Water: { strengths: [["Reads the room", "often notices small shifts in people and situations before speaking"], ["Finds another way", "can adapt intelligently when the obvious route does not work"], ["Thoughtful curiosity", "may ask surprisingly deep questions and connect ideas quietly"]], softSpots: [["Keeps thoughts inside", "may not ask for help until worry has already built up"], ["Can drift without an anchor", "benefits from gentle structure when there are too many possibilities"]], closing: "a quietly insightful child whose sensitivity and curiosity can grow into calm resilience" },
 };
 
+const dayMasterSupportPortraits: Record<string, { introduction: string; secure: string; pressure: string; support: string }> = {
+  Jia: { introduction: "Jia Wood has a purposeful nature that tends to grow towards a clear direction.", secure: "When he or she feels secure, {name} may choose a meaningful goal and keep working towards it, even when progress is slow.", pressure: "Under pressure, a change of plan may feel like losing direction. Honest thoughts may also come out more sharply than intended.", support: "Give some warning before a change and involve {name} in choosing the next step. This respects the need for direction while helping flexibility grow." },
+  Yi: { introduction: "Yi Wood is flexible and often finds a thoughtful way to grow around obstacles.", secure: "When he or she feels secure, {name} may connect ideas, adjust thoughtfully, and find a gentle way to work with different people.", pressure: "Under pressure, {name} may bend too far around other people's needs or hesitate because several approaches seem possible.", support: "Offer a clear boundary and ask what {name} personally thinks. This makes room for flexibility without allowing personal needs to disappear." },
+  Bing: { introduction: "Bing Fire is warm and expressive, with a natural pull towards connection.", secure: "When he or she feels secure, {name}'s warmth may become easier to see through lively conversation, enthusiasm, and a wish to include others.", pressure: "Under pressure, feelings may arrive quickly. A quiet response from others may also feel more personal than it was meant to be.", support: "Let the strongest feeling settle before discussing what happened. Afterwards, acknowledge the feeling and help {name} choose one clear way forward." },
+  Ding: { introduction: "Ding Fire carries a quieter warmth and often notices what is happening beneath the surface.", secure: "When he or she feels secure, {name} may share careful observations and show warmth through quiet, thoughtful attention.", pressure: "Under pressure, feelings or ideas may stay private for too long. Too much questioning can make it even harder to speak.", support: "Mention gently what you have noticed, then allow time. A calm conversation later may help {name} express what was difficult to explain earlier." },
+  Wu: { introduction: "Wu Earth values steadiness and tends to feel most comfortable with a dependable foundation.", secure: "When he or she feels secure, {name} may become a steady presence who values familiar routines and follows through on responsibilities.", pressure: "Under pressure, sudden change may feel unsettling. {name} may also carry a worry quietly rather than risk disturbing other people.", support: "Explain changes early and keep one familiar part of the routine where possible. Check in privately so {name} does not feel responsible for keeping everyone else steady." },
+  Ji: { introduction: "Ji Earth often expresses care in quiet, practical ways that help others grow.", secure: "When he or she feels secure, {name} may show care through practical help, patience, and attention to the small things people need.", pressure: "Under pressure, {name} may focus so much on helping or keeping the peace that personal feelings remain unspoken.", support: "Notice the care being offered, then ask what would help {name} too. This shows that kindness does not require putting personal needs last." },
+  Geng: { introduction: "Geng Metal has a direct nature that often meets a clear challenge through action.", secure: "When he or she feels secure, {name} may meet a clear challenge directly and keep trying after a setback.", pressure: "Under pressure, determination may move faster than the situation requires. {name} may act before hearing the whole story or continue after frustration has built up.", support: "Recognise the determination, then invite a short pause before the next step. Asking what still needs to be understood can help strength become more measured." },
+  Xin: { introduction: "Xin Metal is discerning and often pays close attention to quality and detail.", secure: "When he or she feels secure, {name} may use a careful eye to improve work, choose words thoughtfully, and notice details others miss.", pressure: "Under pressure, a small mistake or critical comment may linger. It may also become difficult to decide when a task is finished.", support: "Agree beforehand on what a finished result needs to include. Give feedback privately and focus on one useful improvement rather than every small flaw." },
+  Ren: { introduction: "Ren Water is adaptable and often looks for another route when the first one is blocked.", secure: "When he or she feels secure, {name} may become more willing to explore, ask questions, and find another route when the first plan does not work.", pressure: "Under pressure, too many possibilities may make it difficult to choose where to begin. An idea may also remain private if {name} is unsure how it will be received.", support: "Give room to explore, but offer one clear starting point. Asking which part {name} would like to try first allows imagination to move without becoming overwhelmed by choices." },
+  Gui: { introduction: "Gui Water is quietly perceptive and often gathers meaning before speaking.", secure: "When he or she feels secure, {name} may share perceptive observations, original ideas, and a quiet understanding of what is happening around him or her.", pressure: "Under pressure, feelings may remain hidden or attention may drift when a task feels disconnected from anything meaningful.", support: "Create a calm opening to talk without repeated questions. For a difficult task, connect it to one useful purpose and agree on a clear point to finish." },
+};
+
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
   if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return `You would like to feel closer to ${name} and find an easier way to connect.`;
@@ -167,6 +180,7 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
     ...candidate,
     strengths: candidate.strengths.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.strengths[index]?.guidance, basis: verified.strengths[index]?.basis })),
     soft_spots: candidate.soft_spots.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.soft_spots[index]?.guidance, basis: verified.soft_spots[index]?.basis })),
+    day_master_support: verified.day_master_support,
     concern_response: candidate.concern_response ?? verified.concern_response,
     concern_tips: candidate.concern_tips?.length ? candidate.concern_tips : verified.concern_tips,
   };
@@ -266,10 +280,23 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     Gui: `As ${name} grows older, quiet sensitivity may grow into a thoughtful understanding of people and situations. Reliable routines and room to reflect can help him or her share those observations with confidence.`,
   };
   const parentEncouragement = `By paying attention to these everyday moments, you help ${name} feel seen and understood. The care you are taking to understand him or her is already meaningful support. You do not need every answer immediately. Your patience and willingness to keep connecting can make a lasting difference.`;
+  const supportPortrait = dayMasterSupportPortraits[dayMasterName];
+  const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
+  const expressionContext = strength === "Weak"
+    ? `For ${name}, these qualities may emerge gradually as confidence grows.`
+    : strength === "Strong"
+      ? `For ${name}, these qualities may be easier to notice, although support still helps them remain balanced.`
+      : `For ${name}, these qualities may appear clearly in some situations and more quietly in others.`;
   return {
     personality,
     strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
     soft_spots: profile.softSpots.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
+    day_master_support: {
+      introduction: `${supportPortrait.introduction} ${expressionContext}`,
+      secure: personalisePortrait(supportPortrait.secure),
+      pressure: personalisePortrait(supportPortrait.pressure),
+      support: personalisePortrait(supportPortrait.support),
+    },
     concern_response: concern ? concernReflection(concern, name) : undefined,
     concern_tips: concern ? concernGuidance(concern, name) : undefined,
     parenting_tips: parentingTips,
