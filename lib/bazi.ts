@@ -238,12 +238,29 @@ function hasSafeConcernAnswer(summary: SummaryReport, name: string, concern?: st
 
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null, variationSeed?: number): SummaryReport {
   const profile = getDayMasterKnowledge(dayMasterName);
-  const variant = variationSeed === undefined ? Math.floor(Math.random() * 3) : Math.abs(variationSeed) % 3;
-  const support = strength === "Weak"
-    ? `In Bazi, ${name} has what is known as a Weak Day Master. This does not mean that he or she lacks strength or ability. Whether a Day Master is strong or weak depends on how it works with the other characters in the Bazi chart. For ${name}, having a Weak Day Master means that these qualities may emerge gradually as he or she feels secure and grows in confidence. ${profile.expressionExample}`
+  const variationCycle = variationSeed === undefined ? Math.floor(Math.random() * 81) : Math.abs(Math.trunc(variationSeed));
+  const variant = variationCycle % 3;
+  const openingVariant = Math.floor(variationCycle / 3) % 3;
+  const connectionVariant = Math.floor(variationCycle / 9) % 3;
+  const closingVariant = Math.floor(variationCycle / 27) % 3;
+  const supportVariants = strength === "Weak"
+    ? [
+      `In Bazi, ${name} has what is known as a Weak Day Master. This does not mean that he or she lacks strength or ability. These Day Master qualities may show themselves more quietly at first. As ${name} feels secure and becomes more confident, they may emerge more clearly. ${profile.expressionExample}`,
+      `${name}'s Day Master is described as Weak in Bazi. The word refers to how the Day Master works with the rest of the chart, not to his or her character or ability. Some of these qualities may take time to become visible. They can grow clearer with trust, encouragement, and experience. ${profile.expressionExample}`,
+      `Bazi describes this as a Weak Day Master. For ${name}, that simply means the qualities in this summary may emerge gradually rather than appearing strongly in every situation. It does not mean that he or she is weak. Feeling safe and supported can make these qualities easier to express. ${profile.expressionExample}`,
+    ]
     : strength === "Balanced"
-      ? `In Bazi, ${name} has what is known as a Balanced Day Master. This does not mean that every quality appears equally in every situation. The label describes how the Day Master works with the other characters in the chart. For ${name}, these qualities may appear more readily in some settings than others. ${profile.expressionExample}`
-      : `In Bazi, ${name} has what is known as a Strong Day Master. This does not mean that he or she will feel strong or confident in every situation. The label describes how the Day Master works with the other characters in the chart. For ${name}, these qualities may be easier to notice, while still benefiting from guidance and balance. ${profile.expressionExample}`;
+      ? [
+        `In Bazi, ${name} has what is known as a Balanced Day Master. This does not mean that every quality appears equally in every situation. Some may be easy to notice, while others appear only when the setting feels right. ${profile.expressionExample}`,
+        `${name}'s Day Master is described as Balanced. The term refers to how it works with the rest of the chart, not to having the same response every day. Different situations may bring different qualities forward. ${profile.expressionExample}`,
+        `Bazi describes this as a Balanced Day Master. For ${name}, these qualities may appear clearly in some settings and more quietly in others. Support and experience still shape how they develop. ${profile.expressionExample}`,
+      ]
+      : [
+        `In Bazi, ${name} has what is known as a Strong Day Master. This does not mean that he or she will feel strong or confident in every situation. It means these Day Master qualities may be easier to notice. Guidance can help ${name} express them with balance. ${profile.expressionExample}`,
+        `${name}'s Day Master is described as Strong in Bazi. The word refers to how the Day Master works with the rest of the chart, not to his or her ability to handle everything alone. These qualities may come forward readily and still benefit from calm guidance. ${profile.expressionExample}`,
+        `Bazi describes this as a Strong Day Master. For ${name}, the qualities in this summary may show themselves quite clearly. They are not fixed reactions, and thoughtful support can help him or her use them well. ${profile.expressionExample}`,
+      ];
+  const support = supportVariants[variant];
   const personalityOpenings = [
     `${name} was born under the ${dayMaster} Day Master. ${profile.name} is often compared to ${profile.image}.`,
     `${name}'s Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
@@ -255,8 +272,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     `Likewise, you may recognise in ${name} ${profile.warmIntroduction}.`,
   ];
   const personality = [
-    personalityOpenings[variant],
-    childConnections[variant],
+    personalityOpenings[openingVariant],
+    childConnections[connectionVariant],
     support,
   ].join("\n\n");
   const wordingVariant = (heading: string) => ([...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) + variant) % 3;
@@ -317,7 +334,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const supportPortrait = dayMasterSupportPortraits[dayMasterName];
   const weeklyAction = concern ? concernWeeklyAction(concern, name) : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
-  const portraitExamplePoint = profile.strengths[variant];
+  const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
   const portraitExamples = [
     `You may notice this when ${portraitExamplePoint.everyday}.`,
     `In everyday life, this could appear through ${portraitExamplePoint.everyday}.`,
@@ -335,7 +352,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     day_master_support: {
       introduction: `${supportPortrait.introduction} ${expressionContext}`,
       secure: personalisePortrait(supportPortrait.secure),
-      example: portraitExamples[variant],
+      example: portraitExamples[connectionVariant],
       pressure: personalisePortrait(supportPortrait.pressure),
       support: personalisePortrait(supportPortrait.support),
       weekly_action: {
@@ -350,7 +367,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     concern_response: concern ? concernReflection(concern, name) : undefined,
     concern_tips: concern ? concernGuidance(concern, name) : undefined,
     parenting_tips: parentingTips,
-    closing_encouragement: `${closingStarts[variant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. It is only a small part of what Bazi can offer because the focus here is the Day Master. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
+    closing_encouragement: `${closingStarts[closingVariant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. It is only a small part of what Bazi can offer because the focus here is the Day Master. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
   };
 }
 
