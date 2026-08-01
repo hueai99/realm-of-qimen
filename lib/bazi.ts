@@ -95,6 +95,7 @@ function concernReflection(concern: string, name: string): string {
   if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You have noticed that ${name} may worry or hold back in some situations.`;
   if (/friend|social|lonely|bully|fit in/.test(text)) return `You would like to understand how ${name} is getting along with other children.`;
   if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) return `You would like to help ${name} recognise the areas he or she finds difficult and become more open to improving them.`;
+  if (/obstacle|setback|challenge|difficulty|difficulties|overcome/.test(text)) return `You would like to help ${name} face obstacles without losing confidence or feeling that he or she has to solve everything at once.`;
   if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You have noticed that it can be difficult for ${name} to follow some everyday requests.`;
   return `You would like some guidance on something that currently matters for ${name}.`;
 }
@@ -102,6 +103,7 @@ function concernReflection(concern: string, name: string): string {
 function concernWeeklyAction(concern: string, name: string): { situation: string; action: string; phrase: string; sign: string } {
   const text = concern.toLowerCase();
   if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) return { situation: "Have a strengths-and-growth conversation", action: `Take turns sharing one thing you handle well and one thing you are still learning. Begin with your own example so the conversation does not feel like a judgement of ${name}.`, phrase: "Here is something I am still working on. What would you like to become better at?", sign: `${name} can name one area to practise without becoming defensive or discouraged.` };
+  if (/obstacle|setback|challenge|difficulty|difficulties|overcome/.test(text)) return { situation: "Choose one obstacle that matters this week", action: `Ask ${name} to describe what is getting in the way. Help him or her choose the smallest useful step, but leave the attempt in ${name}'s hands.`, phrase: "What is getting in the way, and which small part could you try first?", sign: `${name} can describe the obstacle more clearly or begins one step without expecting the whole problem to disappear.` };
   if (/stubborn|recognise|self.aware/.test(text)) return { situation: "Try a short two-sided reflection", action: `Choose one small disagreement after it has passed. Take turns naming one thing each person may have seen differently, without deciding who was right.`, phrase: "I will share what I missed first. What might you have missed?", sign: `${name} can name another point of view or rethink one part of the situation.` };
   if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return { situation: "Set aside ten child-led minutes", action: `Let ${name} choose a simple activity to share with you. Follow his or her lead and keep advice aside unless it is requested.`, phrase: "You choose what we do for the next ten minutes.", sign: `${name} invites you into the activity, shares a detail, or seems more relaxed beside you.` };
   if (/perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/.test(text)) return { situation: "Make one harmless mistake visible", action: `Let ${name} see you make a small everyday mistake, correct what matters, and move on without criticising yourself.`, phrase: "That did not go as planned, but I can fix this part and continue.", sign: `${name} becomes a little less upset by a small error or is more willing to try again.` };
@@ -125,6 +127,7 @@ function concernGuidance(concern: string, name: string): string[] {
   else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than immediate pressure.`, `Notice the effort even when the result is imperfect. A simple “You tried even though you felt worried” can mean a great deal.`, `Give ${name} time to become familiar with a new situation. Confidence may grow after watching first and joining when ready.`];
   else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support is actually wanted.`, `Check whether ${name} would prefer advice, practical help, or simply someone to listen. The answer may differ from one situation to another.`];
   else if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) tips = [`Talk about one specific skill or situation rather than calling it a weakness. A clear example helps ${name} understand what can change without feeling that something is wrong with who he or she is.`, `Ask ${name} what felt difficult and what he or she would like to handle better next time. Listening to the answer makes self-awareness feel like discovery instead of criticism.`, `Notice honest reflection as well as improvement. When ${name} admits that something was difficult or accepts help, acknowledge that openness before discussing the next step.`];
+  else if (/obstacle|setback|challenge|difficulty|difficulties|overcome/.test(text)) tips = [`Ask ${name} to describe the obstacle in his or her own words. Understanding whether the difficult part is starting, knowing what to do, or worrying about the result makes the next step clearer.`, `Help ${name} make the problem smaller without taking it over. Focus on one part that can be attempted now, then pause and review what the attempt revealed.`, `Notice the way ${name} approaches the obstacle, not only whether it disappears. Trying another method, asking for help, or returning after a setback are all signs of progress.`];
   else if (/stubborn|recognise|self.aware/.test(text)) tips = [`Avoid asking ${name} to agree that he or she is stubborn. Talk about one specific moment instead, including what happened and how it affected the situation.`, `Ask what ${name} was trying to achieve or protect in that moment. Once he or she feels heard, explore one different way the situation could have been handled.`, `Notice when ${name} reconsiders a decision, admits a mistake, or listens to another view. Recognising these moments can make honest self-reflection feel safer.`];
   else if (/listen|defiant|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step before adding another.`, `Where possible, offer two acceptable choices. This gives ${name} some say while keeping the responsibility clear.`, `After the task is complete, acknowledge the cooperation. Brief, specific appreciation is easier to understand than a general compliment.`];
   else tips = [`Choose a calm moment and ask ${name} what would feel most helpful. Keep the question simple and allow time for an answer.`, `Listen before offering a solution. The first need may be understanding rather than immediate advice.`, `Try one small change, then check in again later. This makes it easier to notice what genuinely helps ${name}.`];
@@ -239,6 +242,79 @@ function hasSafeConcernAnswer(summary: SummaryReport, name: string, concern?: st
     && !awkwardPhrases.test(text)
     && (!concern || !/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/i.test(concern) || /area|difficult|improv|work on|practise|growth/i.test(text))
     && (!concern || !/stubborn|recognise|self.aware/i.test(concern) || /specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(text));
+}
+
+async function generateTailoredConcern(summary: SummaryReport, input: Input, concern: string, dayMasterName: string): Promise<SummaryReport | null> {
+  if (!process.env.OPENAI_API_KEY || process.env.CONCERN_AI_ENABLED === "false") return null;
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      signal: AbortSignal.timeout(18000),
+      headers: { "content-type": "application/json", authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+        response_format: { type: "json_object" },
+        temperature: 0.7,
+        max_tokens: 700,
+        messages: [
+          {
+            role: "system",
+            content: [
+              "Return JSON only with concern_response, concern_tips, and weekly_action.",
+              "Speak like a warm, practical parenting consultant. Use plain English a 12-year-old can understand.",
+              "Answer the parent's exact concern. Do not replace it with a broader concern or infer behaviour, motives, fear, diagnosis, or circumstances that were not supplied.",
+              "concern_response must warmly paraphrase the parent's intent in one sentence and include the child's name.",
+              "concern_tips must contain exactly three distinct, concrete suggestions. Each suggestion must directly answer the concern and be 18 to 55 words.",
+              "weekly_action must contain situation, action, phrase, and sign. It must be one small experiment for this week, not a repetition of any concern tip.",
+              "Use the reviewed Day Master context only when it naturally supports the concern. Never force a link or invent another Bazi factor.",
+              "Do not use labels such as stubborn, weak, difficult, or problematic unless the parent used that exact word, and never turn the label into a fact about the child.",
+              "Use the selected he or she pronouns. Keep every sentence natural, specific, kind, and non-mechanical.",
+            ].join(" "),
+          },
+          {
+            role: "user",
+            content: JSON.stringify({
+              child_name: input.subject_name,
+              gender: input.gender,
+              parent_concern: concern,
+              reviewed_day_master: dayMasterName,
+              reviewed_context: dayMasterSupportPortraits[dayMasterName],
+            }),
+          },
+        ],
+      }),
+    });
+    if (!response.ok) throw new Error(`OpenAI concern ${response.status}`);
+    const json = await response.json();
+    const parsed = JSON.parse(json.choices[0].message.content) as {
+      concern_response?: string;
+      concern_tips?: string[];
+      weekly_action?: { situation?: string; action?: string; phrase?: string; sign?: string };
+    };
+    const weekly = parsed.weekly_action;
+    if (!parsed.concern_response || parsed.concern_tips?.length !== 3 || !weekly?.situation || !weekly.action || !weekly.phrase || !weekly.sign) return null;
+    const weeklyAction = { situation: weekly.situation, action: weekly.action, phrase: weekly.phrase, sign: weekly.sign };
+    const candidate = genderedSummary({
+      ...summary,
+      concern_original: concern,
+      concern_response: parsed.concern_response,
+      concern_tips: parsed.concern_tips,
+      day_master_support: summary.day_master_support ? {
+        ...summary.day_master_support,
+        weekly_action: { ...weeklyAction, bazi_link: summary.day_master_support.weekly_action.bazi_link },
+      } : summary.day_master_support,
+    }, input.gender);
+    const weeklyText = `${weekly.situation} ${weekly.action} ${weekly.phrase} ${weekly.sign}`;
+    if (!hasSafeConcernAnswer(candidate, input.subject_name, concern)
+      || unsupportedClaims.test(weeklyText)
+      || sourceLeak.test(weeklyText)
+      || aiStylePhrases.test(weeklyText)
+      || awkwardPhrases.test(weeklyText)) return null;
+    return candidate;
+  } catch (error) {
+    console.error("Concern generation fallback", error);
+    return null;
+  }
 }
 
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null, variationSeed?: number): SummaryReport {
@@ -402,7 +478,15 @@ export async function generateReading(input: Input): Promise<Reading> {
   calculated.element_profile = `This summary focuses on one important part of the chart: ${input.subject_name}'s ${calculatedChart.day_master} Day Master. It is associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
   const concern = (input as Input & { parenting_concern?: string | null }).parenting_concern;
   const verified = withQc(calculated, deterministicQc(calculated, input.subject_name, input.gender, concern));
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_SYNC_ENABLED !== "true" || process.env.FREE_SUMMARY_AI_ENABLED === "false") return verified;
+  const fullSummaryAiEnabled = Boolean(process.env.OPENAI_API_KEY) && process.env.OPENAI_SYNC_ENABLED === "true" && process.env.FREE_SUMMARY_AI_ENABLED !== "false";
+  if (!fullSummaryAiEnabled) {
+    if (!concern) return verified;
+    const tailoredConcern = await generateTailoredConcern(verified.report_content, input, concern, calculatedChart.day_master_name ?? "Gui");
+    if (!tailoredConcern) return verified;
+    const tailored = { ...verified, report_content: tailoredConcern, insights_source: `${verified.insights_source}+openai-concern` };
+    const tailoredQc = deterministicQc(tailored, input.subject_name, input.gender, concern);
+    return tailoredQc.approved ? withQc(tailored, tailoredQc) : verified;
+  }
   try {
     const systemPrompt = [
       "Return JSON containing only report_content.",
