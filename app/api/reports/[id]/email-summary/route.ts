@@ -23,11 +23,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   await db.from("leads").update({ email, email_summary_requested: true, marketing_consent: consent, marketing_consent_at: consentAt }).eq("report_id", id);
   if (report.email !== email) await db.from("audit_logs").insert({ actor: "visitor", action: "summary_email.address_updated", target_table: "bazi_reports", target_id: id, payload: { previous_email: report.email, corrected_email: email } });
   if (alreadySent) return NextResponse.json({ status: "sent", email });
-  const delivery = await sendSummaryEmail({ reportId: id, email, parentName: report.parent_name ?? "Parent", childName: report.subject_name, summary });
+  const testingSender = process.env.NOTIFICATION_FROM_EMAIL?.includes("@resend.dev");
+  const deliveryEmail = process.env.RESEND_TEST_RECIPIENT || (testingSender ? "hueai9@gmail.com" : email);
+  const delivery = await sendSummaryEmail({ reportId: id, email: deliveryEmail, parentName: report.parent_name ?? "Parent", childName: report.subject_name, summary });
   await db.from("bazi_reports").update({ email_delivery_status: delivery.status, email_sent_at: delivery.status === "sent" ? new Date().toISOString() : null, email_delivery_error: delivery.error }).eq("id", id);
-  await db.from("audit_logs").insert({ actor: "visitor", action: `summary_email.${delivery.status}`, target_table: "bazi_reports", target_id: id, payload: { recipient: email, marketing_consent: consent } });
+  await db.from("audit_logs").insert({ actor: "visitor", action: `summary_email.${delivery.status}`, target_table: "bazi_reports", target_id: id, payload: { requested_recipient: email, delivery_recipient: deliveryEmail, marketing_consent: consent } });
   if (delivery.status !== "sent") {
-    const testingSender = process.env.NOTIFICATION_FROM_EMAIL?.includes("@resend.dev");
     const message = delivery.statusCode === 403 && testingSender
       ? "For this test, use the exact email address registered with Resend. Email aliases such as +4 will not work yet."
       : "We could not send the email yet. Please check the address and try again.";
