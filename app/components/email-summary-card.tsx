@@ -18,7 +18,7 @@ export default function EmailSummaryCard({ reportId, initialEmail, token }: { re
     } catch (error) { setMessage(error instanceof Error ? error.message : "We could not send the email yet."); }
     finally { setBusy(false); }
   }
-  return <div className="mt-10 flex justify-end">
+  return <div className="mt-10 flex justify-center">
     <button type="button" disabled={sent} onClick={() => { setOpen(true); setMessage(""); }} className="bg-[#9b3c2b] px-6 py-3 font-semibold text-white disabled:opacity-60">{sent ? "Email sent" : "Email this summary"}</button>
     {open && <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#211b16]/75 px-5 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="email-summary-title">
       <div className="w-full max-w-lg bg-[#fffaf0] p-7 shadow-2xl sm:p-9">
