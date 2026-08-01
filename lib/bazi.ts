@@ -357,7 +357,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     childConnections[connectionVariant],
     support,
   ].join("\n\n");
-  const wordingVariant = (heading: string) => ([...`${name}-${heading}`].reduce((total, character) => total + character.charCodeAt(0), 0) + variant) % 3;
+  const wordingVariant = (heading: string) => [...`${variationCycle}-${name}-${heading}`]
+    .reduce((seed, character) => Math.imul(seed ^ character.charCodeAt(0), 16777619) >>> 0, 2166136261) % 3;
   const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
     if (point.descriptions) return point.descriptions[wordingVariant(point.heading)].replaceAll("{name}", name);
     if (point.description) return point.description.replaceAll("{name}", name);
@@ -420,6 +421,15 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const weeklyAction = concern ? concernWeeklyAction(concern, name) : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
+  const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+    const guidance = point.support.trim().replace(/[.!]+$/, "");
+    const directGuidance = guidance.replace(/^you can\s+/i, "");
+    return [
+      `${capitalise(guidance)}.`,
+      `You may find it helpful to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
+      `When this appears, ${guidance.charAt(0).toLowerCase()}${guidance.slice(1)}.`,
+    ][wordingVariant(`${point.heading}-guidance`)];
+  };
   const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
   const portraitExamples = [
     `You may notice this when ${portraitExamplePoint.everyday}.`,
@@ -433,8 +443,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       : `For ${name}, these qualities may appear clearly in some situations and more quietly in others.`;
   return {
     personality,
-    strengths: rotate(profile.strengths, variant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
-    soft_spots: rotate(profile.softSpots, variant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
+    strengths: rotate(profile.strengths, openingVariant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
+    soft_spots: rotate(profile.softSpots, connectionVariant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     day_master_support: {
       introduction: `${supportPortrait.introduction} ${expressionContext}`,
       secure: personalisePortrait(supportPortrait.secure),
