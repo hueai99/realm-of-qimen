@@ -5,7 +5,7 @@ function escapeHtml(value: string) {
 }
 
 export async function sendSummaryEmail(input: { reportId: string; email: string; parentName: string; childName: string; summary: SummaryReport }) {
-  if (!process.env.RESEND_API_KEY || !process.env.NOTIFICATION_FROM_EMAIL) return { status: "not_configured" as const, error: "Email service is not configured" };
+  if (!process.env.RESEND_API_KEY || !process.env.NOTIFICATION_FROM_EMAIL) return { status: "not_configured" as const, error: "Email service is not configured", statusCode: 0 };
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://realm-of-qimen.vercel.app";
   const reportUrl = `${appUrl}/report/${input.reportId}`;
   const paragraphs = (value: string) => value.split(/\n\s*\n/).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("");
@@ -22,6 +22,6 @@ export async function sendSummaryEmail(input: { reportId: string; email: string;
       html: `<div style="font-family:Georgia,serif;max-width:620px;margin:auto;color:#2b211a;line-height:1.65"><p style="color:#9b3c2b;font-size:12px;letter-spacing:2px;text-transform:uppercase">Realm of Qimen</p><h1>${escapeHtml(input.childName)}'s Bazi personality summary</h1><p>Dear ${escapeHtml(input.parentName)},</p>${paragraphs(input.summary.personality)}<h2>Top 3 strengths</h2>${reportPoints(input.summary.strengths)}<h2>Where support may help</h2>${reportPoints(input.summary.soft_spots)}${actionHtml}<h2>Closing encouragement</h2>${paragraphs(input.summary.closing_encouragement)}<p><a href="${reportUrl}" style="display:inline-block;background:#9b3c2b;color:white;padding:12px 22px;text-decoration:none">View the online summary</a></p></div>`,
     }),
   });
-  if (response.ok) return { status: "sent" as const, error: null };
-  return { status: "failed" as const, error: `Resend returned ${response.status}` };
+  if (response.ok) return { status: "sent" as const, error: null, statusCode: response.status };
+  return { status: "failed" as const, error: `Resend returned ${response.status}`, statusCode: response.status };
 }

@@ -26,6 +26,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const delivery = await sendSummaryEmail({ reportId: id, email, parentName: report.parent_name ?? "Parent", childName: report.subject_name, summary });
   await db.from("bazi_reports").update({ email_delivery_status: delivery.status, email_sent_at: delivery.status === "sent" ? new Date().toISOString() : null, email_delivery_error: delivery.error }).eq("id", id);
   await db.from("audit_logs").insert({ actor: "visitor", action: `summary_email.${delivery.status}`, target_table: "bazi_reports", target_id: id, payload: { recipient: email, marketing_consent: consent } });
-  if (delivery.status !== "sent") return NextResponse.json({ error: "We could not send the email yet. Please check the address and try again." }, { status: 502 });
+  if (delivery.status !== "sent") {
+    const testingSender = process.env.NOTIFICATION_FROM_EMAIL?.includes("@resend.dev");
+    const message = delivery.statusCode === 403 && testingSender
+      ? "For this test, use the exact email address registered with Resend. Email aliases such as +4 will not work yet."
+      : "We could not send the email yet. Please check the address and try again.";
+    return NextResponse.json({ error: message }, { status: 502 });
+  }
   return NextResponse.json({ status: "sent", email });
 }
