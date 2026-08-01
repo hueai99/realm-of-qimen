@@ -1,0 +1,20 @@
+import Link from "next/link";
+
+export const metadata = { title: "Privacy Notice | Realm of Qimen" };
+
+export default function PrivacyPage() {
+  return <LegalPage title="Privacy Notice" updated="1 August 2026">
+    <p>Realm of Qimen respects the privacy of parents and children. This notice explains what information we collect, why we use it, and the choices available to you.</p>
+    <Section title="Information we collect"><p>To prepare a child Bazi summary, we collect the parent&apos;s name, email address and mobile number, together with the child&apos;s name, gender, date and time of birth, and place of birth. You may also choose to share a parenting concern, feedback about the report, or an interest in other Bazi services.</p></Section>
+    <Section title="How we use the information"><ul><li>Calculate the Bazi chart and prepare the requested summary.</li><li>Display, store and—when requested—email the summary.</li><li>Respond when you ask to learn more about our services.</li><li>Review feedback, improve report quality and investigate errors.</li><li>Protect the service, maintain records and meet legal obligations.</li></ul><p>Updates and promotional messages are optional. We will use contact details for those messages only when separate consent has been given.</p></Section>
+    <Section title="Children’s information"><p>This service is intended for a parent, legal guardian, or another adult authorised to provide the child&apos;s details. Please do not submit a child&apos;s information if you do not have that authority. We limit collection to information needed to prepare and support the requested reading, and we do not make a child&apos;s information public.</p></Section>
+    <Section title="Service providers and overseas processing"><p>We use service providers for website hosting, database storage, report generation and email delivery. These providers may process information outside Singapore. We take reasonable steps to use reputable providers and appropriate safeguards. We do not sell personal information.</p></Section>
+    <Section title="Retention and security"><p>We retain information only while it is reasonably needed to provide the service, support follow-up requests, improve quality, resolve disputes, or meet legal and business requirements. We use reasonable technical and organisational safeguards, but no internet service can guarantee absolute security.</p></Section>
+    <Section title="Your choices and requests"><p>You may ask to access or correct information, withdraw consent, or request deletion. Withdrawal or deletion may mean that we can no longer provide or retrieve the report. Some information may be retained where required for legal, security, dispute-resolution, or legitimate record-keeping purposes.</p><p><Link className="font-semibold underline underline-offset-4" href="/data-request">Request access, correction or deletion</Link></p></Section>
+    <Section title="Contact"><p>For privacy questions or complaints, email <a className="underline underline-offset-4" href="mailto:realmofqimen@gmail.com">realmofqimen@gmail.com</a>.</p></Section>
+    <p className="text-sm text-[#665a50]">This notice may be updated as the service develops. The latest version will appear on this page.</p>
+  </LegalPage>;
+}
+
+function LegalPage({title,updated,children}:{title:string;updated:string;children:React.ReactNode}){return <main className="mx-auto max-w-3xl px-6 py-12 sm:py-16"><Link href="/" className="text-sm font-semibold tracking-wide">REALM OF QIMEN</Link><p className="mt-12 text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]">Legal</p><h1 className="mt-2 text-5xl">{title}</h1><p className="mt-3 text-sm text-[#74685e]">Last updated: {updated}</p><div className="mt-10 space-y-9 leading-8 text-[#3c3028]">{children}</div></main>}
+function Section({title,children}:{title:string;children:React.ReactNode}){return <section><h2 className="text-2xl">{title}</h2><div className="mt-3 space-y-3 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6">{children}</div></section>}

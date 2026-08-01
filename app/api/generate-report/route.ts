@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     : (parenting_concern?.length ?? 0) > 600 ? "parenting concern"
     : !allowed.has(question_type) ? "report type"
     : !["male", "female", "other"].includes(gender) ? "gender"
+    : body.privacy_consent !== "on" ? "privacy consent"
     : null;
   if (invalidField) return NextResponse.json({ error: `Please check the ${invalidField}.` }, { status: 422 });
   const db = createAdminClient();
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
   if (error || !report) return NextResponse.json({ error: "We could not save your reading. Please try again." }, { status: 500 });
   const variation_seed = variationSeedFromReportId(report.id);
   await db.from("audit_logs").insert({ actor: "system", action: "report.requested", target_table: "bazi_reports", target_id: report.id, payload: { question_type } });
+  await db.from("audit_logs").insert({ actor: "visitor", action: "privacy.consent_recorded", target_table: "bazi_reports", target_id: report.id, payload: { privacy_notice_version: "2026-08-01", terms_version: "2026-08-01", parent_or_authorised_adult: true } });
   let reading: Awaited<ReturnType<typeof generateReading>>;
   try { reading = await generateReading({ subject_name, birth_date, birth_time, birth_place, parenting_concern, gender, question_type, variation_seed } as never); const { error: updateError } = await db.from("bazi_reports").update(reading).eq("id", report.id); if (updateError) throw updateError; await db.from("audit_logs").insert({ actor: "system", action: "report.generated", target_table: "bazi_reports", target_id: report.id, payload: { source: reading.insights_source, variation_seed } }); } catch (generationError) { await db.from("audit_logs").insert({ actor: "system", action: "report.generation_failed", target_table: "bazi_reports", target_id: report.id, payload: {} }); return NextResponse.json({ error: "We saved the details, but could not prepare the report. Please try again." }, { status: 500 }); }
   const { error: leadError } = await db.from("leads").insert({ name: parent_name, parent_name, email, phone, report_id: report.id, conversion_status: "new" }); if (leadError) return NextResponse.json({ error: "Report saved, but the lead could not be created." }, { status: 500 });

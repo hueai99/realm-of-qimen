@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const countries = [
   ["Singapore", "+65"], ["Malaysia", "+60"], ["Indonesia", "+62"], ["Thailand", "+66"],
@@ -53,6 +54,7 @@ export default function IntakeForm() {
       <label className="text-sm">Gender<select required name="gender" defaultValue="" className={cls}><option value="" disabled>Select</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></label>
       <input type="hidden" name="question_type" value="child_potential" />
       <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
+      <label className="flex items-start gap-3 border-t border-[#e2d7ca] pt-5 text-sm leading-6 sm:col-span-2"><input required type="checkbox" name="privacy_consent" className="mt-1 h-4 w-4 shrink-0 accent-[#9b3c2b]"/><span>I confirm that I am the child&apos;s parent, legal guardian, or authorised to provide these details. I agree to the use of this information to prepare and deliver the Bazi summary, as explained in the <Link href="/privacy" target="_blank" className="underline underline-offset-2">Privacy Notice</Link> and <Link href="/terms" target="_blank" className="underline underline-offset-2">Terms &amp; Disclaimer</Link>.</span></label>
     </div>
     {(busy || readyReportId) && <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#211b16]/75 px-5 py-8 backdrop-blur-sm" role="status" aria-live="polite">
       <div className="w-full max-w-2xl rounded-sm bg-[#fffaf0] p-7 shadow-2xl sm:p-10">
