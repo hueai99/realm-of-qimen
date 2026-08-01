@@ -12,6 +12,7 @@ const choices = [
 export default function ReportFeedback({ reportId, childName }: { reportId: string; childName: string }) {
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
+  const [interestedInMore, setInterestedInMore] = useState(false);
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -24,7 +25,7 @@ export default function ReportFeedback({ reportId, childName }: { reportId: stri
       const response = await fetch(`/api/reports/${reportId}/feedback`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ rating, comment }),
+        body: JSON.stringify({ rating, comment, interested_in_more: interestedInMore }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "We could not save your feedback yet.");
@@ -54,6 +55,10 @@ export default function ReportFeedback({ reportId, childName }: { reportId: stri
       </fieldset>
       <label className="mt-6 block">Anything you would like us to know?
         <textarea value={comment} onChange={(event) => setComment(event.target.value)} maxLength={1000} rows={4} placeholder="Tell us what felt accurate, unclear, or missing." className="mt-2 w-full resize-y border border-[#d7cbbd] bg-[#fffdf8] px-4 py-3 outline-none focus:border-[#9b3c2b]" />
+      </label>
+      <label className="mt-5 flex cursor-pointer items-start gap-3 border-t border-[#e2d7ca] pt-5 leading-7">
+        <input type="checkbox" checked={interestedInMore} onChange={(event) => setInterestedInMore(event.target.checked)} className="mt-1 h-4 w-4 accent-[#9b3c2b]" />
+        <span>I would like to learn more about what Bazi can reveal about my child.</span>
       </label>
       {error && <p role="alert" className="mt-4 text-sm text-[#8a4b3c]">{error}</p>}
       <button type="submit" disabled={busy} className="mt-5 bg-[#9b3c2b] px-6 py-3 font-semibold text-white disabled:opacity-50">{busy ? "Sending..." : "Send feedback"}</button>
