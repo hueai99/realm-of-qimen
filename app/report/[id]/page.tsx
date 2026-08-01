@@ -23,6 +23,9 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const possessivePronoun = report.gender === "male" ? "his" : report.gender === "female" ? "her" : "their";
   const genderLabel = report.gender ? report.gender.charAt(0).toUpperCase() + report.gender.slice(1) : "Not specified";
   const birthCountry = report.birth_place?.split(",").map((part) => part.trim()).filter(Boolean).at(-1);
+  const headingVariant = [...report.id].reduce((seed, character) => Math.imul(seed ^ character.charCodeAt(0), 16777619) >>> 0, 2166136261) % 3;
+  const strengthHeading = ["Top 3 strengths", "Strengths to notice", "Three qualities to nurture"][headingVariant];
+  const supportHeading = ["Where a little support can help", "Moments where gentle support may help", "Where thoughtful guidance can help"][headingVariant];
 
   return <main className="min-h-screen">
     <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
@@ -49,8 +52,8 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
           <h2 className="mt-3 text-3xl leading-tight">Getting to know {report.subject_name}</h2>
           <div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.personality.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
         </section>
-        <PointSection title="Top 3 strengths" points={summary.strengths} />
-        <PointSection title="Where a little support can help" points={summary.soft_spots} />
+        <PointSection title={strengthHeading} points={summary.strengths} />
+        <PointSection title={supportHeading} points={summary.soft_spots} />
         {summary.day_master_support && <section>
           <h2 className="text-3xl">Helping {report.subject_name} flourish</h2>
           <p className="mt-5 max-w-3xl leading-8">{summary.day_master_support.introduction}</p>
