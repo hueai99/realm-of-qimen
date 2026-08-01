@@ -51,6 +51,57 @@ const elementNature: Record<string, string> = {
   Metal: "a principled, clear-cut nature that gravitates toward fairness, order, and doing what feels right",
   Water: "a perceptive, adaptable nature that is drawn to understanding, observing, and finding a path around obstacles",
 };
+const pointHeadingVariants: Record<string, [string, string]> = {
+  "A dependable presence": ["Someone others can rely on", "Brings steadiness to others"],
+  "A discerning eye": ["Notices the finer details", "A careful eye for quality"],
+  "Benefits from a pause": ["A pause brings clarity", "Taking time before deciding"],
+  "Big-picture thinking": ["Sees possibilities beyond the task", "Ideas that grow and expand"],
+  "Choosing where to begin": ["Finding the first step", "Deciding what comes first"],
+  "Confidence may change": ["Confidence needs steady support", "When confidence feels uncertain"],
+  "Consistent spirit": ["Stays loyal to a direction", "Keeps faith with the plan"],
+  "Courage to act": ["Steps forward when it matters", "Brave when things feel difficult"],
+  "Criticism may linger": ["Takes feedback to heart", "When comments stay on the mind"],
+  "Curious mind": ["Wants to understand more", "Questions that deepen understanding"],
+  "Drawn to many interests": ["Many ideas compete for attention", "Excited by different possibilities"],
+  "Feelings stay private": ["Needs time to share feelings", "Keeps feelings close at first"],
+  "Finding a steadier pace": ["Knowing when to pause", "Balancing effort with rest"],
+  "Finds another way": ["Tries a different approach", "Adapts when plans do not work"],
+  "Flexible problem-solving": ["Adjusts when plans change", "Finds a way around obstacles"],
+  "Flow of ideas": ["Connects ideas in fresh ways", "Ideas arrive in surprising ways"],
+  "Gathers useful knowledge": ["Remembers what may be useful", "Turns knowledge into practical help"],
+  "Gentle consideration": ["Thinks about how others feel", "A thoughtful way with people"],
+  "Gentle versatility": ["Adapts quietly to different settings", "Fits into changing situations"],
+  "Growing through experience": ["Learns by trying again", "Confidence grows through practice"],
+  "Hard to feel finished": ["Knowing when work is complete", "When details feel unfinished"],
+  "Hopeful energy": ["Sees what could be possible", "Brings hope after disappointment"],
+  "Interest affects concentration": ["Focus follows what feels meaningful", "When interest guides attention"],
+  "Learning to pause and listen": ["Hearing the full story first", "Pausing before stepping in"],
+  "Learns by taking part": ["Learns best through experience", "Understanding grows through doing"],
+  "Loyal follow-through": ["Takes promises seriously", "Stays committed to what matters"],
+  "Loyal soft heart": ["Quietly loyal to trusted people", "Shows care without much display"],
+  "May absorb other people's worries": ["Takes in tension around them", "When others' worries feel close"],
+  "May dwell on mistakes": ["Mistakes stay on the mind", "Finding it hard to let go"],
+  "May follow other people's choices": ["Personal choices need room", "Finding a voice among others"],
+  "May forget personal needs": ["Own needs can come last", "Caring without overlooking oneself"],
+  "May take on adult worries": ["Carries worries that are not theirs", "Needs freedom from adult concerns"],
+  "Natural warmth": ["Makes others feel welcome", "Warmth that draws people in"],
+  "Needs room to recharge": ["Quiet time restores energy", "When rest is quietly needed"],
+  "Needs time with change": ["Adjusting to a new plan", "Change may take time"],
+  "Nurtures growth": ["Helps others grow", "Patient care for people and projects"],
+  "Patient preparation": ["Likes to feel prepared", "Builds confidence through preparation"],
+  "Perceptive awareness": ["Notices unspoken changes", "Sensitive to what is happening"],
+  "Protective loyalty": ["Stands beside people who matter", "Loyal when support is needed"],
+  "Quiet influence": ["Guides without taking over", "Leads through ideas and example"],
+  "Quiet resilience": ["Adjusts without making a show", "Strength that grows quietly"],
+  "Resourceful care": ["Finds practical ways to help", "Care expressed through useful action"],
+  "Social awareness": ["Notices how others respond", "Reads the mood around them"],
+  "Speaking with more care": ["Shaping honesty with kindness", "When honest words feel too sharp"],
+  "Steady determination": ["Keeps going when progress is slow", "Committed to meaningful goals"],
+  "Straightforward heart": ["Values honesty and clear expectations", "Says plainly what feels unfair"],
+  "Strong principles": ["Takes promises and rules seriously", "A clear sense of responsibility"],
+  "Thoughtful insight": ["Notices more before speaking", "Careful thoughts worth waiting for"],
+  "When plans change": ["Adjusting after plans shift", "When letting go feels difficult"],
+};
 const elementThemes: Record<string, { strengths: [string, string][]; softSpots: [string, string][]; closing: string }> = {
   Wood: { strengths: [["Sees room to grow", "notices possibilities and is often motivated by progress"], ["Keeps reaching forward", "can recover momentum when there is a meaningful next step"], ["Independent ideas", "often wants to understand, explore, and try a personal approach"]], softSpots: [["Frustrated by roadblocks", "may become impatient when progress feels blocked"], ["Needs room, with guidance", "can resist when every step is decided for him or her"]], closing: "a forward-looking child whose independent ideas can become purposeful confidence" },
   Fire: { strengths: [["Brings warmth", "can lift the mood and connect readily through genuine enthusiasm"], ["Expresses what matters", "often communicates feelings and ideas with vivid energy"], ["Inspires participation", "can draw others into activities he or she cares about"]], softSpots: [["Feelings can arrive quickly", "may need help settling before talking through an intense moment"], ["Sensitive to the atmosphere", "can be affected by tension or a lack of response from others"]], closing: "a warm-hearted child whose bright expression can mature into generous confidence" },
@@ -430,6 +481,10 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       `When this appears, ${guidance.charAt(0).toLowerCase()}${guidance.slice(1)}.`,
     ][wordingVariant(`${point.heading}-guidance`)];
   };
+  const headingText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+    const headingVariant = wordingVariant(`${point.heading}-heading`);
+    return headingVariant === 0 ? point.heading : pointHeadingVariants[point.heading]?.[headingVariant - 1] ?? point.heading;
+  };
   const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
   const portraitExamples = [
     `You may notice this when ${portraitExamplePoint.everyday}.`,
@@ -443,8 +498,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       : `For ${name}, these qualities may appear clearly in some situations and more quietly in others.`;
   return {
     personality,
-    strengths: rotate(profile.strengths, openingVariant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
-    soft_spots: rotate(profile.softSpots, connectionVariant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
+    strengths: rotate(profile.strengths, openingVariant).map((point) => ({ heading: headingText(point), body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
+    soft_spots: rotate(profile.softSpots, connectionVariant).map((point) => ({ heading: headingText(point), body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     day_master_support: {
       introduction: `${supportPortrait.introduction} ${expressionContext}`,
       secure: personalisePortrait(supportPortrait.secure),
