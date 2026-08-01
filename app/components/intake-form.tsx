@@ -37,11 +37,11 @@ export default function IntakeForm() {
       setReadyReportId(result.report_id); setEmailActionToken(result.email_action_token ?? ""); setBusy(false);
     } catch (e) { setError(e instanceof Error ? e.message : "Something went wrong"); setBusy(false); }
   }
-  const cls = "mt-2 w-full rounded-sm border border-[#c9bcad] bg-[#fffdf8] px-4 py-3 outline-none focus:border-[#9b3c2b]";
+  const cls = "mt-2 w-full rounded-sm border border-[#9bcbd2] bg-[#ffffff] px-4 py-3 outline-none focus:border-[#007789]";
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const thisYear = new Date().getFullYear();
-  return <form onInput={() => error && setError("")} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[#d7cbbd] bg-[#fffaf0] p-6 shadow-[0_20px_50px_rgba(71,49,32,.09)] sm:p-9">
-    <p className="text-xs font-bold uppercase tracking-[.25em] text-[#9b3c2b]">Create a reading</p><h2 className="mb-7 mt-2 text-3xl">Child details</h2>
+  return <form onInput={() => error && setError("")} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[#b9dfe4] bg-[#ffffff] p-6 shadow-[0_20px_50px_rgba(71,49,32,.09)] sm:p-9">
+    <p className="text-xs font-bold uppercase tracking-[.25em] text-[#007789]">Create a reading</p><h2 className="mb-7 mt-2 text-3xl">Child details</h2>
     <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Child&apos;s name<input required name="subject_name" maxLength={80} className={cls} /></label>
       <label className="text-sm sm:col-span-2">Parent&apos;s name<input required name="parent_name" maxLength={80} className={cls} /></label>
@@ -53,34 +53,34 @@ export default function IntakeForm() {
       <label className="text-sm">Country of birth<select required name="birth_country" value={birthCountry} onChange={(event) => setBirthCountry(event.target.value)} className={cls}>{countries.map(([country]) => <option key={country} value={country}>{country}</option>)}</select></label>
       <label className="text-sm">Gender<select required name="gender" defaultValue="" className={cls}><option value="" disabled>Select</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></label>
       <input type="hidden" name="question_type" value="child_potential" />
-      <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[#877b70]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
-      <label className="flex items-start gap-3 border-t border-[#e2d7ca] pt-5 text-sm leading-6 sm:col-span-2"><input required type="checkbox" name="privacy_consent" className="mt-1 h-4 w-4 shrink-0 accent-[#9b3c2b]"/><span>I confirm that I am the child&apos;s parent, legal guardian, or authorised to provide these details. I agree to the use of this information to prepare and deliver the Bazi summary, as explained in the <Link href="/privacy" target="_blank" className="underline underline-offset-2">Privacy Notice</Link> and <Link href="/terms" target="_blank" className="underline underline-offset-2">Terms &amp; Disclaimer</Link>.</span></label>
+      <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[#60747a]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
+      <label className="flex items-start gap-3 border-t border-[#d2e9ec] pt-5 text-sm leading-6 sm:col-span-2"><input required type="checkbox" name="privacy_consent" className="mt-1 h-4 w-4 shrink-0 accent-[#007789]"/><span>I confirm that I am the child&apos;s parent, legal guardian, or authorised to provide these details. I agree to the use of this information to prepare and deliver the Bazi summary, as explained in the <Link href="/privacy" target="_blank" className="underline underline-offset-2">Privacy Notice</Link> and <Link href="/terms" target="_blank" className="underline underline-offset-2">Terms &amp; Disclaimer</Link>.</span></label>
     </div>
-    {(busy || readyReportId) && <div className="fixed inset-0 z-50 overflow-y-auto bg-[#211b16]/75 px-3 py-3 backdrop-blur-sm sm:flex sm:items-center sm:justify-center sm:px-5 sm:py-8" role="status" aria-live="polite">
-      <div className="mx-auto w-full max-w-2xl rounded-sm bg-[#fffaf0] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:p-10">
+    {(busy || readyReportId) && <div className="fixed inset-0 z-50 overflow-y-auto bg-[#004f5b]/75 px-3 py-3 backdrop-blur-sm sm:flex sm:items-center sm:justify-center sm:px-5 sm:py-8" role="status" aria-live="polite">
+      <div className="mx-auto w-full max-w-2xl rounded-sm bg-[#ffffff] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:p-10">
         <div>
-          <div className="mb-7 border-b border-[#d7cbbd] pb-6 text-center">
-            {busy && <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#d7cbbd] border-t-[#9b3c2b]" aria-hidden="true" />}
-            <p className={`${busy ? "mt-4" : ""} text-xs font-bold uppercase tracking-[.22em] text-[#9b3c2b]`}>{busy ? "Preparing report" : "Report is now ready"}</p>
+          <div className="mb-7 border-b border-[#b9dfe4] pb-6 text-center">
+            {busy && <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#b9dfe4] border-t-[#007789]" aria-hidden="true" />}
+            <p className={`${busy ? "mt-4" : ""} text-xs font-bold uppercase tracking-[.22em] text-[#007789]`}>{busy ? "Preparing report" : "Report is now ready"}</p>
           </div>
-          <div className="space-y-4 text-left text-sm leading-6 text-[#665a50] sm:text-base sm:leading-7">
+          <div className="space-y-4 text-left text-sm leading-6 text-[#4e5b6f] sm:text-base sm:leading-7">
             <p>Bazi is a traditional Chinese system practised for more than 1,000 years. It uses the year, month, day, and hour of birth to form four pillars. Each pillar contains two Chinese characters, creating the eight characters known as Bazi. Together, the four pillars offer insights into a person&apos;s natural qualities, emotions, relationships, learning, and growth.</p>
             <p>A Bazi chart may not describe everything seen in a child today. Age, upbringing, experiences, surroundings, and personal choices all influence how these qualities appear. Bazi offers another way to understand a child—not a fixed description of who he or she must become.</p>
           </div>
           <SampleBaziChart />
-          <div className="sticky bottom-0 mt-7 border-t border-[#d7cbbd] bg-[#fffaf0] pb-1 pt-5 text-center">
+          <div className="sticky bottom-0 mt-7 border-t border-[#b9dfe4] bg-[#ffffff] pb-1 pt-5 text-center">
             <h2 className="text-2xl">{busy ? `Preparing ${submittedName}'s personality summary…` : `${submittedName}'s personality summary is ready.`}</h2>
-            <button type="button" disabled={busy} onClick={() => readyReportId && router.push(`/report/${readyReportId}${emailActionToken ? `?email_token=${emailActionToken}` : ""}`)} className="mt-5 bg-[#9b3c2b] px-8 py-4 font-semibold text-white disabled:cursor-wait disabled:bg-[#b9afa5]">{busy ? "Preparing report…" : "Click to read"}</button>
+            <button type="button" disabled={busy} onClick={() => readyReportId && router.push(`/report/${readyReportId}${emailActionToken ? `?email_token=${emailActionToken}` : ""}`)} className="mt-5 bg-[#007789] px-8 py-4 font-semibold text-white disabled:cursor-wait disabled:bg-[#a9bdc0]">{busy ? "Preparing report…" : "Click to read"}</button>
           </div>
         </div>
       </div>
     </div>}
     {error && <p role="alert" className="mt-5 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-    <button disabled={busy} className="mt-7 w-full bg-[#9b3c2b] px-5 py-4 font-semibold text-white disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>
+    <button disabled={busy} className="mt-7 w-full bg-[#007789] px-5 py-4 font-semibold text-white disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>
   </form>;
 }
 
 function SampleBaziChart() {
   const sample = [["Hour", "辛", "巳"], ["Day", "庚", "辰"], ["Month", "甲", "午"], ["Year", "丙", "戌"]];
-  return <figure className="mt-6"><figcaption className="mb-2 text-center text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">Sample Bazi chart</figcaption><div className="mb-1 grid grid-cols-4 text-center"><span /><span className="text-xs font-bold text-[#9b3c2b]">Day Master ↓</span><span /><span /></div><div className="grid grid-cols-4 gap-px overflow-hidden border border-[#d7cbbd] bg-[#d7cbbd]">{sample.map(([label, stem, branch]) => <div key={label} className="bg-[#fffdf8] px-2 py-3 text-center"><p className="text-[10px] uppercase tracking-wider text-[#877b70]">{label}</p><p className="mt-2 flex h-10 items-center justify-center text-2xl">{label === "Day" ? <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#9b3c2b] text-white ring-2 ring-[#f1d8ce]">{stem}</span> : stem}</p><p className="mt-1 text-2xl">{branch}</p></div>)}</div></figure>;
+  return <figure className="mt-6"><figcaption className="mb-2 text-center text-xs font-bold uppercase tracking-[.18em] text-[#007789]">Sample Bazi chart</figcaption><div className="mb-1 grid grid-cols-4 text-center"><span /><span className="text-xs font-bold text-[#007789]">Day Master ↓</span><span /><span /></div><div className="grid grid-cols-4 gap-px overflow-hidden border border-[#b9dfe4] bg-[#b9dfe4]">{sample.map(([label, stem, branch]) => <div key={label} className="bg-[#ffffff] px-2 py-3 text-center"><p className="text-[10px] uppercase tracking-wider text-[#60747a]">{label}</p><p className="mt-2 flex h-10 items-center justify-center text-2xl">{label === "Day" ? <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#007789] text-white ring-2 ring-[#d9f1f4]">{stem}</span> : stem}</p><p className="mt-1 text-2xl">{branch}</p></div>)}</div></figure>;
 }

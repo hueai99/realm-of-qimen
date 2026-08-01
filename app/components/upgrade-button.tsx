@@ -14,8 +14,8 @@ export default function UpgradeButton({ reportId }: { reportId: string }) {
     }
   }
   return <div className="mt-6 shrink-0 text-center sm:mt-0">
-    <button onClick={click} disabled={state === "sending" || state === "sent"} className="bg-[#b7422d] px-7 py-4 font-semibold text-white disabled:opacity-70">{state === "sending" ? "Sending request…" : state === "sent" ? "Request received" : "Request the full report"}</button>
-    {state === "sent" && <p className="mt-2 max-w-xs text-xs leading-5 text-[#cfc5bd]">Thank you. We will contact you about the Premium Report.</p>}
-    {state === "error" && <p role="alert" className="mt-2 max-w-xs text-xs leading-5 text-[#f1b5a8]">We could not send the request. Please try again.</p>}
+    <button onClick={click} disabled={state === "sending" || state === "sent"} className="bg-[#00a0b8] px-7 py-4 font-semibold text-white disabled:opacity-70">{state === "sending" ? "Sending request…" : state === "sent" ? "Request received" : "Request the full report"}</button>
+    {state === "sent" && <p className="mt-2 max-w-xs text-xs leading-5 text-[#d7eef1]">Thank you. We will contact you about the Premium Report.</p>}
+    {state === "error" && <p role="alert" className="mt-2 max-w-xs text-xs leading-5 text-[#ffd1d1]">We could not send the request. Please try again.</p>}
   </div>;
 }
