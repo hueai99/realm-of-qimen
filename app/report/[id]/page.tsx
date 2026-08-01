@@ -63,9 +63,10 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         {summary.concern_response && <section><h2 className="text-3xl">Your concern about {report.subject_name}</h2>{summary.concern_original && <blockquote className="mt-5 max-w-3xl border-l-2 border-[#b7422d] pl-5 italic leading-8 text-[#665a50]">“{summary.concern_original}”</blockquote>}{summary.concern_tips?.length ? <><h3 className="mt-6 text-xl">What may help</h3><ul className="mt-4 max-w-3xl space-y-3">{summary.concern_tips.map((tip) => <li key={tip} className="flex gap-3 rounded-sm bg-[#fffaf0] p-4 leading-7 text-[#665a50]"><GuidanceIcon /> <span>{tip}</span></li>)}</ul></> : null}</section>}
         {summary.day_master_support?.weekly_action && <section className="max-w-3xl border border-[#d7cbbd] bg-[#fffaf0] p-6 sm:p-8">
           <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">A practical next step</p>
-          <h2 className="mt-2 text-2xl">Try this with {report.subject_name} this week</h2>
-          <p className="mt-5 text-lg font-semibold">{summary.day_master_support.weekly_action.situation}</p>
-          <p className="mt-3 leading-7 text-[#665a50]">{summary.day_master_support.weekly_action.action}</p>
+          <h2 className="mt-2 text-xl sm:text-2xl">Try this with {report.subject_name} this week</h2>
+          <p className="mt-5 text-base font-semibold sm:text-lg">{summary.day_master_support.weekly_action.situation}</p>
+          <p className="mt-3 text-sm leading-6 text-[#665a50] sm:text-base sm:leading-7">{summary.day_master_support.weekly_action.action}</p>
+          <div className="mt-5 bg-[#f7eee3] p-4 text-sm leading-6 text-[#665a50] sm:text-base sm:leading-7"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">For example</p><p className="mt-2">{summary.day_master_support.weekly_action.example ?? practicalExample(summary.day_master_support.weekly_action.situation, report.subject_name)}</p></div>
           {summary.day_master_support.weekly_action.bazi_link && <div className="mt-5 border-l-2 border-[#b7422d] pl-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Why this may suit {report.subject_name}</p><p className="mt-2 leading-7 text-[#665a50]">{summary.day_master_support.weekly_action.bazi_link}</p></div>}
           <div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Try saying</p><p className="mt-2 leading-7">“{summary.day_master_support.weekly_action.phrase}”</p></div><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Look for</p><p className="mt-2 leading-7">{summary.day_master_support.weekly_action.sign}</p></div></div>
         </section>}
@@ -109,4 +110,15 @@ function readableParagraphs(value: string) {
   const paragraphs: string[] = [];
   for (let index = 0; index < sentences.length; index += 2) paragraphs.push(sentences.slice(index, index + 2).join(" "));
   return paragraphs;
+}
+
+function practicalExample(situation: string, name: string) {
+  const text = situation.toLowerCase();
+  if (/obstacle|getting in the way|setback/.test(text)) return `If a school task feels overwhelming, ask ${name} to choose just one question or one five-minute step to try first. Review what helped after the attempt.`;
+  if (/several ideas|hard to begin|big idea/.test(text)) return `If ${name} has several ideas for a project, write them down together. Let ${name} choose one idea to test for ten minutes before deciding what to do next.`;
+  if (/plan has to change|unfamiliar change/.test(text)) return `If an outing is cancelled, explain what has changed and offer two workable alternatives. Let ${name} choose which new plan to follow.`;
+  if (/feeling arrives|held inside|seems quieter/.test(text)) return `If ${name} comes home upset and does not want to talk, acknowledge what you notice without pressing for an answer. Check in again after there has been time to settle.`;
+  if (/jumping in|solve a problem/.test(text)) return `If friends disagree, encourage ${name} to hear what each person says before suggesting a solution. One extra question may reveal something that was missed.`;
+  if (/repeated checking|finished work/.test(text)) return `Before homework begins, agree on what “finished” will look like. Once those points are complete, encourage ${name} to submit the work without another full round of checking.`;
+  return `Choose one ordinary situation this week where this pattern appears. Try the approach once, then notice whether ${name} responds differently.`;
 }
