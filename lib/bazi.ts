@@ -94,13 +94,15 @@ function concernReflection(concern: string, name: string): string {
   if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return `You have noticed that ${name} can become very upset, and you would like to understand these reactions better.`;
   if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return `You have noticed that ${name} may worry or hold back in some situations.`;
   if (/friend|social|lonely|bully|fit in/.test(text)) return `You would like to understand how ${name} is getting along with other children.`;
+  if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) return `You would like to help ${name} recognise the areas he or she finds difficult and become more open to improving them.`;
   if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You have noticed that it can be difficult for ${name} to follow some everyday requests.`;
   return `You would like some guidance on something that currently matters for ${name}.`;
 }
 
 function concernWeeklyAction(concern: string, name: string): { situation: string; action: string; phrase: string; sign: string } {
   const text = concern.toLowerCase();
-  if (/stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/.test(text)) return { situation: "Try a short two-sided reflection", action: `Choose one small disagreement after it has passed. Take turns naming one thing each person may have seen differently, without deciding who was right.`, phrase: "I will share what I missed first. What might you have missed?", sign: `${name} can name another point of view or rethink one part of the situation.` };
+  if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) return { situation: "Have a strengths-and-growth conversation", action: `Take turns sharing one thing you handle well and one thing you are still learning. Begin with your own example so the conversation does not feel like a judgement of ${name}.`, phrase: "Here is something I am still working on. What would you like to become better at?", sign: `${name} can name one area to practise without becoming defensive or discouraged.` };
+  if (/stubborn|recognise|self.aware/.test(text)) return { situation: "Try a short two-sided reflection", action: `Choose one small disagreement after it has passed. Take turns naming one thing each person may have seen differently, without deciding who was right.`, phrase: "I will share what I missed first. What might you have missed?", sign: `${name} can name another point of view or rethink one part of the situation.` };
   if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return { situation: "Set aside ten child-led minutes", action: `Let ${name} choose a simple activity to share with you. Follow his or her lead and keep advice aside unless it is requested.`, phrase: "You choose what we do for the next ten minutes.", sign: `${name} invites you into the activity, shares a detail, or seems more relaxed beside you.` };
   if (/perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/.test(text)) return { situation: "Make one harmless mistake visible", action: `Let ${name} see you make a small everyday mistake, correct what matters, and move on without criticising yourself.`, phrase: "That did not go as planned, but I can fix this part and continue.", sign: `${name} becomes a little less upset by a small error or is more willing to try again.` };
   if (/exam|test stress|revision stress/.test(text)) return { situation: "End one revision session with a quick check-in", action: `Ask ${name} to rate the stress from one to five. Then let him or her choose one small priority for the next session.`, phrase: "What number is the stress now, and what should we tackle next?", sign: `${name} can name a worry or begins the next session with a clearer focus.` };
@@ -122,7 +124,8 @@ function concernGuidance(concern: string, name: string): string[] {
   else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. Listening is easier once the strongest feelings have passed.`, `When ${name} is ready, ask what felt most upsetting. Listen before explaining clearly what needs to happen next.`, `Afterwards, agree on one simple way to handle a similar moment. Keep the plan short enough for ${name} to remember.`];
   else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than immediate pressure.`, `Notice the effort even when the result is imperfect. A simple “You tried even though you felt worried” can mean a great deal.`, `Give ${name} time to become familiar with a new situation. Confidence may grow after watching first and joining when ready.`];
   else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support is actually wanted.`, `Check whether ${name} would prefer advice, practical help, or simply someone to listen. The answer may differ from one situation to another.`];
-  else if (/stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/.test(text)) tips = [`Avoid asking ${name} to agree that he or she is stubborn. Talk about one specific moment instead, including what happened and how it affected the situation.`, `Ask what ${name} was trying to achieve or protect in that moment. Once he or she feels heard, explore one different way the situation could have been handled.`, `Notice when ${name} reconsiders a decision, admits a mistake, or listens to another view. Recognising these moments can make honest self-reflection feel safer.`];
+  else if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) tips = [`Talk about one specific skill or situation rather than calling it a weakness. A clear example helps ${name} understand what can change without feeling that something is wrong with who he or she is.`, `Ask ${name} what felt difficult and what he or she would like to handle better next time. Listening to the answer makes self-awareness feel like discovery instead of criticism.`, `Notice honest reflection as well as improvement. When ${name} admits that something was difficult or accepts help, acknowledge that openness before discussing the next step.`];
+  else if (/stubborn|recognise|self.aware/.test(text)) tips = [`Avoid asking ${name} to agree that he or she is stubborn. Talk about one specific moment instead, including what happened and how it affected the situation.`, `Ask what ${name} was trying to achieve or protect in that moment. Once he or she feels heard, explore one different way the situation could have been handled.`, `Notice when ${name} reconsiders a decision, admits a mistake, or listens to another view. Recognising these moments can make honest self-reflection feel safer.`];
   else if (/listen|defiant|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step before adding another.`, `Where possible, offer two acceptable choices. This gives ${name} some say while keeping the responsibility clear.`, `After the task is complete, acknowledge the cooperation. Brief, specific appreciation is easier to understand than a general compliment.`];
   else tips = [`Choose a calm moment and ask ${name} what would feel most helpful. Keep the question simple and allow time for an answer.`, `Listen before offering a solution. The first need may be understanding rather than immediate advice.`, `Try one small change, then check in again later. This makes it easier to notice what genuinely helps ${name}.`];
   return tips;
@@ -181,7 +184,8 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
     if (!summary.concern_tips?.length) issues.push("parenting concern guidance is not separated from the observation");
     if (concern && /connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/i.test(concern) && !/connect|closer|talk|listen|time together/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("connection concern was not answered with connection guidance");
     if (concern && /perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/i.test(concern) && !/effort|progress|good enough|mistake|pressure|checking/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("perfectionism concern was not answered with relevant support");
-    if (concern && /stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/i.test(concern) && !/specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("self-awareness concern was mistaken for a cooperation problem");
+    if (concern && /weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/i.test(concern) && !/area|difficult|improv|work on|practise|growth/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("growth-area concern was not answered with relevant support");
+    if (concern && /stubborn|recognise|self.aware/i.test(concern) && !/specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("self-awareness concern was mistaken for a cooperation problem");
   }
   if (!summary.day_master_support?.introduction || !summary.day_master_support.secure || !summary.day_master_support.example || !summary.day_master_support.pressure || !summary.day_master_support.support || !summary.day_master_support.weekly_action?.situation || !summary.day_master_support.weekly_action.action || !summary.day_master_support.weekly_action.phrase || !summary.day_master_support.weekly_action.sign) {
     issues.push("Day Master support portrait is incomplete");
@@ -233,7 +237,8 @@ function hasSafeConcernAnswer(summary: SummaryReport, name: string, concern?: st
     && !sourceLeak.test(text)
     && !aiStylePhrases.test(text)
     && !awkwardPhrases.test(text)
-    && (!concern || !/stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/i.test(concern) || /specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(text));
+    && (!concern || !/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/i.test(concern) || /area|difficult|improv|work on|practise|growth/i.test(text))
+    && (!concern || !/stubborn|recognise|self.aware/i.test(concern) || /specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(text));
 }
 
 function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null, variationSeed?: number): SummaryReport {
@@ -281,8 +286,12 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     if (point.descriptions) return point.descriptions[wordingVariant(point.heading)].replaceAll("{name}", name);
     if (point.description) return point.description.replaceAll("{name}", name);
     if (point.examples) {
-      const examples = wordingVariant(point.heading) === 1 ? [...point.examples].reverse() : point.examples;
-      return `${name} ${point.meaning}. ${examples.join(" ")}`;
+      const versions = [
+        `${name} ${point.meaning}. ${point.examples.join(" ")}`,
+        `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`,
+        `${name} ${point.meaning}. Parents may recognise this through ${point.everyday}.`,
+      ];
+      return versions[wordingVariant(point.heading)];
     }
     const versions = [
       `${name} ${point.meaning}. This may show up as ${point.everyday}.`,
@@ -334,6 +343,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const supportPortrait = dayMasterSupportPortraits[dayMasterName];
   const weeklyAction = concern ? concernWeeklyAction(concern, name) : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
+  const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
   const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
   const portraitExamples = [
     `You may notice this when ${portraitExamplePoint.everyday}.`,
@@ -347,8 +357,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       : `For ${name}, these qualities may appear clearly in some situations and more quietly in others.`;
   return {
     personality,
-    strengths: profile.strengths.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
-    soft_spots: profile.softSpots.map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
+    strengths: rotate(profile.strengths, variant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master", value: `${dayMasterName} / ${strength}` } })),
+    soft_spots: rotate(profile.softSpots, variant).map((point) => ({ heading: point.heading, body: pointBody(point), guidance: `${capitalise(point.support)}.`, basis: { factor: "Day Master expression", value: `${dayMasterName} / ${strength}` } })),
     day_master_support: {
       introduction: `${supportPortrait.introduction} ${expressionContext}`,
       secure: personalisePortrait(supportPortrait.secure),
