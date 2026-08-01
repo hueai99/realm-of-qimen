@@ -13,7 +13,7 @@ const seasonalState = {
   Winter: { Water:"Prosperous", Wood:"Strong", Metal:"Weak", Earth:"Trapped", Fire:"Dead" },
 } as const;
 const tenGodNames: Record<string, [string, string]> = { "比肩":["Bi Jian","Friend"], "劫财":["Jie Cai","Rob Wealth"], "食神":["Shi Shen","Eating God"], "伤官":["Shang Guan","Hurting Officer"], "偏财":["Pian Cai","Indirect Wealth"], "正财":["Zheng Cai","Direct Wealth"], "七杀":["Qi Sha","Seven Killings"], "正官":["Zheng Guan","Direct Officer"], "偏印":["Pian Yin","Indirect Resource"], "正印":["Zheng Yin","Direct Resource"] };
-type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType };
+type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType; variation_seed?: number };
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
 type QcResult = { approved: boolean; issues: string[]; reviewer: string };
@@ -85,6 +85,20 @@ function concernReflection(concern: string, name: string): string {
   return `You would like some guidance on something that currently matters for ${name}.`;
 }
 
+function concernWeeklyAction(concern: string, name: string): { situation: string; action: string; phrase: string; sign: string } {
+  const text = concern.toLowerCase();
+  if (/stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/.test(text)) return { situation: "After a disagreement, when everyone is calm", action: `Describe one specific moment without labelling ${name}. Ask what he or she wanted at the time, then explore one different response together.`, phrase: "What were you hoping would happen? What could you try differently next time?", sign: `${name} can consider another point of view without feeling blamed or shamed.` };
+  if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return { situation: "During a relaxed moment together", action: `Join ${name} in something he or she already enjoys. Let conversation grow naturally instead of beginning with a serious question.`, phrase: "Show me what you like about this.", sign: `${name} shares a little more or stays in the conversation for longer.` };
+  if (/perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/.test(text)) return { situation: "Before a task where everything may need to feel perfect", action: `Agree with ${name} on what a finished result needs to include. Notice effort and progress before discussing improvements.`, phrase: "When these parts are done, it is complete. It does not have to be flawless.", sign: `${name} finishes with less checking or recovers more calmly from a small mistake.` };
+  if (/exam|test stress|revision stress/.test(text)) return { situation: "Before the next revision session", action: `Ask ${name} which part feels most worrying, then plan one short piece of revision around that answer.`, phrase: "Which part feels hardest today? Let us begin with ten minutes on that.", sign: `${name} begins the session with less avoidance or can name the help that is needed.` };
+  if (/school|study|homework|learn|grade/.test(text)) return { situation: "When schoolwork feels difficult to begin", action: `Help ${name} identify the hardest part and choose one small first step.`, phrase: "Which part is getting in the way? Let us work out the first step.", sign: `${name} starts with less prompting or explains the difficulty more clearly.` };
+  if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) return { situation: "After a strong feeling has settled", action: `Ask ${name} what felt most upsetting. Listen first, then agree on one response to try next time.`, phrase: "What was the hardest part for you?", sign: `${name} can describe the feeling or help choose a calmer response.` };
+  if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return { situation: "Before something that feels unfamiliar or worrying", action: `Help ${name} choose one manageable step. Notice the attempt, even if confidence is not there yet.`, phrase: "What is one small part you feel ready to try?", sign: `${name} attempts the step or needs less reassurance before trying.` };
+  if (/friend|social|lonely|bully|fit in/.test(text)) return { situation: "When asking about friendships", action: `Ask ${name} about one specific part of the day and listen before offering a solution.`, phrase: "Who did you spend time with today, and how did that feel?", sign: `${name} gives more detail or tells you what kind of support would help.` };
+  if (/listen|defiant|cooperate|behavio/.test(text)) return { situation: "When an everyday request is being resisted", action: `Give ${name} one clear request and two acceptable ways to complete it.`, phrase: "This still needs to be done. Would you rather do it now or after dinner?", sign: `${name} chooses an option or completes the request with less argument.` };
+  return { situation: "During a calm moment this week", action: `Ask ${name} what would feel helpful, then choose one small change to try together.`, phrase: "What is one thing that would make this a little easier?", sign: `${name} can name a need or respond to the small change.` };
+}
+
 function concernGuidance(concern: string, name: string): string[] {
   const text = concern.toLowerCase();
   let tips: string[];
@@ -95,7 +109,8 @@ function concernGuidance(concern: string, name: string): string[] {
   else if (/anger|temper|tantrum|meltdown|emotion|upset/.test(text)) tips = [`Give ${name} time to settle before discussing what happened. Listening is easier once the strongest feelings have passed.`, `When ${name} is ready, ask what felt most upsetting. Listen before explaining clearly what needs to happen next.`, `Afterwards, agree on one simple way to handle a similar moment. Keep the plan short enough for ${name} to remember.`];
   else if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) tips = [`Help ${name} choose one small step that feels possible. A manageable success can build confidence more naturally than immediate pressure.`, `Notice the effort even when the result is imperfect. A simple “You tried even though you felt worried” can mean a great deal.`, `Give ${name} time to become familiar with a new situation. Confidence may grow after watching first and joining when ready.`];
   else if (/friend|social|lonely|bully|fit in/.test(text)) tips = [`Ask about one specific part of the day, such as who ${name} spent time with. A smaller question may be easier than “How was school?”`, `Listen without rushing to solve the problem. Giving ${name} time to finish the story may reveal what support is actually wanted.`, `Check whether ${name} would prefer advice, practical help, or simply someone to listen. The answer may differ from one situation to another.`];
-  else if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step before adding another.`, `Where possible, offer two acceptable choices. This gives ${name} some say while keeping the responsibility clear.`, `After the task is complete, acknowledge the cooperation. Brief, specific appreciation is easier to understand than a general compliment.`];
+  else if (/stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/.test(text)) tips = [`Avoid asking ${name} to agree that he or she is stubborn. Talk about one specific moment instead, including what happened and how it affected the situation.`, `Ask what ${name} was trying to achieve or protect in that moment. Once he or she feels heard, explore one different way the situation could have been handled.`, `Notice when ${name} reconsiders a decision, admits a mistake, or listens to another view. Recognising these moments can make honest self-reflection feel safer.`];
+  else if (/listen|defiant|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step before adding another.`, `Where possible, offer two acceptable choices. This gives ${name} some say while keeping the responsibility clear.`, `After the task is complete, acknowledge the cooperation. Brief, specific appreciation is easier to understand than a general compliment.`];
   else tips = [`Choose a calm moment and ask ${name} what would feel most helpful. Keep the question simple and allow time for an answer.`, `Listen before offering a solution. The first need may be understanding rather than immediate advice.`, `Try one small change, then check in again later. This makes it easier to notice what genuinely helps ${name}.`];
   return tips;
 }
@@ -153,6 +168,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
     if (!summary.concern_tips?.length) issues.push("parenting concern guidance is not separated from the observation");
     if (concern && /connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/i.test(concern) && !/connect|closer|talk|listen|time together/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("connection concern was not answered with connection guidance");
     if (concern && /perfect|perfection|mistake|fear of fail|afraid to fail|not good enough/i.test(concern) && !/effort|progress|good enough|mistake|pressure|checking/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("perfectionism concern was not answered with relevant support");
+    if (concern && /stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/i.test(concern) && !/specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("self-awareness concern was mistaken for a cooperation problem");
   }
   if (!summary.day_master_support?.introduction || !summary.day_master_support.secure || !summary.day_master_support.example || !summary.day_master_support.pressure || !summary.day_master_support.support || !summary.day_master_support.weekly_action?.situation || !summary.day_master_support.weekly_action.action || !summary.day_master_support.weekly_action.phrase || !summary.day_master_support.weekly_action.sign) {
     issues.push("Day Master support portrait is incomplete");
@@ -190,7 +206,7 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
   };
 }
 
-function hasSafeConcernAnswer(summary: SummaryReport, name: string): boolean {
+function hasSafeConcernAnswer(summary: SummaryReport, name: string, concern?: string | null): boolean {
   const response = summary.concern_response?.trim() ?? "";
   const tips = summary.concern_tips ?? [];
   const text = `${response} ${tips.join(" ")}`;
@@ -203,12 +219,13 @@ function hasSafeConcernAnswer(summary: SummaryReport, name: string): boolean {
     && !unsupportedClaims.test(text)
     && !sourceLeak.test(text)
     && !aiStylePhrases.test(text)
-    && !awkwardPhrases.test(text);
+    && !awkwardPhrases.test(text)
+    && (!concern || !/stubborn|weakness|recognise|self.aware|see (?:his|her|their) (?:part|fault)/i.test(concern) || /specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(text));
 }
 
-function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null): SummaryReport {
+function groundedSummary(name: string, dayMasterName: string, dayMaster: string, strength: "Strong" | "Balanced" | "Weak", concern?: string | null, variationSeed?: number): SummaryReport {
   const profile = getDayMasterKnowledge(dayMasterName);
-  const variant = Math.floor(Math.random() * 3);
+  const variant = variationSeed === undefined ? Math.floor(Math.random() * 3) : Math.abs(variationSeed) % 3;
   const support = strength === "Weak"
     ? `In Bazi, ${name} has what is known as a Weak Day Master. This does not mean that he or she lacks strength or ability. Whether a Day Master is strong or weak depends on how it works with the other characters in the Bazi chart. For ${name}, having a Weak Day Master means that these qualities may emerge gradually as he or she feels secure and grows in confidence. ${profile.expressionExample}`
     : strength === "Balanced"
@@ -285,6 +302,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   };
   const parentEncouragement = `By paying attention to these everyday moments, you help ${name} feel seen and understood. The care you are taking to understand him or her is already meaningful support. You do not need every answer immediately. Your patience and willingness to keep connecting can make a lasting difference.`;
   const supportPortrait = dayMasterSupportPortraits[dayMasterName];
+  const weeklyAction = concern ? concernWeeklyAction(concern, name) : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const portraitExamplePoint = profile.strengths[variant];
   const portraitExamples = [
@@ -308,10 +326,10 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       pressure: personalisePortrait(supportPortrait.pressure),
       support: personalisePortrait(supportPortrait.support),
       weekly_action: {
-        situation: personalisePortrait(supportPortrait.weekly_action.situation),
-        action: personalisePortrait(supportPortrait.weekly_action.action),
-        phrase: personalisePortrait(supportPortrait.weekly_action.phrase),
-        sign: personalisePortrait(supportPortrait.weekly_action.sign),
+        situation: personalisePortrait(weeklyAction.situation),
+        action: personalisePortrait(weeklyAction.action),
+        phrase: personalisePortrait(weeklyAction.phrase),
+        sign: personalisePortrait(weeklyAction.sign),
       },
     },
     concern_original: concern ?? undefined,
@@ -332,7 +350,7 @@ export function calculateReading(input: Input): Reading {
   const focus: Record<QuestionType, string> = { career: "work that rewards visible craft and patient leadership", wealth: "steady wealth-building through disciplined choices and clear boundaries", child_potential: "learning through curiosity, structure, and encouragement at an individual pace", relationship: "relationships built through direct communication and reciprocity" };
   const dayMaster = `${values.day[0]} · ${stems[values.day[0]][0]} ${stems[values.day[0]][1]}`;
   const dayMasterName = stems[values.day[0]][0];
-  return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${dayMaster} Day Master — ${strength}. “Strength” describes energetic expression, not strength of character.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v4", report_content: groundedSummary(input.subject_name, dayMasterName, dayMaster, strength, (input as Input & { parenting_concern?: string | null }).parenting_concern), chart_status: "verified", chart_data: { ...values, day_master: dayMaster, day_master_name: dayMasterName, day_master_strength: strength, seasonal_state: state, season, strength_method: "season-first-v1", strength_review_status: state === "Prosperous" || state === "Dead" ? "high-confidence" : "review-recommended", knowledge_profile: `day-master-v1/${dayMasterName}`, ten_gods: tenGods } };
+  return { year_pillar: formatPillar(...values.year), month_pillar: formatPillar(...values.month), day_pillar: formatPillar(...values.day), hour_pillar: input.birth_time ? formatPillar(...values.hour) : null, element_profile: `${dayMaster} Day Master — ${strength}. “Strength” describes energetic expression, not strength of character.`, insights: `1. ${input.subject_name} benefits from ${focus[input.question_type]}.\n2. The chart favours progress through consistent routines and one clear priority at a time.\n3. Notice opportunities that feel both energising and sustainable; those are stronger signals than urgency alone.`, insights_confidence: input.birth_time ? 0.9 : 0.78, insights_source: "calculation/validated-v4", report_content: groundedSummary(input.subject_name, dayMasterName, dayMaster, strength, (input as Input & { parenting_concern?: string | null }).parenting_concern, input.variation_seed), chart_status: "verified", chart_data: { ...values, day_master: dayMaster, day_master_name: dayMasterName, day_master_strength: strength, seasonal_state: state, season, strength_method: "season-first-v1", strength_review_status: state === "Prosperous" || state === "Dead" ? "high-confidence" : "review-recommended", knowledge_profile: `day-master-v1/${dayMasterName}`, ten_gods: tenGods } };
 }
 
 export async function generateReading(input: Input): Promise<Reading> {
@@ -398,7 +416,7 @@ export async function generateReading(input: Input): Promise<Reading> {
     const candidate = { ...verified, report_content: attachVerifiedBasis(personalised, verified.report_content), insights_source: `calculation/validated-v3+openai/${json.model}` };
     const qc = deterministicQc(candidate, input.subject_name, input.gender, concern);
     if (qc.approved) return withQc(candidate, qc);
-    const fallback = hasSafeConcernAnswer(candidate.report_content, input.subject_name)
+    const fallback = hasSafeConcernAnswer(candidate.report_content, input.subject_name, concern)
       ? { ...verified, report_content: { ...verified.report_content, concern_response: candidate.report_content.concern_response, concern_tips: candidate.report_content.concern_tips } }
       : verified;
     return withQc(fallback, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });

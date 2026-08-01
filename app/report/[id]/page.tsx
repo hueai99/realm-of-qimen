@@ -59,15 +59,15 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
             <div className="border border-[#d7cbbd] bg-[#fffaf0] p-6"><h3 className="text-xl">When {subjectPronoun} feels pressured</h3><p className="mt-3 leading-7 text-[#665a50]">{summary.day_master_support.pressure}</p></div>
           </div>
           <div className="mt-5 flex max-w-3xl gap-3 border-l-2 border-[#b7422d] bg-[#fffaf0] p-5 leading-7 text-[#665a50]"><GuidanceIcon /><p>{summary.day_master_support.support}</p></div>
-          {summary.day_master_support.weekly_action && <div className="mt-8 max-w-3xl border border-[#d7cbbd] bg-[#fffaf0] p-6 sm:p-8">
-            <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">A practical next step</p>
-            <h3 className="mt-2 text-2xl">Try this with {report.subject_name} this week</h3>
-            <p className="mt-5 text-lg font-semibold">{summary.day_master_support.weekly_action.situation}</p>
-            <p className="mt-3 leading-7 text-[#665a50]">{summary.day_master_support.weekly_action.action}</p>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Try saying</p><p className="mt-2 leading-7">“{summary.day_master_support.weekly_action.phrase}”</p></div><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Look for</p><p className="mt-2 leading-7">{summary.day_master_support.weekly_action.sign}</p></div></div>
-          </div>}
         </section>}
         {summary.concern_response && <section><h2 className="text-3xl">Your concern about {report.subject_name}</h2>{summary.concern_original && <blockquote className="mt-5 max-w-3xl border-l-2 border-[#b7422d] pl-5 italic leading-8 text-[#665a50]">“{summary.concern_original}”</blockquote>}{summary.concern_tips?.length ? <><h3 className="mt-6 text-xl">What may help</h3><ul className="mt-4 max-w-3xl space-y-3">{summary.concern_tips.map((tip) => <li key={tip} className="flex gap-3 rounded-sm bg-[#fffaf0] p-4 leading-7 text-[#665a50]"><GuidanceIcon /> <span>{tip}</span></li>)}</ul></> : null}</section>}
+        {summary.day_master_support?.weekly_action && <section className="max-w-3xl border border-[#d7cbbd] bg-[#fffaf0] p-6 sm:p-8">
+          <p className="text-xs font-bold uppercase tracking-[.18em] text-[#9b3c2b]">A practical next step</p>
+          <h2 className="mt-2 text-2xl">Try this with {report.subject_name} this week</h2>
+          <p className="mt-5 text-lg font-semibold">{summary.day_master_support.weekly_action.situation}</p>
+          <p className="mt-3 leading-7 text-[#665a50]">{summary.day_master_support.weekly_action.action}</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Try saying</p><p className="mt-2 leading-7">“{summary.day_master_support.weekly_action.phrase}”</p></div><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Look for</p><p className="mt-2 leading-7">{summary.day_master_support.weekly_action.sign}</p></div></div>
+        </section>}
         <section className="border-l-2 border-[#b7422d] py-2 pl-6"><h2 className="text-3xl">Closing encouragement</h2><div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.closing_encouragement.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>
         {emailToken && <EmailSummaryCard reportId={report.id} initialEmail={report.email} childName={report.subject_name} token={emailToken} />}
       </div> : report.insights ? <div className="mt-12"><h2 className="text-3xl">Three reflections</h2><ol className="mt-5 space-y-4">{insights.map((insight, i) => <li key={i} className="border-l border-[#b7422d] py-2 pl-5 leading-7">{insight.replace(/^\d+\.\s*/, "")}</li>)}</ol></div> : <div className="my-12 border border-amber-300 bg-amber-50 p-6"><h2 className="text-xl">Analysis pending</h2><p className="mt-2 text-sm">We saved this reading and will update it shortly.</p></div>}
