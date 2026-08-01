@@ -66,6 +66,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
           <h2 className="mt-2 text-2xl">Try this with {report.subject_name} this week</h2>
           <p className="mt-5 text-lg font-semibold">{summary.day_master_support.weekly_action.situation}</p>
           <p className="mt-3 leading-7 text-[#665a50]">{summary.day_master_support.weekly_action.action}</p>
+          {summary.day_master_support.weekly_action.bazi_link && <div className="mt-5 border-l-2 border-[#b7422d] pl-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Why this may suit {report.subject_name}</p><p className="mt-2 leading-7 text-[#665a50]">{summary.day_master_support.weekly_action.bazi_link}</p></div>}
           <div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Try saying</p><p className="mt-2 leading-7">“{summary.day_master_support.weekly_action.phrase}”</p></div><div className="bg-[#f7eee3] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#9b3c2b]">Look for</p><p className="mt-2 leading-7">{summary.day_master_support.weekly_action.sign}</p></div></div>
         </section>}
         <section className="border-l-2 border-[#b7422d] py-2 pl-6"><h2 className="text-3xl">Closing encouragement</h2><div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.closing_encouragement.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>

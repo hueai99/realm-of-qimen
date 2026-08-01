@@ -7,7 +7,7 @@ export type DayMasterSupport = {
   example: string;
   pressure: string;
   support: string;
-  weekly_action: { situation: string; action: string; phrase: string; sign: string };
+  weekly_action: { situation: string; action: string; phrase: string; sign: string; bazi_link?: string };
 };
 export type SummaryReport = { personality: string; strengths: ReportPoint[]; soft_spots: ReportPoint[]; day_master_support?: DayMasterSupport; concern_original?: string; concern_response?: string; concern_tips?: string[]; parenting_tips: ReportPoint[]; closing_encouragement: string };
 export type BaziReport = {

@@ -72,6 +72,19 @@ const dayMasterSupportPortraits: Record<string, { introduction: string; secure: 
   Gui: { introduction: "Gui Water is quietly perceptive and often gathers meaning before speaking.", secure: "When he or she feels secure, {name} may share perceptive observations, original ideas, and a quiet understanding of what is happening around him or her.", pressure: "Under pressure, feelings may remain hidden or attention may drift when a task feels disconnected from anything meaningful.", support: "Create a calm opening to talk without repeated questions. For a difficult task, connect it to one useful purpose and agree on a clear point to finish.", weekly_action: { situation: "When a task feels hard to connect with", action: "Explain one practical reason for the task and agree on a clear stopping point.", phrase: "Let us finish this part because it helps with ___. Then you are done.", sign: "{name} stays with the task for the agreed time or explains what still feels unclear." } },
 };
 
+const dayMasterConcernLinks: Record<string, string> = {
+  Jia: "This approach also suits {name}'s Jia Wood nature. A clear example and a constructive next step can make reflection feel more purposeful.",
+  Yi: "This approach also suits {name}'s Yi Wood nature. Feeling heard first can make it easier to consider another point of view and adjust gently.",
+  Bing: "This approach also suits {name}'s Bing Fire nature. Acknowledging what matters before offering advice can help strong feelings settle into a clearer conversation.",
+  Ding: "This approach also suits {name}'s Ding Fire nature. A gentle opening and time to think can help private thoughts become easier to express.",
+  Wu: "This approach also suits {name}'s Wu Earth nature. A calm and predictable conversation can provide enough steadiness to consider something difficult.",
+  Ji: "This approach also suits {name}'s Ji Earth nature. A caring tone can help honest reflection feel supportive instead of critical.",
+  Geng: "This approach also suits {name}'s Geng Metal nature. One clear example is easier to work with than a broad label or criticism.",
+  Xin: "This approach also suits {name}'s Xin Metal nature. Specific and private feedback can encourage reflection without making one mistake feel larger than it is.",
+  Ren: "This approach also suits {name}'s Ren Water nature. Space to explore another way can make change feel possible rather than imposed.",
+  Gui: "This approach also suits {name}'s Gui Water nature. A quiet question and time to think can help {name} notice and share what is happening inside.",
+};
+
 function concernReflection(concern: string, name: string): string {
   const text = concern.toLowerCase();
   if (/connect|reconnect|reach\b|talk to|open up|closer|bond|communicat|relationship/.test(text)) return `You would like to feel closer to ${name} and find an easier way to connect.`;
@@ -330,6 +343,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
         action: personalisePortrait(weeklyAction.action),
         phrase: personalisePortrait(weeklyAction.phrase),
         sign: personalisePortrait(weeklyAction.sign),
+        bazi_link: concern ? personalisePortrait(dayMasterConcernLinks[dayMasterName]) : undefined,
       },
     },
     concern_original: concern ?? undefined,

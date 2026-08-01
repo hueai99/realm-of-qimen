@@ -11,7 +11,7 @@ export async function sendSummaryEmail(input: { reportId: string; email: string;
   const paragraphs = (value: string) => value.split(/\n\s*\n/).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("");
   const reportPoints = (points: SummaryReport["strengths"]) => points.map((point) => `<h3 style="margin-bottom:4px">${escapeHtml(point.heading)}</h3><p style="margin-top:0">${escapeHtml(point.body)}</p>`).join("");
   const weeklyAction = input.summary.day_master_support?.weekly_action;
-  const actionHtml = weeklyAction ? `<h2>Try this with ${escapeHtml(input.childName)} this week</h2><p><strong>${escapeHtml(weeklyAction.situation)}</strong></p><p>${escapeHtml(weeklyAction.action)}</p><p><strong>Try saying:</strong> “${escapeHtml(weeklyAction.phrase)}”</p><p><strong>Look for:</strong> ${escapeHtml(weeklyAction.sign)}</p>` : "";
+  const actionHtml = weeklyAction ? `<h2>Try this with ${escapeHtml(input.childName)} this week</h2><p><strong>${escapeHtml(weeklyAction.situation)}</strong></p><p>${escapeHtml(weeklyAction.action)}</p>${weeklyAction.bazi_link ? `<p><strong>Why this may suit ${escapeHtml(input.childName)}:</strong> ${escapeHtml(weeklyAction.bazi_link)}</p>` : ""}<p><strong>Try saying:</strong> “${escapeHtml(weeklyAction.phrase)}”</p><p><strong>Look for:</strong> ${escapeHtml(weeklyAction.sign)}</p>` : "";
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { authorization: `Bearer ${process.env.RESEND_API_KEY}`, "content-type": "application/json" },
