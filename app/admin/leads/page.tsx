@@ -12,7 +12,7 @@ export default async function LeadsPage() {
   const db = createAdminClient();
   const { data: leads, error } = await db
     .from("leads")
-    .select("id, name, parent_name, email, phone, report_id, conversion_status, notes, created_at, bazi_reports(id, subject_name, birth_date, birth_time, birth_place, gender, question_type, chart_data, chart_status, report_content)")
+    .select("id, name, parent_name, email, phone, report_id, conversion_status, notes, created_at, bazi_reports(id, subject_name, birth_date, birth_time, birth_place, gender, question_type, chart_data, chart_status, report_content, email_summary_requested)")
     .order("created_at", { ascending: false });
   if (error) return <main className="p-8">Could not load leads.</main>;
 
@@ -38,7 +38,8 @@ export default async function LeadsPage() {
       feedback: feedback ? {
         rating: String(feedback.payload?.rating ?? ""), comment: String(feedback.payload?.comment ?? ""),
         interested_in_more: Boolean(feedback.payload?.interested_in_more) || premiumInterest,
-      } : premiumInterest ? { rating: "", comment: "", interested_in_more: true } : null,
+        email_summary_requested: Boolean(feedback.payload?.email_summary_requested) || Boolean(report?.email_summary_requested),
+      } : premiumInterest || report?.email_summary_requested ? { rating: "", comment: "", interested_in_more: premiumInterest, email_summary_requested: Boolean(report?.email_summary_requested) } : null,
     };
   });
   return <LeadsTable initial={rows} />;
