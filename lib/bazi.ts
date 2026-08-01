@@ -241,8 +241,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const variationCycle = variationSeed === undefined ? Math.floor(Math.random() * 81) : Math.abs(Math.trunc(variationSeed));
   const openingVariant = variationCycle % 3;
   const connectionVariant = Math.floor(variationCycle / 3) % 3;
-  const variant = (variationCycle + connectionVariant) % 3;
-  const closingVariant = (variationCycle + (2 * connectionVariant)) % 3;
+  const variant = Math.floor(variationCycle / 9) % 3;
+  const closingVariant = Math.floor(variationCycle / 27) % 3;
   const supportVariants = strength === "Weak"
     ? [
       `In Bazi, ${name} has what is known as a Weak Day Master. This does not mean that he or she lacks strength or ability. These Day Master qualities may show themselves more quietly at first. As ${name} feels secure and becomes more confident, they may emerge more clearly. ${profile.expressionExample}`,

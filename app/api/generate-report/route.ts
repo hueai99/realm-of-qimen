@@ -14,6 +14,9 @@ function normaliseName(value: string) {
   const trimmed = value.trim();
   return trimmed === trimmed.toLowerCase() ? trimmed.replace(/[A-Za-z]/, (letter) => letter.toUpperCase()) : trimmed;
 }
+function variationSeedFromReportId(id: string) {
+  return [...id].reduce((seed, character) => Math.imul(seed ^ character.charCodeAt(0), 16777619) >>> 0, 2166136261) % 81;
+}
 export async function POST(request: Request) {
   let body: Record<string, string>; try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid request" }, { status: 400 }); }
   body.phone_code = (body.phone_code ?? "").split("|").pop() ?? "";
@@ -31,10 +34,9 @@ export async function POST(request: Request) {
     : null;
   if (invalidField) return NextResponse.json({ error: `Please check the ${invalidField}.` }, { status: 422 });
   const db = createAdminClient();
-  const { count: matchingReports } = await db.from("bazi_reports").select("id", { count: "exact", head: true }).eq("birth_date", birth_date).eq("birth_time", birth_time).eq("birth_place", birth_place);
-  const variation_seed = matchingReports ?? Date.now();
   const { data: report, error } = await db.from("bazi_reports").insert({ subject_name, parent_name, email, birth_date, birth_time, birth_place, parenting_concern, gender, question_type }).select("id").single();
   if (error || !report) return NextResponse.json({ error: "We could not save your reading. Please try again." }, { status: 500 });
+  const variation_seed = variationSeedFromReportId(report.id);
   await db.from("audit_logs").insert({ actor: "system", action: "report.requested", target_table: "bazi_reports", target_id: report.id, payload: { question_type } });
   let reading: Awaited<ReturnType<typeof generateReading>>;
   try { reading = await generateReading({ subject_name, birth_date, birth_time, birth_place, parenting_concern, gender, question_type, variation_seed } as never); const { error: updateError } = await db.from("bazi_reports").update(reading).eq("id", report.id); if (updateError) throw updateError; await db.from("audit_logs").insert({ actor: "system", action: "report.generated", target_table: "bazi_reports", target_id: report.id, payload: { source: reading.insights_source, variation_seed } }); } catch (generationError) { await db.from("audit_logs").insert({ actor: "system", action: "report.generation_failed", target_table: "bazi_reports", target_id: report.id, payload: {} }); return NextResponse.json({ error: "We saved the details, but could not prepare the report. Please try again." }, { status: 500 }); }
