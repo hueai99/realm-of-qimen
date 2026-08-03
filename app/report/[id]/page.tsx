@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
 import ReportFeedback from "@/app/components/report-feedback";
 import type { BaziReport } from "@/lib/types";
 
@@ -26,10 +24,6 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const birthCountry = report.birth_place?.split(",").map((part) => part.trim()).filter(Boolean).at(-1);
 
   return <main className="min-h-screen">
-    <header className="mx-auto flex max-w-5xl items-center gap-3 px-5 py-4 sm:px-6 sm:py-5">
-      <Link href="/" aria-label="Realm of Qimen home"><Image src="/ROQ%20logo.png" alt="Realm of Qimen" width={72} height={72} priority className="h-16 w-16 object-contain sm:h-[4.5rem] sm:w-[4.5rem]" /></Link>
-      <span className="text-[10px] uppercase tracking-widest text-[#60747a] sm:text-xs">Personality blueprint</span>
-    </header>
     <article className="mx-auto max-w-5xl px-5 pb-16 pt-3 sm:px-6 sm:pb-20 sm:pt-8">
       <div className="border-b border-[#acd8de] pb-7 sm:pb-10">
         <p className="text-xs font-bold uppercase tracking-[.25em] text-[#007789]">Your Child&apos;s Bazi Personality Blueprint · Summary Report</p>

@@ -1,7 +1,21 @@
 @import "tailwindcss";
 
-:root { color-scheme: light; }
+:root {
+  color-scheme: light;
+  --paper: #f7f2e9;
+  --paper-deep: #eee5d7;
+  --card: #fffdf8;
+  --ink: #26231f;
+  --muted: #6b655d;
+  --border: #d8cec0;
+  --teal: #2c8c94;
+  --teal-dark: #17636b;
+  --teal-soft: #e3f1f0;
+  --terracotta: #a85842;
+}
 * { box-sizing: border-box; }
-body { margin: 0; background: #f7fbfb; color: #272727; font-family: Constantia, Georgia, "Times New Roman", serif; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
 button, input, select, textarea { font: inherit; }
-::selection { background: #00a0b8; color: white; }
+::selection { background: var(--teal); color: white; }
