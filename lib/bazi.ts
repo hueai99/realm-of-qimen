@@ -148,7 +148,7 @@ function concernReflection(concern: string, name: string): string {
   if (/weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/.test(text)) return `You would like to help ${name} recognise the areas he or she finds difficult and become more open to improving them.`;
   if (/obstacle|setback|challenge|difficulty|difficulties|overcome/.test(text)) return `You would like to help ${name} face obstacles without losing confidence or feeling that he or she has to solve everything at once.`;
   if (/listen|defiant|stubborn|cooperate|behavio/.test(text)) return `You have noticed that it can be difficult for ${name} to follow some everyday requests.`;
-  return `You would like some guidance on something that currently matters for ${name}.`;
+  return "";
 }
 
 function concernWeeklyAction(concern: string, name: string): { situation: string; action: string; phrase: string; sign: string } {
@@ -164,7 +164,7 @@ function concernWeeklyAction(concern: string, name: string): { situation: string
   if (/confidence|shy|afraid|anxious|worry|fear/.test(text)) return { situation: "Repeat one manageable step", action: `Choose one small action ${name} can practise twice this week. Keep it familiar enough for progress to be noticed.`, phrase: "You have tried this once. Would you like to practise the same step again?", sign: `${name} approaches the second attempt with less hesitation or needs less help.` };
   if (/friend|social|lonely|bully|fit in/.test(text)) return { situation: "Create one low-pressure chance to connect", action: `Help ${name} choose a simple shared activity with one familiar peer, without making a new friendship the goal.`, phrase: "Would you like to invite someone to do this with you?", sign: `${name} shows interest in the activity, suggests a person, or explains what would feel comfortable.` };
   if (/listen|defiant|cooperate|behavio/.test(text)) return { situation: "Choose one routine to make predictable", action: `Pick one repeated task and agree with ${name} on the time and order before it begins. Keep the arrangement the same for one week.`, phrase: "Let us agree when this happens so neither of us has to keep reminding the other.", sign: `${name} begins the routine with fewer reminders or refers back to the agreement.` };
-  return { situation: "Test one small change for seven days", action: `Choose one part of the concern that you can easily notice. For example, if ${name} often resists starting a task, offer a choice between two suitable starting times. Use the same approach for seven days, then notice whether the task begins with less tension.`, phrase: "Let us try this for one week, then talk about what felt different.", sign: `${name} responds more openly, or you gain a clearer sense of what support is useful.` };
+  return { situation: "", action: "", phrase: "", sign: "" };
 }
 
 function concernGuidance(concern: string, name: string): string[] {
@@ -181,7 +181,7 @@ function concernGuidance(concern: string, name: string): string[] {
   else if (/obstacle|setback|challenge|difficulty|difficulties|overcome/.test(text)) tips = [`Ask ${name} to describe the obstacle in his or her own words. Understanding whether the difficult part is starting, knowing what to do, or worrying about the result makes the next step clearer.`, `Help ${name} make the problem smaller without taking it over. Focus on one part that can be attempted now, then pause and review what the attempt revealed.`, `Notice the way ${name} approaches the obstacle, not only whether it disappears. Trying another method, asking for help, or returning after a setback are all signs of progress.`];
   else if (/stubborn|recognise|self.aware/.test(text)) tips = [`Avoid asking ${name} to agree that he or she is stubborn. Talk about one specific moment instead, including what happened and how it affected the situation.`, `Ask what ${name} was trying to achieve or protect in that moment. Once he or she feels heard, explore one different way the situation could have been handled.`, `Notice when ${name} reconsiders a decision, admits a mistake, or listens to another view. Recognising these moments can make honest self-reflection feel safer.`];
   else if (/listen|defiant|cooperate|behavio/.test(text)) tips = [`Keep the request short and clear so ${name} knows exactly what is expected. Explain one step before adding another.`, `Where possible, offer two acceptable choices. This gives ${name} some say while keeping the responsibility clear.`, `After the task is complete, acknowledge the cooperation. Brief, specific appreciation is easier to understand than a general compliment.`];
-  else tips = [`Choose a calm moment and ask ${name} what would feel most helpful. Keep the question simple and allow time for an answer.`, `Listen before offering a solution. The first need may be understanding rather than immediate advice.`, `Try one small change, then check in again later. This makes it easier to notice what genuinely helps ${name}.`];
+  else tips = [];
   return tips;
 }
 
@@ -266,11 +266,17 @@ function genderedSummary(summary: SummaryReport, gender: string): SummaryReport 
 }
 
 function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport): SummaryReport {
+  const candidateWeekly = candidate.day_master_support?.weekly_action;
+  const keepCandidateWeekly = candidateWeekly?.situation?.trim() && candidateWeekly.action?.trim() && candidateWeekly.phrase?.trim() && candidateWeekly.sign?.trim();
+  const verifiedSupport = verified.day_master_support;
   return {
     ...candidate,
     strengths: candidate.strengths.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.strengths[index]?.guidance, basis: verified.strengths[index]?.basis })),
     soft_spots: candidate.soft_spots.map((point, index) => ({ ...point, guidance: point.guidance ?? verified.soft_spots[index]?.guidance, basis: verified.soft_spots[index]?.basis })),
-    day_master_support: verified.day_master_support,
+    day_master_support: verifiedSupport ? {
+      ...verifiedSupport,
+      weekly_action: keepCandidateWeekly ? { ...verifiedSupport.weekly_action, ...candidateWeekly } : verifiedSupport.weekly_action,
+    } : candidate.day_master_support,
     concern_original: verified.concern_original,
     concern_response: candidate.concern_response ?? verified.concern_response,
     concern_tips: candidate.concern_tips?.length ? candidate.concern_tips : verified.concern_tips,
@@ -399,9 +405,9 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     `The Day Master at the centre of ${name}'s summary is ${dayMaster}, often compared to ${profile.image}.`,
   ];
   const childConnections = [
-    `Likewise, you may see this in ${name} through ${profile.warmIntroduction}.`,
-    `Likewise, this may appear in ${name} as ${profile.warmIntroduction}.`,
-    `Likewise, you may recognise in ${name} ${profile.warmIntroduction}.`,
+    `${name} may have ${profile.warmIntroduction}.`,
+    `You may recognise this quality in ${name} when ${profile.warmIntroduction}.`,
+    `In everyday life, ${profile.warmIntroduction} may become visible in ${name}.`,
   ];
   const personality = [
     personalityOpenings[openingVariant],
@@ -469,7 +475,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   };
   const parentEncouragement = `By paying attention to these everyday moments, you help ${name} feel seen and understood. The care you are taking to understand him or her is already meaningful support. You do not need every answer immediately. Your patience and willingness to keep connecting can make a lasting difference.`;
   const supportPortrait = dayMasterSupportPortraits[dayMasterName];
-  const weeklyAction = concern ? concernWeeklyAction(concern, name) : supportPortrait.weekly_action;
+  const concernAction = concern ? concernWeeklyAction(concern, name) : null;
+  const weeklyAction = concernAction?.situation ? concernAction : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
   const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
@@ -515,10 +522,10 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       },
     },
     concern_original: concern ?? undefined,
-    concern_response: concern ? concernReflection(concern, name) : undefined,
-    concern_tips: concern ? concernGuidance(concern, name) : undefined,
+    concern_response: concern && concernReflection(concern, name) ? concernReflection(concern, name) : undefined,
+    concern_tips: concern && concernGuidance(concern, name).length ? concernGuidance(concern, name) : undefined,
     parenting_tips: parentingTips,
-    closing_encouragement: `${closingStarts[closingVariant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. It is only a small part of what Bazi can offer because the focus here is the Day Master. A full Bazi reading can reveal more about how he or she learns, manages emotions, and connects with others. The Premium Report offers this fuller picture, with an optional 15-minute online consultation for questions about the completed report.`,
+    closing_encouragement: `${closingStarts[closingVariant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. This first look focuses on the Day Master, which is only one part of a Bazi chart. Other parts can offer a fuller view of how he or she learns, manages emotions, and connects with others.`,
   };
 }
 
@@ -542,7 +549,9 @@ export async function generateReading(input: Input): Promise<Reading> {
   const publicElement = Object.keys(elementStyle).find((element) => calculatedChart.day_master?.includes(element)) ?? "element";
   calculated.element_profile = `This summary focuses on one important part of the chart: ${input.subject_name}'s ${calculatedChart.day_master} Day Master. It is associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
   const concern = (input as Input & { parenting_concern?: string | null }).parenting_concern;
-  const verified = withQc(calculated, deterministicQc(calculated, input.subject_name, input.gender, concern));
+  const verifiedQc = deterministicQc(calculated, input.subject_name, input.gender, concern);
+  if (!verifiedQc.approved) throw new Error(`Deterministic report failed expert QC: ${verifiedQc.issues.join("; ")}`);
+  const verified = withQc(calculated, verifiedQc);
   const fullSummaryAiEnabled = Boolean(process.env.OPENAI_API_KEY) && process.env.OPENAI_SYNC_ENABLED === "true" && process.env.FREE_SUMMARY_AI_ENABLED !== "false";
   if (!fullSummaryAiEnabled) {
     if (!concern) return verified;
@@ -560,7 +569,7 @@ export async function generateReading(input: Input): Promise<Reading> {
       "Write so that a 12-year-old can understand every sentence. Replace abstract phrases with actions a parent can see.",
       "Use only the supplied reviewed Day Master guidance and verified strong/weak state. Do not add traits or calculation details.",
       "Introduce the child by name first. Then use the Day Master's natural image to help tell the story.",
-      "After the Day Master image, explicitly connect it to the child with a sentence such as 'Likewise, you may see this in [name] when...'. The metaphor must explain a behaviour a parent can recognise.",
+      "After the Day Master comparison, connect it naturally to a behaviour the parent may recognise in the child. Do not use a fixed transition such as 'Likewise'.",
       "Write personality as three short paragraphs: the Day Master metaphor; how it may appear in this child; then a separate explanation of Strong, Balanced, or Weak.",
       "Every strength and soft spot must include a scene from homework, play, friendship, family routines, transitions, mistakes, or emotional moments.",
       "When a point has two examples, write them as two separate sentences. Never compress two examples into one list.",

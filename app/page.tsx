@@ -19,7 +19,7 @@ export default async function Home() {
       <section id="bazi" className="mx-auto grid max-w-6xl gap-10 px-6 pb-16 pt-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-16 lg:pb-24 lg:pt-20">
         <div className="pt-2 lg:pt-8">
           <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Your child&apos;s Bazi personality summary</p>
-          <h1 className="mt-5 max-w-2xl text-4xl leading-[1.08] sm:text-6xl sm:leading-[1.02]">Understand your child with greater clarity.</h1>
+          <h1 className="mt-5 max-w-2xl text-3xl leading-[1.12] sm:text-6xl sm:leading-[1.02]">Understand your child with greater clarity.</h1>
           <p className="mt-7 max-w-xl text-base leading-7 text-[var(--muted)] sm:text-lg sm:leading-8">Discover natural strengths, moments that may feel harder, and practical ways to support your child at home.</p>
           <div className="mt-8 flex flex-wrap gap-2 text-xs">
             {['Personalised', 'Private', 'No login required'].map((item) => <span key={item} className="rounded-full bg-[var(--teal-soft)] px-4 py-2 text-[var(--teal-dark)]">{item}</span>)}
@@ -29,7 +29,7 @@ export default async function Home() {
         <IntakeForm />
       </section>
 
-      <section className="border-y border-[var(--border)] bg-[var(--card)] px-6 py-16 sm:py-20">
+      <section id="services" className="scroll-mt-24 border-y border-[var(--border)] bg-[var(--card)] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Realm of Qimen services</p>
           <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">

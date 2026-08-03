@@ -24,13 +24,13 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const birthCountry = report.birth_place?.split(",").map((part) => part.trim()).filter(Boolean).at(-1);
 
   return <main className="min-h-screen">
-    <article className="mx-auto max-w-5xl px-5 pb-16 pt-3 sm:px-6 sm:pb-20 sm:pt-8">
+    <article className="mx-auto max-w-5xl px-4 pb-14 pt-3 sm:px-6 sm:pb-20 sm:pt-8">
       <div className="border-b border-[#acd8de] pb-7 sm:pb-10">
         <p className="text-xs font-bold uppercase tracking-[.25em] text-[#007789]">Your Child&apos;s Bazi Personality Blueprint · Summary Report</p>
-        <h1 className="mt-2 text-4xl sm:mt-3 sm:text-5xl">{report.subject_name}</h1>
+        <h1 className="mt-2 text-3xl sm:mt-3 sm:text-5xl">{report.subject_name}</h1>
         <p className="mt-3 text-sm leading-6 text-[#5d6f75] sm:mt-4 sm:text-base">{genderLabel} · Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{birthCountry ? ` · ${birthCountry}` : ""}</p>
       </div>
-      <section className="my-8 max-w-3xl border-l-2 border-[#00a0b8] bg-[#ffffff] px-6 py-5">
+      <section className="my-7 max-w-3xl border-l-2 border-[var(--teal)] bg-[var(--card)] px-5 py-5 sm:my-8 sm:px-6">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#007789]">About this Bazi summary</p>
         <p className="mt-3 leading-7 text-[#4e5b6f]">In Bazi, the Day Master represents the person at the centre of the reading. It comes from the element connected to the day {subjectPronoun} {birthVerb} born and offers a first look at {possessivePronoun} natural temperament—how {subjectPronoun} may respond, make decisions, and approach everyday situations.</p>
         <p className="mt-3 leading-7 text-[#4e5b6f]">This summary looks at {report.subject_name}&apos;s Day Master. It is a starting point rather than the whole story of {possessivePronoun} personality.</p>
@@ -115,5 +115,5 @@ function practicalExample(situation: string, name: string) {
   if (/feeling arrives|held inside|seems quieter/.test(text)) return `If ${name} comes home upset and does not want to talk, acknowledge what you notice without pressing for an answer. Check in again after there has been time to settle.`;
   if (/jumping in|solve a problem/.test(text)) return `If friends disagree, encourage ${name} to hear what each person says before suggesting a solution. One extra question may reveal something that was missed.`;
   if (/repeated checking|finished work/.test(text)) return `Before homework begins, agree on what “finished” will look like. Once those points are complete, encourage ${name} to submit the work without another full round of checking.`;
-  return `Choose one ordinary situation this week where this pattern appears. Try the approach once, then notice whether ${name} responds differently.`;
+  return `If ${name} is putting off a task, ask which part feels hardest. Choose one small first step together, then check whether beginning feels easier.`;
 }

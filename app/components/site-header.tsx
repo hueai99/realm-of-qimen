@@ -17,7 +17,11 @@ export default function SiteHeader() {
           <span className="text-[var(--muted)]">Qimen</span>
           <span className="text-[var(--muted)]">Feng Shui</span>
         </nav>
-        <span className="rounded-full border border-[var(--border)] px-3 py-2 text-xs text-[var(--muted)] md:hidden">Bazi</span>
+        <nav aria-label="Mobile navigation" className="flex items-center gap-1.5 text-[10px] sm:gap-2 sm:text-xs md:hidden">
+          <Link href="/#bazi" className="rounded-full border border-[var(--teal)] bg-[var(--teal-soft)] px-2 py-2 text-[var(--teal-dark)] sm:px-2.5">Bazi</Link>
+          <Link href="/#services" className="rounded-full border border-[var(--border)] px-2 py-2 text-[var(--muted)] sm:px-2.5">Qimen</Link>
+          <Link href="/#services" className="rounded-full border border-[var(--border)] px-2 py-2 text-[var(--muted)] sm:px-2.5">Feng Shui</Link>
+        </nav>
       </div>
     </header>
   );
