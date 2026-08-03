@@ -1,5 +1,6 @@
 import Link from "next/link";
 import IntakeForm from "@/app/components/intake-form";
+import ServiceIcon from "@/app/components/service-icon";
 import { createClient } from "@/lib/supabase/server";
 import type { BaziReport } from "@/lib/types";
 
@@ -37,7 +38,7 @@ export default async function Home() {
           </div>
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
             <article className="border-t-4 border-[var(--teal)] bg-[var(--paper)] p-6 sm:p-8">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--teal-soft)] text-lg text-[var(--teal-dark)]">八</span>
+              <ServiceIcon service="bazi" />
               <p className="mt-6 text-xs uppercase tracking-[.18em] text-[var(--teal-dark)]">Understand natural patterns</p>
               <h3 className="mt-2 text-3xl">Bazi</h3>
               <p className="mt-4 min-h-24 text-sm leading-6 text-[var(--muted)]">Explore temperament, strengths, relationships, and the ways a person may grow through different stages of life.</p>
@@ -46,8 +47,8 @@ export default async function Home() {
                 <Link href="#bazi" className="font-semibold text-[var(--teal-dark)] underline underline-offset-4">Start a child reading</Link>
               </div>
             </article>
-            <FutureService symbol="奇" eyebrow="Find clarity in a situation" title="Qimen">Consider timing, direction, and strategy when facing an important decision or uncertain situation.</FutureService>
-            <FutureService symbol="宅" eyebrow="Understand your surroundings" title="Feng Shui">Explore how a home or workspace may better support the people who live and work within it.</FutureService>
+            <FutureService service="qimen" eyebrow="Find clarity in a situation" title="Qimen">Consider timing, direction, and strategy when facing an important decision or uncertain situation.</FutureService>
+            <FutureService service="fengshui" eyebrow="Understand your surroundings" title="Feng Shui">Explore how a home or workspace may better support the people who live and work within it.</FutureService>
           </div>
         </div>
       </section>
@@ -60,9 +61,9 @@ export default async function Home() {
   );
 }
 
-function FutureService({ symbol, eyebrow, title, children }: { symbol: string; eyebrow: string; title: string; children: React.ReactNode }) {
+function FutureService({ service, eyebrow, title, children }: { service: "qimen" | "fengshui"; eyebrow: string; title: string; children: React.ReactNode }) {
   return <article className="border border-[var(--border)] bg-[var(--paper)] p-6 sm:p-8">
-    <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--paper-deep)] text-lg text-[var(--muted)]">{symbol}</span>
+    <ServiceIcon service={service} />
     <p className="mt-6 text-xs uppercase tracking-[.18em] text-[var(--muted)]">{eyebrow}</p><h3 className="mt-2 text-3xl">{title}</h3>
     <p className="mt-4 min-h-24 text-sm leading-6 text-[var(--muted)]">{children}</p><span className="mt-7 inline-block rounded-full border border-[var(--border)] px-3 py-2 text-xs text-[var(--muted)]">Coming later</span>
   </article>;
