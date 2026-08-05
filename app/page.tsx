@@ -15,7 +15,7 @@ export default async function Home() {
   } catch {}
 
   return (
-    <main>
+    <main className="flex flex-col">
       <section id="bazi" className="mx-auto grid max-w-6xl gap-10 px-6 pb-16 pt-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-16 lg:pb-24 lg:pt-20">
         <div className="pt-2 lg:pt-8">
           <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Your child&apos;s Bazi personality summary</p>
@@ -29,7 +29,7 @@ export default async function Home() {
         <IntakeForm />
       </section>
 
-      <section id="services" className="scroll-mt-24 border-y border-[var(--border)] bg-[var(--card)] px-6 py-16 sm:py-20">
+      <section id="services" className="order-first scroll-mt-24 border-y border-[var(--border)] bg-[var(--card)] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Realm of Qimen services</p>
           <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
