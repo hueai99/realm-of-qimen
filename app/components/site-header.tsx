@@ -8,7 +8,7 @@ export default function SiteHeader() {
         <Link href="/" aria-label="Realm of Qimen home" className="flex min-w-0 items-center gap-3">
           <Image src="/ROQ%20logo.png" alt="Realm of Qimen" width={80} height={80} priority className="h-16 w-16 shrink-0 rounded-full object-contain sm:h-20 sm:w-20" />
           <span className="min-w-0">
-            <strong className="block whitespace-nowrap font-serif text-sm font-normal tracking-[.13em] sm:text-base">REALM OF QIMEN</strong>
+            <strong className="font-display block whitespace-nowrap text-sm font-normal tracking-[.13em] sm:text-base">REALM OF QIMEN</strong>
             <span className="mt-1 block text-[11px] text-[var(--muted)] sm:text-xs">Traditional wisdom for modern life</span>
           </span>
         </Link>

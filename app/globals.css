@@ -2,6 +2,8 @@
 
 :root {
   color-scheme: light;
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: Arial, Helvetica, sans-serif;
   --paper: #f7f2e9;
   --paper-deep: #eee5d7;
   --card: #fffdf8;
@@ -15,7 +17,10 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
-h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; }
-button, input, select, textarea { font: inherit; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+h1, h2, h3 { margin-block-start: 0; font-family: var(--font-display); font-weight: 400; letter-spacing: -.018em; }
+p, li, label, legend, input, select, textarea, button { font-family: var(--font-body); }
+button, input, select, textarea { font-size: inherit; }
+.font-display { font-family: var(--font-display); }
+.brand-label { font-family: var(--font-body); font-size: .75rem; font-weight: 700; letter-spacing: .18em; line-height: 1.4; text-transform: uppercase; }
 ::selection { background: var(--teal); color: white; }
