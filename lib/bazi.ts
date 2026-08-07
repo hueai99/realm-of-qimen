@@ -414,14 +414,15 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       ];
   const support = supportVariants[variant];
   const personalityOpenings = [
-    `${name} was born under the ${dayMaster} Day Master. ${profile.name} is often compared to ${profile.image}.`,
-    `${name}'s Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
-    `The Day Master at the centre of ${name}'s summary is ${dayMaster}, often compared to ${profile.image}.`,
+    `${name}'s Day Master is ${dayMaster}. In Bazi, ${profile.name} is often compared to ${profile.image}.`,
+    `In ${name}'s Bazi chart, the Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
+    `${name} has the ${dayMaster} Day Master. Bazi compares ${profile.name} to ${profile.image}.`,
   ];
+  const everydayConnection = profile.strengths[connectionVariant];
   const childConnections = [
-    `${name} may have ${profile.warmIntroduction}.`,
-    `You may recognise this quality in ${name} when ${profile.warmIntroduction}.`,
-    `In everyday life, ${profile.warmIntroduction} may become visible in ${name}.`,
+    `${name} ${everydayConnection.meaning}. You may notice it when ${name} is ${everydayConnection.everyday}.`,
+    `This quality may appear in small, everyday moments. You may see it when ${name} is ${everydayConnection.everyday}.`,
+    `You may recognise this part of ${name} when ${name} is ${everydayConnection.everyday}.`,
   ];
   const personality = [
     personalityOpenings[openingVariant],
