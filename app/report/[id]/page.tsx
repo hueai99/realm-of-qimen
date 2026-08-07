@@ -109,6 +109,7 @@ function readableParagraphs(value: string) {
 
 function practicalExample(situation: string, name: string) {
   const text = situation.toLowerCase();
+  if (/following .* lead|share with you|connect|closer/.test(text)) return `If ${name} chooses drawing, sit nearby and let the activity unfold without correcting or teaching. Follow what ${name} wants to share, even if it is only a small detail about the picture.`;
   if (/obstacle|getting in the way|setback/.test(text)) return `If a school task feels overwhelming, ask ${name} to choose just one question or one five-minute step to try first. Review what helped after the attempt.`;
   if (/several ideas|hard to begin|big idea/.test(text)) return `If ${name} has several ideas for a project, write them down together. Let ${name} choose one idea to test for ten minutes before deciding what to do next.`;
   if (/plan has to change|unfamiliar change/.test(text)) return `If an outing is cancelled, explain what has changed and offer two workable alternatives. Let ${name} choose which new plan to follow.`;
