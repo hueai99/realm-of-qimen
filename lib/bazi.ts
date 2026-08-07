@@ -16,7 +16,7 @@ const tenGodNames: Record<string, [string, string]> = { "比肩":["Bi Jian","Fri
 type Input = { subject_name: string; birth_date: string; birth_time?: string | null; gender: string; question_type: QuestionType; variation_seed?: number };
 export type Reading = { year_pillar: string; month_pillar: string; day_pillar: string; hour_pillar: string | null; element_profile: string; insights: string; insights_confidence: number; insights_source: string; insights_review_status?: "reviewed" | "rejected"; report_content: SummaryReport; chart_status: "verified"; chart_data: Record<string, unknown> };
 
-type QcResult = { approved: boolean; issues: string[]; reviewer: string };
+type QcResult = { approved: boolean; issues: string[]; warnings?: string[]; reviewer: string };
 const unsupportedClaims = /\b(top structure|profile star|ranked star|destined|guaranteed|will definitely|diagnos(?:e|is)|scientifically proven|dead|trapped|the subject|this individual|profile indicates|behavioural profile)\b/i;
 const sourceLeak = /\b(Joey Yap|Destiny\s*X|Power of X|uploaded (?:file|document|reference)|source material|reference document|knowledge base|internal prompt|training data)\b/i;
 const aiStylePhrases = /\b(delv(?:e|es|ing)|tapestry|unlock(?:ing)?|transformative|profound|multifaceted|navigate the complexities|in today'?s world|it is important to note|it'?s worth noting|moreover|furthermore|in conclusion|serves as a testament|embark on|holistic journey)\b/i;
@@ -185,7 +185,7 @@ function concernGuidance(concern: string, name: string): string[] {
   return tips;
 }
 
-function deterministicQc(reading: Reading, childName?: string, gender?: string, concern?: string | null): QcResult {
+function deterministicQc(reading: Reading, childName?: string, gender?: string, concern?: string | null, strictEditorial = true): QcResult {
   const issues: string[] = [];
   const summary = reading.report_content;
   const prose = JSON.stringify(summary);
@@ -247,7 +247,21 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
   if (!/\b(summary|day master|one part|fuller|more)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement does not gently place the summary in the wider Bazi picture");
   if (/\b(traditional reflective framework|not a fixed label|set aside anything|keep what helps|this blueprint)\b/i.test(summary.closing_encouragement)) issues.push("closing encouragement sounds like a disclaimer or template");
-  return { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v4" };
+  const blockingIssueMessages = new Set([
+    "verified chart data is incomplete",
+    "the report is not attached to a reviewed Day Master profile",
+    "summary structure is incomplete",
+    "personality explanation does not identify the verified Day Master",
+    "unsupported or over-certain claim detected",
+    "private source or internal process disclosure detected",
+    "a strength or soft spot is not traceable to verified Bazi data",
+    "Day Master support portrait is incomplete",
+  ]);
+  const blockingIssues = issues.filter((issue) => blockingIssueMessages.has(issue));
+  const editorialWarnings = issues.filter((issue) => !blockingIssueMessages.has(issue));
+  return strictEditorial
+    ? { approved: issues.length === 0, issues, reviewer: "rules/expert-bazi-and-editorial-qc-v4" }
+    : { approved: blockingIssues.length === 0, issues: blockingIssues, warnings: editorialWarnings, reviewer: "rules/expert-bazi-and-editorial-qc-v4" };
 }
 
 function withQc(reading: Reading, qc: QcResult): Reading {
@@ -549,7 +563,7 @@ export async function generateReading(input: Input): Promise<Reading> {
   const publicElement = Object.keys(elementStyle).find((element) => calculatedChart.day_master?.includes(element)) ?? "element";
   calculated.element_profile = `This summary focuses on one important part of the chart: ${input.subject_name}'s ${calculatedChart.day_master} Day Master. It is associated with ${elementStyle[publicElement] ?? "a distinctive way of responding to the world"}.`;
   const concern = (input as Input & { parenting_concern?: string | null }).parenting_concern;
-  const verifiedQc = deterministicQc(calculated, input.subject_name, input.gender, concern);
+  const verifiedQc = deterministicQc(calculated, input.subject_name, input.gender, concern, false);
   if (!verifiedQc.approved) throw new Error(`Deterministic report failed expert QC: ${verifiedQc.issues.join("; ")}`);
   const verified = withQc(calculated, verifiedQc);
   const fullSummaryAiEnabled = Boolean(process.env.OPENAI_API_KEY) && process.env.OPENAI_SYNC_ENABLED === "true" && process.env.FREE_SUMMARY_AI_ENABLED !== "false";
