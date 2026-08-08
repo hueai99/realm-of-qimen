@@ -66,7 +66,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Bing: {
     name: "Bing Fire", image: "the sun", story: "Bing Fire is often compared to the sun. The metaphor helps explain the warmth and open energy linked to this Day Master.",
-    warmIntroduction: "an open, bright nature that often brings warmth, visibility, and life to what matters",
+    warmIntroduction: "an open nature that may share enthusiasm freely and help other people feel included",
     motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
     strengths: [
       { heading: "Natural warmth", meaning: "can make people feel included through an open presence", everyday: "welcoming someone into play or sharing enthusiasm freely", support: "appreciate the warmth without making him or her responsible for everyone else's mood" },
@@ -85,12 +85,12 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Ding: {
     name: "Ding Fire", image: "a lamp", story: "Ding Fire is often compared to a lamp. The metaphor helps explain the quieter warmth and careful insight linked to this Day Master.",
-    warmIntroduction: "a thoughtful, illuminating nature that may notice meaning and feeling beneath the surface",
+    warmIntroduction: "a thoughtful nature that may notice details and feelings other people miss",
     motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
     strengths: [
-      { heading: "Thoughtful insight", meaning: "may think deeply before revealing what has been noticed", everyday: "offering an observation that shows careful listening", support: "leave a pause after questions so the fuller answer has time to arrive" },
+      { heading: "Thoughtful insight", meaning: "may think carefully before sharing an observation", everyday: "mentioning a detail that shows careful listening", support: "pause after asking a question so he or she has time to answer" },
       { heading: "Gentle consideration", meaning: "often cares about how words and choices affect others", everyday: "remembering a small detail that comforts someone", support: "appreciate the kindness while reminding him or her that other people's feelings are not theirs to manage" },
-      { heading: "Quiet influence", meaning: "can guide through ideas and example rather than force", everyday: "helping a sibling or friend see a different way", support: "invite contribution without putting him or her on display" },
+      { heading: "Quiet influence", meaning: "may help other people through a thoughtful idea or quiet example", everyday: "showing a sibling or friend another way to approach something", support: "invite contribution without putting him or her on display" },
     ],
     softSpots: [
       { heading: "May dwell on mistakes", meaning: "may continue thinking about a mistake or conversation after it has ended", everyday: "replaying what happened and wondering what could have been different", support: "listen first, then help him or her decide what can be changed and what can be left behind" },
@@ -104,16 +104,16 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Wu: {
     name: "Wu Earth", image: "a mountain", story: "Wu Earth is often compared to a mountain. The metaphor helps explain the steady and dependable qualities linked to this Day Master.",
-    warmIntroduction: "a grounded, private nature that often values reliability, principles, and a secure foundation",
+    warmIntroduction: "a steady nature that often values familiar routines, reliability, and knowing what to expect",
     motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
     strengths: [
       { heading: "A dependable presence", meaning: "can bring steadiness when people or routines feel unsettled", everyday: "remembering what needs to be done or staying near someone who needs support", support: "thank him or her without making dependability an obligation" },
       { heading: "Strong principles", meaning: "often takes promises and responsibilities seriously", everyday: "wanting adults to keep a rule or promise consistent", support: "explain exceptions honestly rather than dismissing the concern" },
-      { heading: "Patient preparation", meaning: "may prefer to understand the ground before beginning", everyday: "checking materials or instructions before a new task", support: "allow preparation while agreeing on a gentle point to begin" },
+      { heading: "Patient preparation", meaning: "may prefer to understand what is expected before beginning", everyday: "checking materials or instructions before a new task", support: "allow preparation while agreeing on a gentle point to begin" },
     ],
     softSpots: [
       { heading: "Needs time with change", meaning: "may need longer to accept a new plan or another point of view", everyday: "going quiet or resisting when plans change suddenly", support: "explain why the change is needed and give him or her a little time to adjust" },
-      { heading: "May take on adult worries", meaning: "may feel responsible for problems that adults should handle", everyday: "trying to keep the peace or solve an adult's concern", support: "reassure him or her that the adults will take care of the problem" },
+      { heading: "Carries concerns quietly", meaning: "may keep a concern private instead of asking for support", everyday: "becoming quieter when a familiar routine or plan feels unsettled", support: "check in privately and make it clear that he or she does not have to solve the problem alone" },
     ],
     strongExpression: "Reliability and strong principles may be easy to notice. Support can help him or her remain open to change and other points of view.",
     weakExpression: "These grounded qualities may take time to appear. Predictable care and preparation can help confidence grow through experience.",
@@ -185,30 +185,30 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     strengths: [
       { heading: "Big-picture thinking", meaning: "may start with one simple question and quickly imagine a much bigger story or project", everyday: "turning a classroom topic into an idea for something new to make", descriptions: ["{name} may begin with a simple question and imagine a much larger project. A lesson about space could inspire a model rocket or a story about another planet.", "A small idea may quickly grow in {name}'s mind. A weekend outing, for example, could inspire a map, a story, or a plan for a future adventure.", "When a topic catches {name}'s interest, he or she may see possibilities beyond the original task. A simple art activity could become an idea for a larger display or handmade gift."], support: "listen to the idea first, then help him or her choose one small step to try" },
       { heading: "Finds another way", meaning: "may look for another way forward when the original plan no longer works", everyday: "trying a different approach after a setback", descriptions: ["{name} may enjoy discovering new things and trying different activities. If a model will not stand, he or she may change the design and try again.", "When the first plan does not work, {name} may be willing to adjust it. During a game, he or she might change strategy instead of giving up.", "An unexpected problem may lead {name} to test another approach. If a craft does not turn out as planned, he or she may use the materials in a different way."], support: "give him or her room to explore, then agree on a time to check in again" },
-      { heading: "Learns by taking part", meaning: "may learn better when able to try something instead of only reading or listening", everyday: "understanding a lesson more easily after testing an idea or building something", descriptions: ["{name} may understand something more easily when he or she can try it personally. Building, testing, or joining an activity can make the lesson clearer.", "Hands-on experience may help an idea make sense to {name}. Measuring ingredients or building a simple model may be easier to remember than instructions alone.", "{name} may learn best by becoming involved. Trying the first step personally can make a new skill feel clearer and less distant."], support: "give him or her opportunities to learn by doing whenever possible" },
+      { heading: "Open to discovery", meaning: "may enjoy exploring unfamiliar ideas and experiences", everyday: "asking questions about a new topic or choosing an activity that offers something different", descriptions: ["{name} may enjoy discovering something unfamiliar. A new topic may lead to questions and ideas that continue after the activity ends.", "Curiosity may draw {name} towards a new subject or activity. He or she may want time to explore before deciding what to do with it.", "When something new catches {name}'s attention, he or she may ask questions and look for more possibilities."], support: "give him or her room to explore while keeping one clear starting point" },
     ],
     softSpots: [
       { heading: "Drawn to many interests", meaning: "may become excited by several ideas and find it hard to decide which one to finish first", everyday: "starting a new activity before completing the one already underway", descriptions: ["Several ideas may catch {name}'s interest at the same time. He or she may begin a new activity while another is still unfinished because the new idea feels exciting.", "{name} may become interested in something new before the current activity is complete. This is often excitement rather than a lack of effort.", "When several activities look appealing, {name} may find it difficult to choose which one deserves attention first. The newest idea may quickly pull focus away from an earlier one."], support: "keep a short list of the other ideas, then help him or her choose one thing to finish first" },
       { heading: "Benefits from a pause", meaning: "may respond before considering what could happen next", everyday: "answering or agreeing too quickly", descriptions: ["{name} may sometimes answer or agree before thinking about what could happen next. A short pause can give him or her time to understand the choice more fully.", "Excitement may lead {name} to decide quickly. Taking a moment before answering can make the next step easier to understand.", "{name} may be ready to act before all the details are clear. A brief pause can help him or her notice what the decision may involve."], support: "invite him or her to pause, then ask, 'What might happen next?' before a decision is made" },
     ],
-    strongExpression: "Imagination and independence may be easy to notice. Clear limits can help that energy stay focused on something meaningful.",
-    weakExpression: "Imagination may remain private before confidence grows. Safe opportunities to explore can help him or her take one achievable step at a time.",
+    strongExpression: "Imagination and adaptability may be easy to notice. Clear limits can help that energy stay focused on something meaningful.",
+    weakExpression: "Imagination and adaptability may appear differently across situations. A full chart assessment is needed before interpreting Day Master strength.",
     expressionExample: "He or she may stay quiet when joining a new activity. Once comfortable, he or she may begin sharing ideas or suggest a different approach when something does not work.",
     limits: "The Day Master alone cannot establish extroversion, intelligence, realism, distractibility, or risk-taking.",
-    closing: "imagination, courage, and an ability to find another way when plans change",
+    closing: "imagination, adaptability, and a willingness to try another way when plans change",
   },
   Gui: {
     name: "Gui Water", image: "gentle rain", story: "Gui Water is often compared to gentle rain. The metaphor helps explain the quiet sensitivity and awareness linked to this Day Master.",
-    warmIntroduction: "a perceptive, subtle nature that often gathers impressions quietly and finds unexpected connections",
+    warmIntroduction: "a quiet, thoughtful nature that may watch and reflect before speaking",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
     strengths: [
-      { heading: "Perceptive awareness", meaning: "may notice small shifts in mood, meaning, or environment", everyday: "sensing that someone is uncomfortable before anything is said", support: "confirm the observation without asking him or her to manage the situation" },
+      { heading: "Perceptive awareness", meaning: "may notice small changes in tone, behaviour, or surroundings", everyday: "asking about a change in someone's tone or noticing that a familiar routine feels different", support: "listen to the observation without expecting him or her to manage the situation" },
       { heading: "Flow of ideas", meaning: "can connect thoughts in original and surprising ways", everyday: "offering an unusual answer, story, or solution", support: "ask how the idea formed and help give it a simple shape" },
-      { heading: "Gentle versatility", meaning: "often adjusts to different people and settings", everyday: "finding a place in varied groups or changing approach quietly", support: "provide a reliable home base where adaptation is not required" },
+      { heading: "Gentle versatility", meaning: "may adjust quietly to different people and settings", everyday: "taking time to find a comfortable place in a new group", support: "keep home routines predictable so he or she has a familiar place to relax" },
     ],
     softSpots: [
       { heading: "Feelings stay private", meaning: "may keep thoughts and feelings inside until it feels safe to share them", everyday: "saying very little even though mood or behaviour has changed", support: "mention what you have noticed and leave room to talk later instead of asking repeated questions" },
-      { heading: "Interest affects concentration", meaning: "may focus deeply on meaningful work but drift when a task feels disconnected", everyday: "becoming absorbed in one activity but struggling to finish another", support: "connect the task to a useful question and agree on one clear point to finish" },
+      { heading: "Needs a clear purpose", meaning: "may find it easier to continue when the purpose of a task is clear", everyday: "asking why a task matters before settling into it", support: "explain one practical reason for the task and agree on a clear point to finish" },
     ],
     strongExpression: "Sensitivity and adaptability may be easy to notice. Gentle structure can help him or her stay consistent without feeling restricted.",
     weakExpression: "This insight may be especially quiet at first. Trust, patience, and freedom from immediate pressure can help it emerge.",
@@ -219,5 +219,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
 };
 
 export function getDayMasterKnowledge(name: string): DayMasterKnowledge {
-  return dayMasterKnowledge[name] ?? dayMasterKnowledge.Gui;
+  const knowledge = dayMasterKnowledge[name];
+  if (!knowledge) throw new Error(`Unsupported Day Master knowledge profile: ${name}`);
+  return knowledge;
 }

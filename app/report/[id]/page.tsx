@@ -16,7 +16,6 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const pillars: Array<[string, string | null | undefined]> = [["Hour", report.hour_pillar ?? "Birth time unknown"], ["Day", report.day_pillar], ["Month", report.month_pillar], ["Year", report.year_pillar]];
   const insights = report.insights?.split("\n").filter(Boolean) ?? [];
   const summary = report.report_content;
-  const dayMasterStrength = report.chart_data?.day_master_strength ?? report.chart_data?.strength;
   const subjectPronoun = report.gender === "male" ? "he" : report.gender === "female" ? "she" : "they";
   const possessivePronoun = report.gender === "male" ? "his" : report.gender === "female" ? "her" : "their";
   const birthVerb = subjectPronoun === "they" ? "were" : "was";
@@ -42,7 +41,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         <section>
           <p className="text-xs uppercase tracking-[.2em] text-[#007789]">Personality at a glance</p>
           <h2 className="mt-3 text-2xl leading-tight sm:text-3xl">Getting to know {report.subject_name}</h2>
-          <div className="mt-5 max-w-3xl space-y-4 leading-7 sm:leading-8">{readableParagraphs(summary.personality).map((paragraph, index) => <p key={`${index}-${paragraph}`}>{paragraph}</p>)}</div>
+          <div className="mt-5 max-w-3xl space-y-4 leading-7 sm:leading-8">{readableParagraphs(withoutUnverifiedStrength(summary.personality)).map((paragraph, index) => <p key={`${index}-${paragraph}`}>{paragraph}</p>)}</div>
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Where a little support can help" points={summary.soft_spots} />
@@ -74,6 +73,13 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
 
 function GuidanceIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-1 h-5 w-5 shrink-0 fill-none stroke-[#007789]" strokeWidth="1.7"><path d="M9 18h6M10 22h4M8.2 14.5A7 7 0 1 1 15.8 14.5C14.8 15.3 14.5 16 14.5 17h-5c0-1-.3-1.7-1.3-2.5Z" /></svg>;
+}
+
+function withoutUnverifiedStrength(text: string) {
+  return text
+    .split(/\n\s*\n/)
+    .filter((paragraph) => !/\b(?:strong|balanced|weak) day master\b/i.test(paragraph))
+    .join("\n\n");
 }
 
 function PillarCard({ label, value }: { label: string; value: string | null | undefined }) {
