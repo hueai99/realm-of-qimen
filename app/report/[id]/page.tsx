@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import ReportFeedback from "@/app/components/report-feedback";
 import type { BaziReport } from "@/lib/types";
+import { calculateReading } from "@/lib/bazi";
+import { demoDisplayName } from "@/lib/demo";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +13,17 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const db = await createClient();
   const { data, error } = await db.from("bazi_reports").select("*").eq("id", id).maybeSingle();
   if (error || !data) notFound();
-  const report = data as BaziReport;
+  const storedReport = data as BaziReport;
+  const displayedSubjectName = storedReport.is_demo ? demoDisplayName(storedReport.id, storedReport.subject_name) : storedReport.subject_name;
+  const currentDemo = storedReport.is_demo ? calculateReading({
+    subject_name: displayedSubjectName,
+    birth_date: storedReport.birth_date,
+    birth_time: storedReport.birth_time,
+    gender: storedReport.gender ?? "other",
+    question_type: "child_potential",
+    variation_seed: Number.parseInt(storedReport.id.replace(/\D/g, "").slice(-6), 10) || 0,
+  }) : null;
+  const report = currentDemo ? { ...storedReport, ...currentDemo, subject_name: displayedSubjectName, id: storedReport.id, email: storedReport.email, birth_date: storedReport.birth_date, birth_time: storedReport.birth_time, gender: storedReport.gender, birth_place: storedReport.birth_place, is_demo: true } as BaziReport : storedReport;
   await db.from("audit_logs").insert({ actor: "visitor", action: "report.viewed", target_table: "bazi_reports", target_id: id, payload: {} });
   const pillars: Array<[string, string | null | undefined]> = [["Hour", report.hour_pillar ?? "Birth time unknown"], ["Day", report.day_pillar], ["Month", report.month_pillar], ["Year", report.year_pillar]];
   const insights = report.insights?.split("\n").filter(Boolean) ?? [];
