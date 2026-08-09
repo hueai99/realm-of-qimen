@@ -13,6 +13,7 @@ export type DayMasterKnowledge = {
   image: string;
   story: string;
   metaphorMeaning?: string;
+  metaphorBridge?: string;
   warmIntroduction: string;
   motivations: string[];
   strengths: [DayMasterPoint, DayMasterPoint, DayMasterPoint];
@@ -29,6 +30,7 @@ export type DayMasterKnowledge = {
 export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   Jia: {
     name: "Jia Wood", image: "a tall, rooted tree", story: "Jia Wood is often compared to a tall, rooted tree. The metaphor helps explain its steady wish to grow towards a clear goal.",
+    metaphorBridge: "A tall tree grows steadily and holds firm through changing weather. In a similar way, {name} may feel happiest with a clear direction and may keep working towards something that matters, even when progress takes time.",
     warmIntroduction: "a steady, direct nature that often wants to grow towards something worthwhile",
     motivations: ["clear progress", "being trusted with responsibility", "protecting people or principles that matter"],
     strengths: [
@@ -48,10 +50,11 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Yi: {
     name: "Yi Wood", image: "a flexible vine", story: "Yi Wood is often compared to a flexible vine. The metaphor helps explain how it may adapt and keep growing when the path changes.",
+    metaphorBridge: "A vine bends around whatever stands in its way and keeps searching for room to grow. In a similar way, {name} may observe what is happening, adjust the approach, and find another way forward when the first idea does not work.",
     warmIntroduction: "an adaptable, observant nature that often finds a way to grow around obstacles",
     motivations: ["connection", "room to approach things creatively", "encouragement that preserves dignity"],
     strengths: [
-      { heading: "Flexible problem-solving", meaning: "can adjust intelligently when the first route is blocked", everyday: "finding a different way into a game, friendship, or school task", support: "ask what else might work before supplying the answer" },
+      { heading: "Finds another way", meaning: "may think of another way forward when the first idea does not work", everyday: "changing how to build something, approaching a school task differently, or finding another way to join a group", support: "ask what else could be tried before offering the answer" },
       { heading: "Social awareness", meaning: "may notice tone, timing, and how others are responding", everyday: "changing approach when a friend seems uncomfortable", support: "affirm this consideration while reminding him or her that personal needs also matter" },
       { heading: "Quiet resilience", meaning: "can keep growing through change without making a show of the effort", everyday: "settling into a new routine little by little", support: "name small signs of courage that might otherwise go unseen" },
     ],
@@ -67,6 +70,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Bing: {
     name: "Bing Fire", image: "the sun", story: "Bing Fire is often compared to the sun. The metaphor helps explain the warmth and open energy linked to this Day Master.",
+    metaphorBridge: "The sun gives warmth openly and is difficult to miss when it shines. In a similar way, {name} may bring visible enthusiasm to people and activities, especially when he or she feels welcome and involved.",
     warmIntroduction: "an open nature that may share enthusiasm freely and help other people feel included",
     motivations: ["meaningful participation", "being able to contribute", "warm and genuine acknowledgement"],
     strengths: [
@@ -86,6 +90,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Ding: {
     name: "Ding Fire", image: "a lamp", story: "Ding Fire is often compared to a lamp. The metaphor helps explain the quieter warmth and careful insight linked to this Day Master.",
+    metaphorBridge: "A lamp does not light the whole sky, but it helps people see what is close by. In a similar way, {name} may notice small details, offer quiet warmth, and share thoughtful observations when he or she feels safe enough to speak.",
     warmIntroduction: "a thoughtful nature that may notice details and feelings other people miss",
     motivations: ["being understood", "ideas with emotional meaning", "calm appreciation rather than loud attention"],
     strengths: [
@@ -105,6 +110,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Wu: {
     name: "Wu Earth", image: "a mountain", story: "Wu Earth is often compared to a mountain. The metaphor helps explain the steady and dependable qualities linked to this Day Master.",
+    metaphorBridge: "A mountain feels solid and does not shift quickly. In a similar way, {name} may value familiar routines, take responsibilities seriously, and need a little time to feel ready when plans suddenly change.",
     warmIntroduction: "a steady nature that often values familiar routines, reliability, and knowing what to expect",
     motivations: ["stability", "clear priorities", "being relied upon without being rushed"],
     strengths: [
@@ -124,6 +130,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Ji: {
     name: "Ji Earth", image: "garden soil", story: "Ji Earth is often compared to garden soil. The metaphor helps explain the practical care and nurturing qualities linked to this Day Master.",
+    metaphorBridge: "Garden soil quietly gives seeds what they need to take root and grow. In a similar way, {name} may support people through patient, practical care rather than drawing attention to what he or she is doing.",
     warmIntroduction: "a nurturing, receptive nature that often gathers knowledge and helps people or ideas grow",
     motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
     strengths: [
@@ -143,6 +150,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Geng: {
     name: "Geng Metal", image: "raw iron", story: "Geng Metal is often compared to raw iron. The metaphor helps explain how determination may be shaped through experience and guidance.",
+    metaphorBridge: "Raw iron becomes useful through shaping and repeated work. In a similar way, {name}'s determination may become clearer when he or she tackles something difficult, learns from a mistake, and tries again.",
     warmIntroduction: "a straightforward nature. When something matters, he or she may speak plainly about what feels right. Determination may show when he or she stays with a difficult task or returns to it after a setback",
     motivations: ["a clear challenge", "visible progress", "trust earned through honesty and follow-through"],
     strengths: [
@@ -162,6 +170,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Xin: {
     name: "Xin Metal", image: "finely made jewellery", story: "Xin Metal is often compared to finely made jewellery. The metaphor helps explain its care for quality and small details.",
+    metaphorBridge: "Fine jewellery is shaped with patience and close attention to detail. In a similar way, {name} may notice small differences, care about doing things well, and choose words or actions carefully.",
     warmIntroduction: "a refined, discerning nature that often notices quality, meaning, and details others pass by",
     motivations: ["doing something well", "thoughtful appreciation", "time to understand before committing"],
     strengths: [
@@ -181,6 +190,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Ren: {
     name: "Ren Water", image: "a flowing river", story: "Ren Water is often compared to a flowing river. The metaphor helps explain how it may keep moving and find another route around an obstacle.",
+    metaphorBridge: "A river keeps moving and changes course when something blocks its path. In a similar way, {name} may explore different ideas and find another way forward when the first plan does not work.",
     warmIntroduction: "an adaptable nature. When something does not go according to plan, he or she may try a different approach instead of giving up",
     motivations: ["movement and discovery", "a meaningful challenge", "freedom within clear boundaries"],
     strengths: [
@@ -200,6 +210,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Gui: {
     name: "Gui Water", image: "gentle rain", story: "Gui Water is often compared to gentle rain. The metaphor helps explain the quiet sensitivity and awareness linked to this Day Master.",
+    metaphorBridge: "Gentle rain works quietly, soaking into the ground little by little. In a similar way, {name} may take in small details before speaking and later share an observation that other people missed.",
     metaphorMeaning: "Gentle rain does not arrive with a loud splash. It gathers quietly and reaches small places, offering a simple picture of Gui Water's observant and thoughtful nature.",
     warmIntroduction: "a quiet, thoughtful nature that may notice small details and reflect before speaking",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],

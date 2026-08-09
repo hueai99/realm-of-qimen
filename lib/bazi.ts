@@ -408,11 +408,17 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     `${name} has the ${dayMaster} Day Master. Bazi compares ${profile.name} to ${profile.image}.`,
   ].map((opening) => profile.metaphorMeaning ? `${opening} ${profile.metaphorMeaning}` : opening);
   const everydayConnection = profile.strengths[connectionVariant];
-  const childConnections = [
+  const defaultChildConnections = [
     `${name} ${everydayConnection.meaning}. You may notice it when ${name} is ${everydayConnection.everyday}.`,
     `This quality may appear in small, everyday moments. You may see it when ${name} is ${everydayConnection.everyday}.`,
     `You may recognise this part of ${name} when ${name} is ${everydayConnection.everyday}.`,
   ];
+  const metaphorBridge = profile.metaphorBridge?.replaceAll("{name}", name);
+  const childConnections = metaphorBridge ? [
+    `${metaphorBridge} You may notice this when ${name} is ${everydayConnection.everyday}.`,
+    `${metaphorBridge} One everyday sign may be ${everydayConnection.everyday}.`,
+    `${metaphorBridge} This may appear when ${name} is ${everydayConnection.everyday}.`,
+  ] : defaultChildConnections;
   const personality = [
     personalityOpenings[openingVariant],
     childConnections[connectionVariant],
