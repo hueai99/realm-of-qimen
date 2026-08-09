@@ -135,7 +135,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     motivations: ["being useful", "learning that has practical meaning", "feeling connected and appreciated"],
     strengths: [
       { heading: "Nurtures growth", meaning: "may naturally help others feel supported", everyday: "showing someone younger how to do something or tending carefully to a shared project", support: "celebrate the care while making space for his or her own needs" },
-      { heading: "Gathers useful knowledge", meaning: "often remembers information that can help in real situations", everyday: "connecting a fact learned earlier to today's problem", support: "invite him or her to explain discoveries without expecting an answer to everything" },
+      { heading: "Remembers useful details", meaning: "may remember useful things learned earlier and bring them up when they matter", everyday: "recalling something from an earlier lesson that helps with a problem today", support: "encourage him or her to share what was learned, without expecting an answer for everything" },
       { heading: "Resourceful care", meaning: "can find practical ways to make things better", everyday: "quietly organising materials or noticing what someone needs", support: "name the thought behind the action, not only the helpful result" },
     ],
     softSpots: [

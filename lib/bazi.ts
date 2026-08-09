@@ -68,7 +68,7 @@ const pointHeadingVariants: Record<string, [string, string]> = {
   "Finds another way": ["Tries a different approach", "Adapts when plans do not work"],
   "Flexible problem-solving": ["Adjusts when plans change", "Finds a way around obstacles"],
   "Flow of ideas": ["Connects ideas in fresh ways", "Ideas arrive in surprising ways"],
-  "Gathers useful knowledge": ["Remembers what may be useful", "Turns knowledge into practical help"],
+  "Remembers useful details": ["Brings useful knowledge to mind", "Uses what was learned before"],
   "Gentle consideration": ["Thinks about how others feel", "A thoughtful way with people"],
   "Gentle versatility": ["Adapts quietly to different settings", "Fits into changing situations"],
   "Growing through experience": ["Learns by trying again", "Confidence grows through practice"],
@@ -397,9 +397,9 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const variant = Math.floor(variationCycle / 9) % 3;
   const closingVariant = Math.floor(variationCycle / 27) % 3;
   const supportVariants = [
-    `${profile.expressionExample} These are possibilities connected with the Day Master, not a fixed description of ${name}.`,
-    `${profile.expressionExample} Age, experience, surroundings, and personal choices will also shape how these qualities appear.`,
-    `${profile.expressionExample} This Day Master view is a starting point and does not describe every part of ${name}'s personality.`,
+    `These qualities may not look the same in every setting or on every day. They are possibilities connected with the Day Master, not a fixed description of ${name}.`,
+    `Age, experience, surroundings, and personal choices will shape how these qualities appear as ${name} grows.`,
+    `This Day Master view offers one way to understand ${name}'s natural style. It is a starting point and does not describe every part of ${name}'s personality.`,
   ];
   const support = supportVariants[variant];
   const personalityOpenings = [
@@ -414,11 +414,9 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     `You may recognise this part of ${name} when ${name} is ${everydayConnection.everyday}.`,
   ];
   const metaphorBridge = profile.metaphorBridge?.replaceAll("{name}", name);
-  const childConnections = metaphorBridge ? [
-    `${metaphorBridge} You may notice this when ${name} is ${everydayConnection.everyday}.`,
-    `${metaphorBridge} One everyday sign may be ${everydayConnection.everyday}.`,
-    `${metaphorBridge} This may appear when ${name} is ${everydayConnection.everyday}.`,
-  ] : defaultChildConnections;
+  const childConnections = metaphorBridge
+    ? [metaphorBridge, metaphorBridge, metaphorBridge]
+    : defaultChildConnections;
   const personality = [
     personalityOpenings[openingVariant],
     childConnections[connectionVariant],
@@ -432,15 +430,15 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     if (point.examples) {
       const versions = [
         `${name} ${point.meaning}. ${point.examples.join(" ")}`,
-        `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`,
-        `${name} ${point.meaning}. Parents may recognise this through ${point.everyday}.`,
+        `${name} ${point.meaning}. You may notice this when he or she is ${point.everyday}.`,
+        `${name} ${point.meaning}. For example, he or she may show this by ${point.everyday}.`,
       ];
       return versions[wordingVariant(point.heading)];
     }
     const versions = [
-      `${name} ${point.meaning}. This may show up as ${point.everyday}.`,
-      `${name} ${point.meaning}. In everyday life, this may look like ${point.everyday}.`,
-      `${name} ${point.meaning}. Parents may recognise this through ${point.everyday}.`,
+      `${name} ${point.meaning}. You may notice this when he or she is ${point.everyday}.`,
+      `${name} ${point.meaning}. For example, he or she may show this by ${point.everyday}.`,
+      `${name} ${point.meaning}. In everyday life, this can appear when he or she is ${point.everyday}.`,
     ];
     return versions[wordingVariant(point.heading)];
   };
@@ -487,8 +485,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     const directGuidance = guidance.replace(/^you can\s+/i, "");
     return [
       `${capitalise(guidance)}.`,
-      `You may find it helpful to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
-      `When this appears, ${guidance.charAt(0).toLowerCase()}${guidance.slice(1)}.`,
+      `Try to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
+      `A helpful response is to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
     ][wordingVariant(`${point.heading}-guidance`)];
   };
   const headingText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
