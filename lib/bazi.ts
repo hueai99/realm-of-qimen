@@ -79,10 +79,10 @@ const pointHeadingVariants: Record<string, [string, string]> = {
   "Learns by taking part": ["Learns best through experience", "Understanding grows through doing"],
   "Loyal follow-through": ["Takes promises seriously", "Stays committed to what matters"],
   "Loyal soft heart": ["Quietly loyal to trusted people", "Shows care without much display"],
-  "May absorb other people's worries": ["Takes in tension around them", "When others' worries feel close"],
+  "Quick to notice tension": ["Sensitive to unspoken tension", "Notices when something feels unsettled"],
   "May dwell on mistakes": ["Mistakes stay on the mind", "Finding it hard to let go"],
   "May follow other people's choices": ["Personal choices need room", "Finding a voice among others"],
-  "May forget personal needs": ["Own needs can come last", "Caring without overlooking oneself"],
+  "Own needs may come second": ["Needs care and rest too", "Remembering personal needs"],
   "May take on adult worries": ["Carries worries that are not theirs", "Needs freedom from adult concerns"],
   "Natural warmth": ["Makes others feel welcome", "Warmth that draws people in"],
   "Needs room to recharge": ["Quiet time restores energy", "When rest is quietly needed"],
@@ -424,7 +424,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   ].join("\n\n");
   const wordingVariant = (heading: string) => [...`${variationCycle}-${name}-${heading}`]
     .reduce((seed, character) => Math.imul(seed ^ character.charCodeAt(0), 16777619) >>> 0, 2166136261) % 3;
-  const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+  const pointBody = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number], position: number) => {
     if (point.descriptions) return point.descriptions[wordingVariant(point.heading)].replaceAll("{name}", name);
     if (point.description) return point.description.replaceAll("{name}", name);
     if (point.examples) {
@@ -436,11 +436,11 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       return versions[wordingVariant(point.heading)];
     }
     const versions = [
-      `${name} ${point.meaning}. You may notice this when he or she is ${point.everyday}.`,
       `${name} ${point.meaning}. For example, he or she may show this by ${point.everyday}.`,
-      `${name} ${point.meaning}. In everyday life, this can appear when he or she is ${point.everyday}.`,
+      `${name} ${point.meaning}. This could appear through ${point.everyday}.`,
+      `${name} ${point.meaning}. One sign of this may be ${point.everyday}.`,
     ];
-    return versions[wordingVariant(point.heading)];
+    return versions[(position + openingVariant) % versions.length];
   };
   const parentingTips = [...profile.strengths, ...profile.softSpots].map((point, index) => {
     const supportText = capitalise(point.support);
@@ -480,14 +480,15 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const weeklyAction = concernAction?.situation ? concernAction : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
-  const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
+  const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number], position: number) => {
     const guidance = point.support.trim().replace(/[.!]+$/, "");
     const directGuidance = guidance.replace(/^you can\s+/i, "");
-    return [
+    const versions = [
       `${capitalise(guidance)}.`,
-      `Try to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
-      `A helpful response is to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
-    ][wordingVariant(`${point.heading}-guidance`)];
+      `You can ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
+      `It may help to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
+    ];
+    return versions[(position + openingVariant) % versions.length];
   };
   const headingText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
     const headingVariant = wordingVariant(`${point.heading}-heading`);
@@ -496,14 +497,14 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
   const portraitExamples = [
     `You may notice this when ${portraitExamplePoint.everyday}.`,
-    `In everyday life, this could appear through ${portraitExamplePoint.everyday}.`,
+    `A simple example may be ${portraitExamplePoint.everyday}.`,
     `A small sign of this may be ${portraitExamplePoint.everyday}.`,
   ];
   const expressionContext = `These qualities are possibilities linked to the Day Master and may not appear in every situation.`;
   return {
     personality,
-    strengths: rotate(profile.strengths, openingVariant).map((point) => ({ heading: headingText(point), body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master", value: dayMasterName } })),
-    soft_spots: rotate(profile.softSpots, connectionVariant).map((point) => ({ heading: headingText(point), body: pointBody(point), guidance: guidanceText(point), basis: { factor: "Day Master expression", value: dayMasterName } })),
+    strengths: rotate(profile.strengths, openingVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index), guidance: guidanceText(point, index), basis: { factor: "Day Master", value: dayMasterName } })),
+    soft_spots: rotate(profile.softSpots, connectionVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index + 3), guidance: guidanceText(point, index + 3), basis: { factor: "Day Master expression", value: dayMasterName } })),
     day_master_support: {
       introduction: `${supportPortrait.introduction} ${expressionContext}`,
       secure: personalisePortrait(supportPortrait.secure),
