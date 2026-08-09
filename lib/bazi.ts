@@ -92,7 +92,7 @@ const pointHeadingVariants: Record<string, [string, string]> = {
   "Perceptive awareness": ["Notices unspoken changes", "Sensitive to what is happening"],
   "Protective loyalty": ["Stands beside people who matter", "Loyal when support is needed"],
   "Quiet influence": ["Guides without taking over", "Leads through ideas and example"],
-  "Quiet resilience": ["Adjusts without making a show", "Strength that grows quietly"],
+  "Adjusts quietly to change": ["Settles into change gradually", "Finds a rhythm after change"],
   "Resourceful care": ["Finds practical ways to help", "Care expressed through useful action"],
   "Notices how others feel": ["Pays attention to others", "Sensitive to other people's reactions"],
   "Speaking with more care": ["Shaping honesty with kindness", "When honest words feel too sharp"],
@@ -481,8 +481,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
   const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number], _position: number) => {
-    const guidance = point.support.trim().replace(/[.!]+$/, "");
-    return `${capitalise(guidance)}.`;
+    const guidance = capitalise(point.support.trim());
+    return /[.!?][’”'"]?$/.test(guidance) ? guidance : `${guidance}.`;
   };
   const headingText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
     const headingVariant = wordingVariant(`${point.heading}-heading`);
