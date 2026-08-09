@@ -54,7 +54,7 @@ export default async function Home() {
       </section>
 
       {demos.length > 0 && <section className="px-5 py-8 sm:px-6 sm:py-12"><div className="mx-auto max-w-6xl">
-        <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Explore the format</p><h2 className="mt-2 text-[1.75rem] leading-tight sm:mt-3 sm:text-4xl">Sample Bazi readings</h2>
+        <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">See what to expect</p><h2 className="mt-2 text-[1.75rem] leading-tight sm:mt-3 sm:text-4xl">Sample Bazi summaries</h2>
         <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4 md:grid-cols-3">{demos.map((demo) => <Link key={demo.id} href={`/report/${demo.id}`} className="border border-[var(--border)] bg-[var(--card)] p-4 transition hover:-translate-y-1 hover:border-[var(--teal)] sm:p-5"><span className="text-xs uppercase tracking-widest text-[var(--teal-dark)]">Sample Bazi Summary</span><h3 className="mt-2 text-xl sm:mt-3 sm:text-2xl">{demoDisplayName(demo.id, demo.subject_name)}</h3><span className="mt-3 inline-block text-sm font-semibold text-[var(--teal-dark)] underline underline-offset-4 sm:mt-4">Read report →</span></Link>)}</div>
       </div></section>}
     </main>
