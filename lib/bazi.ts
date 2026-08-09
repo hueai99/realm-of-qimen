@@ -116,7 +116,7 @@ const dayMasterSupportPortraits: Record<string, { introduction: string; secure: 
   Bing: { introduction: "Bing Fire is warm and expressive, with a natural pull towards connection.", secure: "When he or she feels secure, {name}'s warmth may become easier to see through lively conversation, enthusiasm, and a wish to include others.", pressure: "When a plan changes unexpectedly, {name} may lose enthusiasm or become unusually quiet.", support: "Acknowledge the disappointment before discussing the new plan. Give {name} some quiet time if he or she is not ready to talk.", weekly_action: { situation: "When a plan changes unexpectedly", action: "Acknowledge the disappointment first, then explain the new plan in one or two clear steps.", phrase: "I know you were looking forward to that. Let us look at what we can do now.", sign: "{name} begins to engage with the new plan or explains what felt disappointing." } },
   Ding: { introduction: "Ding Fire carries a quieter warmth and may notice details other people miss.", secure: "When he or she feels secure, {name} may share careful observations and show warmth through quiet, thoughtful attention.", pressure: "Under pressure, {name} may find it difficult to put feelings or ideas into words. Several questions at once can make answering harder.", support: "Mention gently what you have noticed, then allow time. A calm conversation later may help {name} explain what was difficult earlier.", weekly_action: { situation: "When something seems hard to explain", action: "Mention one change you noticed, then leave space instead of asking several questions.", phrase: "You seem quieter today. I am here if you want to talk later.", sign: "{name} returns to the conversation in his or her own time." } },
   Wu: { introduction: "Wu Earth values steadiness and tends to feel most comfortable with a dependable foundation.", secure: "When he or she feels secure, {name} may become a steady presence who values familiar routines and follows through on responsibilities.", pressure: "Under pressure, a sudden change may leave {name} quieter or more hesitant than usual.", support: "Explain changes early and keep one familiar part of the routine where possible. Check in privately and give {name} time to ask practical questions.", weekly_action: { situation: "Before an unfamiliar change", action: "Give {name} advance notice and point out one part of the day that will remain familiar.", phrase: "This will be different, but this part will stay the same.", sign: "{name} asks practical questions and approaches the change with less resistance." } },
-  Ji: { introduction: "Ji Earth often expresses care in quiet, practical ways that help others grow.", secure: "When he or she feels secure, {name} may show care through practical help, patience, and attention to the small things people need.", pressure: "Under pressure, {name} may continue helping even when tired or may not mention what he or she needs.", support: "Notice the care being offered, then ask what would help {name} too. This shows that receiving help matters as much as giving it.", weekly_action: { situation: "After {name} has been helping others", action: "Notice the care, then check what {name} needs before moving to the next task.", phrase: "That was thoughtful of you. What would help you now?", sign: "{name} becomes more comfortable naming a need or accepting help." } },
+  Ji: { introduction: "Ji Earth often expresses care in quiet, practical ways that help others grow.", secure: "When he or she feels secure, {name} may show care through practical help, patience, and attention to the small things people need.", pressure: "Under pressure, {name} may continue helping even when tired or may not mention what he or she needs.", support: "When {name} helps someone, thank him or her for being thoughtful. Then ask whether he or she needs help or a break too.", weekly_action: { situation: "After {name} has been helping others", action: "Thank {name} for helping, then ask whether he or she needs help or a break before moving on.", phrase: "That was thoughtful of you. What would help you now?", sign: "{name} becomes more comfortable naming a need or accepting help." } },
   Geng: { introduction: "Geng Metal has a direct nature that often meets a clear challenge through action.", secure: "When he or she feels secure, {name} may meet a clear challenge directly and keep trying after a setback.", pressure: "Under pressure, determination may move faster than the situation requires. {name} may act before hearing the whole story or continue after frustration has built up.", support: "Recognise the determination, then invite a short pause before the next step. Asking what still needs to be understood can help strength become more measured.", weekly_action: { situation: "Before jumping in to solve a problem", action: "Invite {name} to find out one more fact before choosing what to do.", phrase: "You are ready to help. What else do we need to know first?", sign: "{name} pauses to listen or ask a question before acting." } },
   Xin: { introduction: "Xin Metal is discerning and often pays close attention to quality and detail.", secure: "When he or she feels secure, {name} may use a careful eye to improve work, choose words thoughtfully, and notice details others miss.", pressure: "Under pressure, a small mistake or critical comment may linger. It may also become difficult to decide when a task is finished.", support: "Agree beforehand on what a finished result needs to include. Give feedback privately and focus on one useful improvement rather than every small flaw.", weekly_action: { situation: "Before a task that could invite repeated checking", action: "Agree with {name} on two or three things the finished work needs to include.", phrase: "Once these parts are done, the task is complete.", sign: "{name} finishes with fewer checks or accepts one small imperfection more calmly." } },
   Ren: { introduction: "Ren Water is adaptable and often looks for another route when the first one is blocked.", secure: "When he or she feels secure, {name} may become more willing to explore, ask questions, and find another route when the first plan does not work.", pressure: "Under pressure, several possibilities may make it difficult for {name} to choose where to begin.", support: "Give room to explore, but offer one clear starting point. Ask which idea {name} would like to try first.", weekly_action: { situation: "When several ideas make it hard to begin", action: "Let {name} keep the ideas, then choose one small step to test first.", phrase: "Which idea would you like to try for ten minutes?", sign: "{name} starts one idea without worrying about abandoning the others." } },
@@ -396,12 +396,6 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const connectionVariant = Math.floor(variationCycle / 3) % 3;
   const variant = Math.floor(variationCycle / 9) % 3;
   const closingVariant = Math.floor(variationCycle / 27) % 3;
-  const supportVariants = [
-    `These qualities may not look the same in every setting or on every day. They are possibilities connected with the Day Master, not a fixed description of ${name}.`,
-    `Age, experience, surroundings, and personal choices will shape how these qualities appear as ${name} grows.`,
-    `This Day Master view offers one way to understand ${name}'s natural style. It is a starting point and does not describe every part of ${name}'s personality.`,
-  ];
-  const support = supportVariants[variant];
   const personalityOpenings = [
     `${name}'s Day Master is ${dayMaster}. In Bazi, ${profile.name} is often compared to ${profile.image}.`,
     `In ${name}'s Bazi chart, the Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
@@ -420,7 +414,6 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const personality = [
     personalityOpenings[openingVariant],
     childConnections[connectionVariant],
-    support,
   ].join("\n\n");
   const wordingVariant = (heading: string) => [...`${variationCycle}-${name}-${heading}`]
     .reduce((seed, character) => Math.imul(seed ^ character.charCodeAt(0), 16777619) >>> 0, 2166136261) % 3;
@@ -490,17 +483,16 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   };
   const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
   const portraitExamples = [
-    `You may notice this when ${portraitExamplePoint.everyday}.`,
-    `A simple example may be ${portraitExamplePoint.everyday}.`,
-    `A small sign of this may be ${portraitExamplePoint.everyday}.`,
+    `You may notice this when ${name} is ${portraitExamplePoint.everyday}.`,
+    `For example, ${name} may show this by ${portraitExamplePoint.everyday}.`,
+    `${name} may show this through ${portraitExamplePoint.everyday}.`,
   ];
-  const expressionContext = `These qualities are possibilities linked to the Day Master and may not appear in every situation.`;
   return {
     personality,
     strengths: rotate(profile.strengths, openingVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index), guidance: guidanceText(point, index), basis: { factor: "Day Master", value: dayMasterName } })),
     soft_spots: rotate(profile.softSpots, connectionVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index + 3), guidance: guidanceText(point, index + 3), basis: { factor: "Day Master expression", value: dayMasterName } })),
     day_master_support: {
-      introduction: `${supportPortrait.introduction} ${expressionContext}`,
+      introduction: supportPortrait.introduction,
       secure: personalisePortrait(supportPortrait.secure),
       example: portraitExamples[connectionVariant],
       pressure: personalisePortrait(supportPortrait.pressure),

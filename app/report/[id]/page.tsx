@@ -59,7 +59,6 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         <PointSection title="Where a little support can help" points={summary.soft_spots} />
         {summary.day_master_support && <section>
           <h2 className="text-3xl">Helping {report.subject_name} flourish</h2>
-          <p className="mt-5 max-w-3xl leading-8">{summary.day_master_support.introduction}</p>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <div className="border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When {subjectPronoun} feels secure</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.secure}</p><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.example}</p></div>
             <div className="border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When {subjectPronoun} feels pressured</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.pressure}</p></div>
