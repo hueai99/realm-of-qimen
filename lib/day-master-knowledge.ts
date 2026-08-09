@@ -12,6 +12,7 @@ export type DayMasterKnowledge = {
   name: string;
   image: string;
   story: string;
+  metaphorMeaning?: string;
   warmIntroduction: string;
   motivations: string[];
   strengths: [DayMasterPoint, DayMasterPoint, DayMasterPoint];
@@ -199,7 +200,8 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
   },
   Gui: {
     name: "Gui Water", image: "gentle rain", story: "Gui Water is often compared to gentle rain. The metaphor helps explain the quiet sensitivity and awareness linked to this Day Master.",
-    warmIntroduction: "a quiet, thoughtful nature that may watch and reflect before speaking",
+    metaphorMeaning: "Gentle rain does not arrive with a loud splash. It gathers quietly and reaches small places, offering a simple picture of Gui Water's observant and thoughtful nature.",
+    warmIntroduction: "a quiet, thoughtful nature that may notice small details and reflect before speaking",
     motivations: ["emotional safety", "freedom to think", "gentle connection without pressure"],
     strengths: [
       { heading: "Perceptive awareness", meaning: "may notice small changes in tone, behaviour, or surroundings", everyday: "asking about a change in someone's tone or noticing that a familiar routine feels different", support: "listen to the observation without expecting him or her to manage the situation" },
@@ -212,7 +214,7 @@ export const dayMasterKnowledge: Record<string, DayMasterKnowledge> = {
     ],
     strongExpression: "Sensitivity and adaptability may be easy to notice. Gentle structure can help him or her stay consistent without feeling restricted.",
     weakExpression: "This insight may be especially quiet at first. Trust, patience, and freedom from immediate pressure can help it emerge.",
-    expressionExample: "He or she may watch quietly before joining a conversation. Once comfortable, an unexpected observation or creative connection may be shared.",
+    expressionExample: "He or she may watch quietly before joining a conversation. Once comfortable, he or she may mention a detail others missed or connect two ideas in an unexpected way.",
     limits: "The Day Master alone cannot establish mood disorder, secrecy, manipulation, wisdom, or consistency.",
     closing: "sensitivity, original ideas, and a quiet ability to notice what is happening around him or her",
   },

@@ -406,7 +406,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     `${name}'s Day Master is ${dayMaster}. In Bazi, ${profile.name} is often compared to ${profile.image}.`,
     `In ${name}'s Bazi chart, the Day Master is ${dayMaster}. It is often compared to ${profile.image}.`,
     `${name} has the ${dayMaster} Day Master. Bazi compares ${profile.name} to ${profile.image}.`,
-  ];
+  ].map((opening) => profile.metaphorMeaning ? `${opening} ${profile.metaphorMeaning}` : opening);
   const everydayConnection = profile.strengths[connectionVariant];
   const childConnections = [
     `${name} ${everydayConnection.meaning}. You may notice it when ${name} is ${everydayConnection.everyday}.`,
