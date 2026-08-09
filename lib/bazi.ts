@@ -94,7 +94,7 @@ const pointHeadingVariants: Record<string, [string, string]> = {
   "Quiet influence": ["Guides without taking over", "Leads through ideas and example"],
   "Quiet resilience": ["Adjusts without making a show", "Strength that grows quietly"],
   "Resourceful care": ["Finds practical ways to help", "Care expressed through useful action"],
-  "Social awareness": ["Notices how others respond", "Reads the mood around them"],
+  "Notices how others feel": ["Pays attention to others", "Sensitive to other people's reactions"],
   "Speaking with more care": ["Shaping honesty with kindness", "When honest words feel too sharp"],
   "Steady determination": ["Keeps going when progress is slow", "Committed to meaningful goals"],
   "Straightforward heart": ["Values honesty and clear expectations", "Says plainly what feels unfair"],
@@ -480,15 +480,9 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const weeklyAction = concernAction?.situation ? concernAction : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
-  const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number], position: number) => {
+  const guidanceText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number], _position: number) => {
     const guidance = point.support.trim().replace(/[.!]+$/, "");
-    const directGuidance = guidance.replace(/^you can\s+/i, "");
-    const versions = [
-      `${capitalise(guidance)}.`,
-      `You can ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
-      `It may help to ${directGuidance.charAt(0).toLowerCase()}${directGuidance.slice(1)}.`,
-    ];
-    return versions[(position + openingVariant) % versions.length];
+    return `${capitalise(guidance)}.`;
   };
   const headingText = (point: ReturnType<typeof getDayMasterKnowledge>["strengths"][number]) => {
     const headingVariant = wordingVariant(`${point.heading}-heading`);
