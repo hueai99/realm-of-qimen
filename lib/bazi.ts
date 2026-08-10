@@ -505,7 +505,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     Bing: `As ${name} grows older, natural warmth may help him or her bring people together and speak with confidence. Learning to pause when feelings run high can make that warmth even more reassuring to others.`,
     Ding: `As ${name} grows older, careful observation may develop into thoughtful judgement and a calm way of supporting others. A safe place to share feelings can help those quiet insights find a voice.`,
     Wu: `As ${name} grows older, steadiness may become a dependable source of support for family and friends. Learning that change can be handled one step at a time will help that reliability remain flexible.`,
-    Ji: `As ${name} grows older, practical care may become a quiet ability to help people and ideas flourish. Encouragement to name personal needs will help him or her care for others without disappearing into the background.`,
+    Ji: `As ${name} grows older, his or her thoughtful and practical nature may make ${name} someone others can rely on. Encourage ${name} to speak up about personal needs too, so caring for others does not always mean putting himself or herself last.`,
     Geng: `As ${name} grows older, determination may mature into clear judgement and the courage to stand up for what matters. Learning when to pause and listen will help that strength become measured as well as brave.`,
     Xin: `As ${name} grows older, a careful eye may develop into excellent judgement and thoughtful self-expression. Gentle reminders that work can be worthwhile without being perfect will protect the confidence behind that care.`,
     Ren: `As ${name} grows older, the ability to adapt may help him or her approach unfamiliar situations with greater confidence. Learning to pause, ask for support, and try a different approach can provide a steady foundation for the years ahead.`,
@@ -550,7 +550,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       : undefined,
     concern_tips: matchedConcern && concernGuidance(concern ?? "", name).length ? concernGuidance(concern ?? "", name) : undefined,
     parenting_tips: parentingTips,
-    closing_encouragement: `${closingStarts[closingVariant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. This first look focuses on the Day Master, which is only one part of a Bazi chart. Other parts can offer a fuller view of how he or she learns, manages emotions, and connects with others.`,
+    closing_encouragement: `${closingStarts[closingVariant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you a better understanding of how ${name} relates to the world. It focuses only on the Day Master, which is one part of a Bazi chart. A more in-depth Bazi analysis can offer a fuller view of how he or she learns, manages emotions, and connects with others.`,
   };
 }
 
