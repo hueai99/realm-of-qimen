@@ -134,6 +134,7 @@ function practicalExample(situation: string, name: string, concern?: string) {
   if (/school|study|homework|learn|grade/.test(concernText)) return `Choose one small piece of schoolwork and ask ${name} to explain it without looking at the answer. Use the explanation to find what is clear and where help is still needed.`;
   if (/busy family task|one part.*look after/.test(text)) return `Before preparing a meal together, ask ${name} to set the table while someone else handles the food. Remind ${name} that only that one part needs his or her attention.`;
   if (/other people's wishes|personal view/.test(text)) return `If friends are choosing an activity, ask ${name} what he or she would prefer before hearing the group's decision. The answer does not have to match everyone else's.`;
+  if (/someone else's choice|follow someone else|own view/.test(text)) return `If the family is choosing a meal or activity, ask ${name} for a preference before anyone else answers. Discuss the other choices only after ${name} has shared an independent view.`;
   if (/plan changes unexpectedly/.test(text)) return `If a planned outing is cancelled, first acknowledge that ${name} may feel disappointed. Then explain the replacement plan in one or two clear steps.`;
   if (/hard to explain|difficult to explain/.test(text)) return `If ${name} becomes unusually quiet after school, mention the change gently and ask one simple question. Leave time for an answer instead of asking several questions at once.`;
   if (/following .* lead|share with you|connect|closer/.test(text)) return `If ${name} chooses drawing, sit nearby and let the activity unfold without correcting or teaching. Follow what ${name} wants to share, even if it is only a small detail about the picture.`;
@@ -147,5 +148,5 @@ function practicalExample(situation: string, name: string, concern?: string) {
   if (/several responsibilities|several tasks|what needs to be done/.test(text)) return `Write down everything ${name} is trying to handle. Decide together what needs attention today, what can wait, and what another person can help with.`;
   if (/two things that matter|choices all have good points|repeated checking/.test(text)) return `Before ${name} begins a task, agree on the two most important things it needs. When those are complete, encourage ${name} to stop checking and move on.`;
   if (/decide too quickly|one choice needs/.test(text)) return `If ${name} has several good ideas, write them down and agree on a time to choose one. This keeps the other ideas safe without delaying the decision.`;
-  return `Choose one ordinary moment when this pattern appears. Try the suggested response once, then notice whether ${name} finds the next step easier.`;
+  return `When this happens, pause and ask ${name} what feels difficult. Listen first, then agree on one small response to try if the same situation happens again.`;
 }
