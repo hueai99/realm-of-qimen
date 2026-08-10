@@ -59,19 +59,16 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         <PointSection title="Where a little support can help" points={summary.soft_spots} />
         {summary.day_master_support && <section>
           <h2 className="text-3xl">Helping {report.subject_name} flourish</h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <div className="border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When {subjectPronoun} feels secure</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.secure}</p><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.example}</p></div>
-            <div className="border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When {subjectPronoun} feels pressured</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.pressure}</p></div>
-          </div>
+          <div className="mt-6 max-w-3xl border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When pressure builds</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.pressure}</p></div>
           <div className="mt-5 flex max-w-3xl gap-3 border-l-2 border-[#00a0b8] bg-[#ffffff] p-5 leading-7 text-[#4e5b6f]"><GuidanceIcon /><p>{summary.day_master_support.support}</p></div>
         </section>}
         {summary.concern_response && <section><h2 className="text-3xl">Your concern about {report.subject_name}</h2>{summary.concern_original && <blockquote className="mt-5 max-w-3xl border-l-2 border-[#00a0b8] pl-5 italic leading-8 text-[#4e5b6f]">“{summary.concern_original}”</blockquote>}{summary.concern_tips?.length ? <><h3 className="mt-6 text-xl">What may help</h3><ul className="mt-4 max-w-3xl space-y-3">{summary.concern_tips.map((tip) => <li key={tip} className="flex gap-3 rounded-sm bg-[#ffffff] p-4 leading-7 text-[#4e5b6f]"><GuidanceIcon /> <span>{tip}</span></li>)}</ul></> : null}</section>}
-        {summary.day_master_support?.weekly_action && <section className="max-w-3xl border border-[#b9dfe4] bg-[#ffffff] p-6 sm:p-8">
+        {summary.day_master_support?.weekly_action && (!summary.concern_original || Boolean(summary.concern_tips?.length)) && <section className="max-w-3xl border border-[#b9dfe4] bg-[#ffffff] p-6 sm:p-8">
           <p className="text-xs font-bold uppercase tracking-[.18em] text-[#007789]">A practical next step</p>
           <h2 className="mt-2 text-xl sm:text-2xl">Try this with {report.subject_name} this week</h2>
           <p className="mt-5 text-base font-semibold sm:text-lg">{summary.day_master_support.weekly_action.situation}</p>
           <p className="mt-3 text-sm leading-6 text-[#4e5b6f] sm:text-base sm:leading-7">{summary.day_master_support.weekly_action.action}</p>
-          <div className="mt-5 bg-[#eaf7f9] p-4 text-sm leading-6 text-[#4e5b6f] sm:text-base sm:leading-7"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">For example</p><p className="mt-2">{summary.day_master_support.weekly_action.example ?? practicalExample(summary.day_master_support.weekly_action.situation, report.subject_name)}</p></div>
+          <div className="mt-5 bg-[#eaf7f9] p-4 text-sm leading-6 text-[#4e5b6f] sm:text-base sm:leading-7"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">For example</p><p className="mt-2">{summary.day_master_support.weekly_action.example ?? practicalExample(summary.day_master_support.weekly_action.situation, report.subject_name, summary.concern_original)}</p></div>
           {summary.day_master_support.weekly_action.bazi_link && <div className="mt-5 border-l-2 border-[#00a0b8] pl-4"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">Why this may suit {report.subject_name}</p><p className="mt-2 leading-7 text-[#4e5b6f]">{summary.day_master_support.weekly_action.bazi_link}</p></div>}
           <div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="bg-[#eaf7f9] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">Try saying</p><p className="mt-2 leading-7">“{summary.day_master_support.weekly_action.phrase}”</p></div><div className="bg-[#eaf7f9] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">Look for</p><p className="mt-2 leading-7">{summary.day_master_support.weekly_action.sign}</p></div></div>
         </section>}
@@ -124,8 +121,21 @@ function readableParagraphs(value: string) {
   return paragraphs;
 }
 
-function practicalExample(situation: string, name: string) {
+function practicalExample(situation: string, name: string, concern?: string) {
   const text = situation.toLowerCase();
+  const concernText = concern?.toLowerCase() ?? "";
+  if (/perfect|mistake|not good enough|fear of fail/.test(concernText)) return `If ${name} makes a small mistake in homework, describe what is already working before choosing one part to correct together. Stop once that part is complete.`;
+  if (/exam|test stress|revision/.test(concernText)) return `After one short revision session, ask ${name} to rate the stress from one to five. Then agree on one topic for the next session instead of discussing the whole exam.`;
+  if (/connect|closer|bond|open up|talk/.test(concernText)) return `Let ${name} choose a short activity to do together, such as drawing or making a snack. Join in without teaching or correcting, and follow what ${name} chooses to share.`;
+  if (/weakness|weak point|improv|self.aware|stubborn/.test(concernText)) return `Share one small thing you are still learning yourself. Then ask ${name} to choose one skill to practise, without turning the conversation into a list of faults.`;
+  if (/obstacle|setback|challenge|difficult/.test(concernText)) return `If a task feels overwhelming, ask ${name} to point to the exact part that is getting in the way. Help choose one small step, then let ${name} attempt it.`;
+  if (/anger|temper|meltdown|upset|emotion/.test(concernText)) return `After everyone is calm, talk about one recent moment. Ask what happened just before the upset, then agree on one response ${name} can try next time.`;
+  if (/friend|social|lonely|bully|fit in/.test(concernText)) return `Ask ${name} about one recent moment with a friend: what happened, how it felt, and what ${name} would like to happen next. Listen before suggesting a solution.`;
+  if (/school|study|homework|learn|grade/.test(concernText)) return `Choose one small piece of schoolwork and ask ${name} to explain it without looking at the answer. Use the explanation to find what is clear and where help is still needed.`;
+  if (/busy family task|one part.*look after/.test(text)) return `Before preparing a meal together, ask ${name} to set the table while someone else handles the food. Remind ${name} that only that one part needs his or her attention.`;
+  if (/other people's wishes|personal view/.test(text)) return `If friends are choosing an activity, ask ${name} what he or she would prefer before hearing the group's decision. The answer does not have to match everyone else's.`;
+  if (/plan changes unexpectedly/.test(text)) return `If a planned outing is cancelled, first acknowledge that ${name} may feel disappointed. Then explain the replacement plan in one or two clear steps.`;
+  if (/hard to explain|difficult to explain/.test(text)) return `If ${name} becomes unusually quiet after school, mention the change gently and ask one simple question. Leave time for an answer instead of asking several questions at once.`;
   if (/following .* lead|share with you|connect|closer/.test(text)) return `If ${name} chooses drawing, sit nearby and let the activity unfold without correcting or teaching. Follow what ${name} wants to share, even if it is only a small detail about the picture.`;
   if (/obstacle|getting in the way|setback/.test(text)) return `If a school task feels overwhelming, ask ${name} to choose just one question or one five-minute step to try first. Review what helped after the attempt.`;
   if (/several ideas|hard to begin|big idea/.test(text)) return `If ${name} has several ideas for a project, write them down together. Let ${name} choose one idea to test for ten minutes before deciding what to do next.`;
@@ -133,5 +143,9 @@ function practicalExample(situation: string, name: string) {
   if (/feeling arrives|held inside|seems quieter/.test(text)) return `If ${name} comes home upset and does not want to talk, acknowledge what you notice without pressing for an answer. Check in again after there has been time to settle.`;
   if (/jumping in|solve a problem/.test(text)) return `If friends disagree, encourage ${name} to hear what each person says before suggesting a solution. One extra question may reveal something that was missed.`;
   if (/repeated checking|finished work/.test(text)) return `Before homework begins, agree on what “finished” will look like. Once those points are complete, encourage ${name} to submit the work without another full round of checking.`;
-  return `If ${name} is putting off a task, ask which part feels hardest. Choose one small first step together, then check whether beginning feels easier.`;
+  if (/personal task|request must be handled|finish what/.test(text)) return `If ${name} is doing homework when someone asks for help, first ask what still needs to be finished. Then decide together whether the request can wait.`;
+  if (/several responsibilities|several tasks|what needs to be done/.test(text)) return `Write down everything ${name} is trying to handle. Decide together what needs attention today, what can wait, and what another person can help with.`;
+  if (/two things that matter|choices all have good points|repeated checking/.test(text)) return `Before ${name} begins a task, agree on the two most important things it needs. When those are complete, encourage ${name} to stop checking and move on.`;
+  if (/decide too quickly|one choice needs/.test(text)) return `If ${name} has several good ideas, write them down and agree on a time to choose one. This keeps the other ideas safe without delaying the decision.`;
+  return `Choose one ordinary moment when this pattern appears. Try the suggested response once, then notice whether ${name} finds the next step easier.`;
 }

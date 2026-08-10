@@ -111,16 +111,16 @@ const elementThemes: Record<string, { strengths: [string, string][]; softSpots: 
 };
 
 const dayMasterSupportPortraits: Record<string, { introduction: string; secure: string; pressure: string; support: string; weekly_action: { situation: string; action: string; phrase: string; sign: string } }> = {
-  Jia: { introduction: "Jia Wood has a purposeful nature that tends to grow towards a clear direction.", secure: "When he or she feels secure, {name} may choose a meaningful goal and keep working towards it, even when progress is slow.", pressure: "Under pressure, a change of plan may feel like losing direction. Honest thoughts may also come out more sharply than intended.", support: "Give some warning before a change and involve {name} in choosing the next step. This respects the need for direction while helping flexibility grow.", weekly_action: { situation: "When a plan has to change", action: "Explain what is changing, then let {name} choose one part of the new plan.", phrase: "This part has changed. Which step would you like to do first?", sign: "{name} begins moving forward without staying stuck on the original plan." } },
-  Yi: { introduction: "Yi Wood is flexible and often finds a thoughtful way to grow around obstacles.", secure: "When he or she feels secure, {name} may connect ideas, adjust thoughtfully, and find a gentle way to work with different people.", pressure: "Under pressure, {name} may bend too far around other people's needs or hesitate because several approaches seem possible.", support: "Offer a clear boundary and ask what {name} personally thinks. This makes room for flexibility without allowing personal needs to disappear.", weekly_action: { situation: "When other people's wishes take over", action: "Ask for {name}'s own view before discussing what everyone else wants.", phrase: "I have heard what they think. What feels right to you?", sign: "{name} states a preference more clearly, even if it differs from someone else's." } },
-  Bing: { introduction: "Bing Fire is warm and expressive, with a natural pull towards connection.", secure: "When he or she feels secure, {name}'s warmth may become easier to see through lively conversation, enthusiasm, and a wish to include others.", pressure: "When a plan changes unexpectedly, {name} may lose enthusiasm or become unusually quiet.", support: "Acknowledge the disappointment before discussing the new plan. Give {name} some quiet time if he or she is not ready to talk.", weekly_action: { situation: "When a plan changes unexpectedly", action: "Acknowledge the disappointment first, then explain the new plan in one or two clear steps.", phrase: "I know you were looking forward to that. Let us look at what we can do now.", sign: "{name} begins to engage with the new plan or explains what felt disappointing." } },
-  Ding: { introduction: "Ding Fire carries a quieter warmth and may notice details other people miss.", secure: "When he or she feels secure, {name} may share careful observations and show warmth through quiet, thoughtful attention.", pressure: "Under pressure, {name} may find it difficult to put feelings or ideas into words. Several questions at once can make answering harder.", support: "Mention gently what you have noticed, then allow time. A calm conversation later may help {name} explain what was difficult earlier.", weekly_action: { situation: "When something seems hard to explain", action: "Mention one change you noticed, then leave space instead of asking several questions.", phrase: "You seem quieter today. I am here if you want to talk later.", sign: "{name} returns to the conversation in his or her own time." } },
-  Wu: { introduction: "Wu Earth values steadiness and tends to feel most comfortable with a dependable foundation.", secure: "When he or she feels secure, {name} may become a steady presence who values familiar routines and follows through on responsibilities.", pressure: "Under pressure, a sudden change may leave {name} quieter or more hesitant than usual.", support: "Explain changes early and keep one familiar part of the routine where possible. Check in privately and give {name} time to ask practical questions.", weekly_action: { situation: "Before an unfamiliar change", action: "Give {name} advance notice and point out one part of the day that will remain familiar.", phrase: "This will be different, but this part will stay the same.", sign: "{name} asks practical questions and approaches the change with less resistance." } },
-  Ji: { introduction: "Ji Earth often expresses care in quiet, practical ways that help others grow.", secure: "When he or she feels secure, {name} may show care through practical help, patience, and attention to the small things people need.", pressure: "Under pressure, {name} may continue helping even when tired or may not mention what he or she needs.", support: "When {name} helps someone, thank him or her for being thoughtful. Then ask whether he or she needs help or a break too.", weekly_action: { situation: "After {name} has been helping others", action: "Thank {name} for helping, then ask whether he or she needs help or a break before moving on.", phrase: "That was thoughtful of you. What would help you now?", sign: "{name} becomes more comfortable naming a need or accepting help." } },
-  Geng: { introduction: "Geng Metal has a direct nature that often meets a clear challenge through action.", secure: "When he or she feels secure, {name} may meet a clear challenge directly and keep trying after a setback.", pressure: "Under pressure, determination may move faster than the situation requires. {name} may act before hearing the whole story or continue after frustration has built up.", support: "Recognise the determination, then invite a short pause before the next step. Asking what still needs to be understood can help strength become more measured.", weekly_action: { situation: "Before jumping in to solve a problem", action: "Invite {name} to find out one more fact before choosing what to do.", phrase: "You are ready to help. What else do we need to know first?", sign: "{name} pauses to listen or ask a question before acting." } },
-  Xin: { introduction: "Xin Metal is discerning and often pays close attention to quality and detail.", secure: "When he or she feels secure, {name} may use a careful eye to improve work, choose words thoughtfully, and notice details others miss.", pressure: "Under pressure, a small mistake or critical comment may linger. It may also become difficult to decide when a task is finished.", support: "Agree beforehand on what a finished result needs to include. Give feedback privately and focus on one useful improvement rather than every small flaw.", weekly_action: { situation: "Before a task that could invite repeated checking", action: "Agree with {name} on two or three things the finished work needs to include.", phrase: "Once these parts are done, the task is complete.", sign: "{name} finishes with fewer checks or accepts one small imperfection more calmly." } },
-  Ren: { introduction: "Ren Water is adaptable and often looks for another route when the first one is blocked.", secure: "When he or she feels secure, {name} may become more willing to explore, ask questions, and find another route when the first plan does not work.", pressure: "Under pressure, several possibilities may make it difficult for {name} to choose where to begin.", support: "Give room to explore, but offer one clear starting point. Ask which idea {name} would like to try first.", weekly_action: { situation: "When several ideas make it hard to begin", action: "Let {name} keep the ideas, then choose one small step to test first.", phrase: "Which idea would you like to try for ten minutes?", sign: "{name} starts one idea without worrying about abandoning the others." } },
-  Gui: { introduction: "Gui Water is quietly perceptive and often gathers meaning before speaking.", secure: "When he or she feels secure, {name} may share perceptive observations, original ideas, and a quiet understanding of what is happening around him or her.", pressure: "Under pressure, {name} may become quiet or find it difficult to explain what he or she is thinking.", support: "Create a calm opening to talk without repeated questions. Give {name} time to find the words rather than expecting an immediate answer.", weekly_action: { situation: "When something is difficult to explain", action: "Ask one simple question, then give {name} time to think before asking another.", phrase: "You do not have to answer straight away. We can talk when you are ready.", sign: "{name} returns to the conversation or finds an easier way to share what is on his or her mind." } },
+  Jia: { introduction: "Jia Wood is associated with a steady, goal-focused nature.", secure: "When he or she feels secure, {name} may choose a meaningful goal and keep working towards it, even when progress is slow.", pressure: "When a plan changes after {name} has committed to it, he or she may need time to let go of the original direction.", support: "Explain what has changed, then involve {name} in choosing one part of the new plan.", weekly_action: { situation: "When a plan has to change", action: "Explain what is changing, then let {name} choose one part of the new plan.", phrase: "This part has changed. Which step would you like to do first?", sign: "A useful sign is that {name} begins the new plan with less hesitation." } },
+  Yi: { introduction: "Yi Wood may adjust thoughtfully when the first approach does not work.", secure: "When secure, {name} may notice what is happening and adjust the approach without giving up on the goal.", pressure: "In an unfamiliar group, {name} may look to other people before stating a personal preference.", support: "Ask what {name} thinks before inviting the rest of the group to answer.", weekly_action: { situation: "When {name} is unsure whether to follow someone else's choice", action: "Ask for {name}'s own view before discussing what everyone else wants.", phrase: "I have heard what they think. What feels right to you?", sign: "You may notice {name} stating a preference more clearly, even if it differs from someone else's." } },
+  Bing: { introduction: "Bing Fire is warm and expressive, with a natural pull towards connection.", secure: "When secure, {name}'s warmth may be easier to see when {name} shares an idea enthusiastically or invites someone to join in.", pressure: "When a familiar plan changes unexpectedly, {name} may lose enthusiasm or need time to adjust.", support: "Acknowledge the disappointment before discussing what can happen next.", weekly_action: { situation: "When a plan changes unexpectedly", action: "Acknowledge the disappointment first, then explain the new plan in one or two clear steps.", phrase: "I know you were looking forward to that. Let us look at what we can do now.", sign: "You may notice {name} beginning to consider the new plan or explaining what felt disappointing." } },
+  Ding: { introduction: "Ding Fire carries a quieter warmth and may notice details other people miss.", secure: "When he or she feels secure, {name} may share careful observations and show warmth through quiet, thoughtful attention.", pressure: "Under pressure, {name} may keep an idea or feeling private until he or she feels more certain about it.", support: "Mention gently what you have noticed, then allow time. A calm conversation later may help {name} explain what was difficult earlier.", weekly_action: { situation: "When {name} becomes unusually quiet", action: "Mention one change you noticed, then leave space instead of asking several questions.", phrase: "You seem quieter today. I am here if you want to talk later.", sign: "You may notice {name} returning to the conversation when he or she feels ready." } },
+  Wu: { introduction: "Wu Earth values steadiness and often likes to know what to expect.", secure: "When he or she feels secure, {name} may become a steady presence who values familiar routines and follows through on responsibilities.", pressure: "When several responsibilities build up, {name} may try to carry them quietly instead of saying that the load feels heavy.", support: "Ask {name} to show you what is on the list, then decide together what can wait or be shared.", weekly_action: { situation: "When {name} has several responsibilities at once", action: "Ask {name} to show you what needs to be done. Decide together what must be handled now, what can wait, and what can be shared.", phrase: "Let us look at the list together. Which part needs attention first?", sign: "A useful sign is that {name} names what feels like too much or accepts help with one task." } },
+  Ji: { introduction: "Ji Earth often expresses care through patient, practical help.", secure: "When he or she feels secure, {name} may patiently help with practical tasks and notice small things that make life easier for others.", pressure: "Because {name} may be willing to help, he or she may take on another person's need before finishing a personal task.", support: "Before {name} offers more help, ask what he or she needs to finish first.", weekly_action: { situation: "When someone asks {name} for help during a personal task", action: "Help {name} decide whether the request must be handled now or can wait until the personal task is finished.", phrase: "Finish what you need to do first. Then you can decide how to help.", sign: "You may notice {name} finishing a personal responsibility before taking on another request." } },
+  Geng: { introduction: "Geng Metal is associated with a direct, determined approach to a clear challenge.", secure: "When he or she feels secure, {name} may meet a clear challenge directly and keep trying after a setback.", pressure: "When eager to resolve a problem, {name} may move quickly and miss part of the detail.", support: "Invite {name} to find out one more fact before deciding what to do.", weekly_action: { situation: "Before jumping in to solve a problem", action: "Invite {name} to find out one more fact before choosing what to do.", phrase: "You are ready to help. What else do we need to know first?", sign: "You may notice {name} pausing to listen or ask a question before acting." } },
+  Xin: { introduction: "Xin Metal is careful and often pays close attention to quality and detail.", secure: "When he or she feels secure, {name} may use a careful eye to improve work, choose words thoughtfully, and notice details others miss.", pressure: "When several choices all have good points, {name} may hesitate because no option feels clearly best.", support: "Help {name} choose the two things that matter most, then compare the options using only those points.", weekly_action: { situation: "When several choices all seem possible", action: "Help {name} choose the two things that matter most. Compare each option using only those two points.", phrase: "Which two things matter most in this choice?", sign: "A useful sign is that {name} compares the options and chooses without checking every possible detail." } },
+  Ren: { introduction: "Ren Water is adaptable and often looks for another route when the first one is blocked.", secure: "When secure, {name} may explore different possibilities and try another route when the first plan does not work.", pressure: "When asked to decide too quickly, {name} may resist settling on one answer before exploring other possibilities.", support: "Give {name} a little time to explore, then agree on when one choice needs to be made.", weekly_action: { situation: "When several ideas make it hard to begin", action: "Write the ideas down, then help {name} choose one small step to test first.", phrase: "Which idea would you like to try for ten minutes?", sign: "A useful sign is that {name} begins one idea while keeping the others written down for later." } },
+  Gui: { introduction: "Gui Water is quietly observant and often thinks before speaking.", secure: "When secure, {name} may share a detail other people missed or connect two ideas in an unexpected way.", pressure: "Under stress, {name} may keep thoughts private or find it harder to explain what he or she is feeling.", support: "Ask one simple question, then give {name} time to find the words.", weekly_action: { situation: "When something is difficult to explain", action: "Ask one simple question, then give {name} time to think before asking another.", phrase: "You do not have to answer straight away. We can talk when you are ready.", sign: "You may notice {name} returning to the conversation or finding an easier way to share what is on his or her mind." } },
 };
 
 const dayMasterConcernLinks: Record<string, string> = {
@@ -203,6 +203,18 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
   const longSentences = prose.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).filter((sentence) => words(sentence) > 32);
   if (longSentences.length) issues.push("the report contains sentences that are too long or convoluted");
   const sections = [...(summary.strengths ?? []), ...(summary.soft_spots ?? []), ...(summary.parenting_tips ?? [])];
+  const visibleSections = [...(summary.strengths ?? []), ...(summary.soft_spots ?? [])];
+  const visibleProse = JSON.stringify({
+    personality: summary.personality,
+    strengths: summary.strengths?.map(({ heading, body, guidance }) => ({ heading, body, guidance })),
+    soft_spots: summary.soft_spots?.map(({ heading, body, guidance }) => ({ heading, body, guidance })),
+    concern_response: summary.concern_response,
+    concern_tips: summary.concern_tips,
+    pressure: summary.day_master_support?.pressure,
+    support: summary.day_master_support?.support,
+    weekly_action: summary.day_master_support?.weekly_action,
+    closing_encouragement: summary.closing_encouragement,
+  });
   if (sections.some(({ heading }) => !heading || words(heading) > 6)) issues.push("section heading format is inconsistent");
   if (sections.some(({ body }) => words(body) < 12 || words(body) > 85)) issues.push("section length is outside the parent-friendly range");
   if ((summary.parenting_tips ?? []).some(({ body }) => words(body) < 20)) issues.push("a parenting tip needs more warmth, context, and practical explanation");
@@ -215,9 +227,9 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
   if ((summary.personality ?? "").split(/\n\s*\n/).filter(Boolean).length < 3) issues.push("personality explanation does not separate the Day Master image, the child, and the scope of this summary clearly");
   if (words(summary.closing_encouragement ?? "") < 75 || words(summary.closing_encouragement ?? "") > 220) issues.push("closing encouragement is too brief or overwhelming");
   if ((summary.closing_encouragement ?? "").split(/\n\s*\n/).filter(Boolean).length < 2) issues.push("closing encouragement does not separate encouragement from the wider Bazi invitation");
-  const repeatedOpenings = sections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
+  const repeatedOpenings = visibleSections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
   if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
-  const sentences = prose.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).map((sentence) => sentence.trim().toLowerCase()).filter((sentence) => words(sentence) >= 7);
+  const sentences = visibleProse.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).map((sentence) => sentence.trim().toLowerCase()).filter((sentence) => words(sentence) >= 7);
   const sentenceSignatures = sentences.map((sentence) => sentence.replace(/[^a-z0-9\s]/g, "").split(/\s+/).filter((word) => !/^(a|an|and|the|this|that|to|of|in|on|for|may|can|is|are|he|she|his|her)$/.test(word)).slice(0, 7).join(" "));
   if (new Set(sentenceSignatures).size !== sentenceSignatures.length) issues.push("the report repeats the same idea or sentence in more than one section");
   if ((prose.match(/one example is/gi) ?? []).length > 1) issues.push("the report overuses the same example sentence structure");
@@ -231,6 +243,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
   if (relatableMoments.length < 4) issues.push("report lacks enough recognisable everyday moments");
   if (!/\b(you may|you can|at the heart|feel understood|with calm guidance|ready to listen)\b/i.test(prose)) issues.push("report lacks an empathetic, encouraging voice");
   if (/\b(?:he|she) (?:are|were|have|do)\b|ideas so (?:he|she) is not forgotten/i.test(prose)) issues.push("a pronoun creates an ungrammatical or unintended meaning");
+  if (/\bthey (?:is|was|has|feels|asks|seems|becomes|explains|approaches|shows|states|finishes|begins|returns|notices|invites)\b/i.test(prose)) issues.push("singular-they verb agreement is incorrect");
   if (gender && gender !== "other" && /\bthe child(?:['’]s)?\b/i.test(prose)) issues.push("report refers generically to 'the child' instead of using personal pronouns");
   if (summary.concern_response) {
     if (childName && !summary.concern_response.includes(childName)) issues.push("parenting concern response is not personal to the child");
@@ -242,7 +255,7 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
     if (concern && /weakness|weak point|area.*improv|see (?:his|her|their) (?:part|fault)/i.test(concern) && !/area|difficult|improv|work on|practise|growth/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("growth-area concern was not answered with relevant support");
     if (concern && /stubborn|recognise|self.aware/i.test(concern) && !/specific moment|what happened|trying to achieve|another (?:view|point)|reconsider|self-reflect/i.test(`${summary.concern_response} ${summary.concern_tips?.join(" ") ?? ""}`)) issues.push("self-awareness concern was mistaken for a cooperation problem");
   }
-  if (!summary.day_master_support?.introduction || !summary.day_master_support.secure || !summary.day_master_support.example || !summary.day_master_support.pressure || !summary.day_master_support.support || !summary.day_master_support.weekly_action?.situation || !summary.day_master_support.weekly_action.action || !summary.day_master_support.weekly_action.phrase || !summary.day_master_support.weekly_action.sign) {
+  if (!summary.day_master_support?.introduction || !summary.day_master_support.pressure || !summary.day_master_support.support || !summary.day_master_support.weekly_action?.situation || !summary.day_master_support.weekly_action.action || !summary.day_master_support.weekly_action.phrase || !summary.day_master_support.weekly_action.sign) {
     issues.push("Day Master support portrait is incomplete");
   }
   if (childName && summary.closing_encouragement.split(childName).length - 1 < 2) issues.push("closing encouragement is not personal enough");
@@ -257,6 +270,21 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
     "private source or internal process disclosure detected",
     "a strength or soft spot is not traceable to verified Bazi data",
     "Day Master support portrait is incomplete",
+    "formulaic AI-style wording detected",
+    "awkward, ungrammatical, or unnatural wording detected",
+    "singular-they verb agreement is incorrect",
+    "parenting concern response is not personal to the child",
+    "parenting concern reflection is unclear or too long",
+    "parenting concern response sounds procedural or templated",
+    "connection concern was not answered with connection guidance",
+    "perfectionism concern was not answered with relevant support",
+    "growth-area concern was not answered with relevant support",
+    "self-awareness concern was mistaken for a cooperation problem",
+    "repetitive sentence openings detected",
+    "the report repeats the same idea or sentence in more than one section",
+    "the report overuses the same example sentence structure",
+    "parent guidance repeats the same sentence structure",
+    "the same qualities are repeated across report sections",
   ]);
   const blockingIssues = issues.filter((issue) => blockingIssueMessages.has(issue));
   const editorialWarnings = issues.filter((issue) => !blockingIssueMessages.has(issue));
@@ -270,13 +298,33 @@ function withQc(reading: Reading, qc: QcResult): Reading {
 }
 
 function genderedSummary(summary: SummaryReport, gender: string): SummaryReport {
-  if (gender !== "male" && gender !== "female") return summary;
   const matchCase = (source: string, replacement: string) => source[0] === source[0].toUpperCase() ? capitalise(replacement) : replacement;
+  const pronouns = gender === "male"
+    ? { subject: "he", object: "him", possessive: "his", reflexive: "himself" }
+    : gender === "female"
+      ? { subject: "she", object: "her", possessive: "her", reflexive: "herself" }
+      : { subject: "they", object: "them", possessive: "their", reflexive: "themselves" };
   const replace = (value: string) => value
-    .replace(/\bhimself or herself\b/gi, (word) => matchCase(word, gender === "male" ? "himself" : "herself"))
-    .replace(/\bhim or her\b/gi, (word) => matchCase(word, gender === "male" ? "him" : "her"))
-    .replace(/\bhis or her\b/gi, (word) => matchCase(word, gender === "male" ? "his" : "her"))
-    .replace(/\bhe or she\b/gi, (word) => matchCase(word, gender === "male" ? "he" : "she"));
+    .replace(/\bhimself or herself\b/gi, (word) => matchCase(word, pronouns.reflexive))
+    .replace(/\bhim or her\b/gi, (word) => matchCase(word, pronouns.object))
+    .replace(/\bhis or her\b/gi, (word) => matchCase(word, pronouns.possessive))
+    .replace(/\bhe or she\b/gi, (word) => matchCase(word, pronouns.subject))
+    .replace(/\bthey is\b/gi, "they are")
+    .replace(/\bthey was\b/gi, "they were")
+    .replace(/\bthey has\b/gi, "they have")
+    .replace(/\bthey feels\b/gi, "they feel")
+    .replace(/\bthey asks\b/gi, "they ask")
+    .replace(/\bthey seems\b/gi, "they seem")
+    .replace(/\bthey becomes\b/gi, "they become")
+    .replace(/\bthey explains\b/gi, "they explain")
+    .replace(/\bthey approaches\b/gi, "they approach")
+    .replace(/\bthey shows\b/gi, "they show")
+    .replace(/\bthey states\b/gi, "they state")
+    .replace(/\bthey finishes\b/gi, "they finish")
+    .replace(/\bthey begins\b/gi, "they begin")
+    .replace(/\bthey returns\b/gi, "they return")
+    .replace(/\bthey notices\b/gi, "they notice")
+    .replace(/\bthey invites\b/gi, "they invite");
   return JSON.parse(JSON.stringify(summary), (_key, value) => typeof value === "string" ? replace(value) : value) as SummaryReport;
 }
 
@@ -424,28 +472,24 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
       const versions = [
         `${name} ${point.meaning}. ${point.examples.join(" ")}`,
         `${name} ${point.meaning}. You may notice this when he or she is ${point.everyday}.`,
-        `${name} ${point.meaning}. For example, he or she may show this by ${point.everyday}.`,
+        `${name} ${point.meaning}. A parent may recognise this when he or she is ${point.everyday}.`,
       ];
       return versions[wordingVariant(point.heading)];
     }
     const versions = [
-      `${name} ${point.meaning}. For example, he or she may show this by ${point.everyday}.`,
-      `${name} ${point.meaning}. This could appear through ${point.everyday}.`,
-      `${name} ${point.meaning}. One sign of this may be ${point.everyday}.`,
+      `${name} ${point.meaning}. You may notice this when he or she is ${point.everyday}.`,
+      `${name} ${point.meaning}. In everyday life, he or she may be ${point.everyday}.`,
+      `${name} ${point.meaning}. A parent may recognise this when he or she is ${point.everyday}.`,
     ];
     return versions[(position + openingVariant) % versions.length];
   };
-  const parentingTips = [...profile.strengths, ...profile.softSpots].map((point, index) => {
-    const supportText = capitalise(point.support);
-    const bodies = [
-      `${supportText}. This may be especially helpful in situations such as ${point.everyday}. Keep the guidance simple, then give ${name} time to respond in his or her own way.`,
-      `In situations such as ${point.everyday}, ${point.support}. A calm approach gives ${name} support without taking over the experience.`,
-      `${supportText}. Use this when you notice moments such as ${point.everyday}. It can help ${name} understand what to try next.`,
-      `If a situation involves ${point.everyday}, ${point.support}. Give ${name} time to take in the guidance before expecting an answer.`,
-      `${supportText}. This can make situations such as ${point.everyday} feel more manageable for ${name}.`,
-    ];
-    return { heading: index < 3 ? ["When this quality appears", "Helping this strength grow", "Making learning feel natural"][index] : ["When things feel harder", "Finding a steadier response"][index - 3], body: bodies[index] };
-  });
+  const parentingTips = [
+    { heading: "Notice a specific moment", body: `Describe one thing ${name} did and why it mattered. A specific observation is easier to understand than a broad compliment.` },
+    { heading: "Ask before advising", body: `When something feels difficult, ask whether ${name} wants help, a listening ear, or time to think. The answer may change from one situation to another.` },
+    { heading: "Keep the next step small", body: `Choose one action that can be tried now. A manageable step gives ${name} a chance to practise without making the whole situation feel overwhelming.` },
+    { heading: "Allow room to recover", body: `After a difficult moment, return to the conversation when everyone is calmer. Focus on what can be understood or tried differently next time.` },
+    { heading: "Look for gradual change", body: `Notice small shifts over several days instead of expecting an immediate result. This gives ${name} time to build confidence in a natural way.` },
+  ];
   const closingStarts = dayMasterName === "Ren" ? [
     `${name} may not always share every idea or feeling straight away. As confidence grows, imagination may become easier to see in the questions he or she asks and the solutions he or she tries. When plans change, ${name} may gradually learn to adjust and try again instead of feeling stuck.`,
     `${name}'s ideas may first appear quietly. With growing confidence, he or she may begin asking more questions and testing possible solutions. The willingness to adjust after a setback can become a valuable source of self-belief.`,
@@ -469,7 +513,8 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   };
   const parentEncouragement = `By paying attention to these everyday moments, you help ${name} feel seen and understood. The care you are taking to understand him or her is already meaningful support. You do not need every answer immediately. Your patience and willingness to keep connecting can make a lasting difference.`;
   const supportPortrait = dayMasterSupportPortraits[dayMasterName];
-  const concernAction = concern ? concernWeeklyAction(concern, name) : null;
+  const matchedConcern = concern ? concernReflection(concern, name) : "";
+  const concernAction = concern && matchedConcern ? concernWeeklyAction(concern, name) : null;
   const weeklyAction = concernAction?.situation ? concernAction : supportPortrait.weekly_action;
   const personalisePortrait = (text: string) => text.replaceAll("{name}", name);
   const rotate = <T,>(items: T[], offset: number) => [...items.slice(offset % items.length), ...items.slice(0, offset % items.length)];
@@ -481,12 +526,6 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     const headingVariant = wordingVariant(`${point.heading}-heading`);
     return headingVariant === 0 ? point.heading : pointHeadingVariants[point.heading]?.[headingVariant - 1] ?? point.heading;
   };
-  const portraitExamplePoint = profile.strengths[(variant + openingVariant) % profile.strengths.length];
-  const portraitExamples = [
-    `You may notice this when ${name} is ${portraitExamplePoint.everyday}.`,
-    `For example, ${name} may show this by ${portraitExamplePoint.everyday}.`,
-    `${name} may show this through ${portraitExamplePoint.everyday}.`,
-  ];
   return {
     personality,
     strengths: rotate(profile.strengths, openingVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index), guidance: guidanceText(point, index), basis: { factor: "Day Master", value: dayMasterName } })),
@@ -494,7 +533,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     day_master_support: {
       introduction: supportPortrait.introduction,
       secure: personalisePortrait(supportPortrait.secure),
-      example: portraitExamples[connectionVariant],
+      example: "",
       pressure: personalisePortrait(supportPortrait.pressure),
       support: personalisePortrait(supportPortrait.support),
       weekly_action: {
@@ -502,12 +541,14 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
         action: personalisePortrait(weeklyAction.action),
         phrase: personalisePortrait(weeklyAction.phrase),
         sign: personalisePortrait(weeklyAction.sign),
-        bazi_link: concern ? personalisePortrait(dayMasterConcernLinks[dayMasterName]) : undefined,
+        bazi_link: matchedConcern ? personalisePortrait(dayMasterConcernLinks[dayMasterName]) : undefined,
       },
     },
     concern_original: concern ?? undefined,
-    concern_response: concern && concernReflection(concern, name) ? concernReflection(concern, name) : undefined,
-    concern_tips: concern && concernGuidance(concern, name).length ? concernGuidance(concern, name) : undefined,
+    concern_response: concern
+      ? matchedConcern || `You asked how to support ${name} with “${concern}”. The Day Master alone does not provide enough information to answer that responsibly without making assumptions.`
+      : undefined,
+    concern_tips: matchedConcern && concernGuidance(concern ?? "", name).length ? concernGuidance(concern ?? "", name) : undefined,
     parenting_tips: parentingTips,
     closing_encouragement: `${closingStarts[closingVariant]}\n\n${futureByDayMaster[dayMasterName]}\n\n${parentEncouragement}\n\nHopefully, this summary has given you better insight into how ${name} relates to the world. This first look focuses on the Day Master, which is only one part of a Bazi chart. Other parts can offer a fuller view of how he or she learns, manages emotions, and connects with others.`,
   };
@@ -606,6 +647,8 @@ export async function generateReading(input: Input): Promise<Reading> {
     const fallback = hasSafeConcernAnswer(candidate.report_content, input.subject_name, concern)
       ? { ...verified, report_content: { ...verified.report_content, concern_response: candidate.report_content.concern_response, concern_tips: candidate.report_content.concern_tips } }
       : verified;
-    return withQc(fallback, { approved: true, issues: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-qc-v1-safe-fallback" });
+    const fallbackQc = deterministicQc(fallback, input.subject_name, input.gender, concern, false);
+    if (!fallbackQc.approved) throw new Error(`Safe fallback failed editorial QC: ${fallbackQc.issues.join("; ")}`);
+    return withQc(fallback, { ...fallbackQc, warnings: [`AI prose withheld: ${qc.issues.join("; ")}`], reviewer: "rules/expert-bazi-and-editorial-qc-v4-safe-fallback" });
   } catch (error) { console.error("AI generation fallback", error); return verified; }
 }
