@@ -13,6 +13,7 @@ const countries = [
 
 export default function IntakeForm() {
   const router = useRouter();
+  const [step, setStep] = useState(1);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [submittedName, setSubmittedName] = useState("");
@@ -40,22 +41,50 @@ export default function IntakeForm() {
   const cls = "mt-2 w-full rounded-sm border border-[var(--border)] bg-[var(--card)] px-4 py-3 outline-none transition focus:border-[var(--teal)] focus:ring-2 focus:ring-[var(--teal-soft)]";
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const thisYear = new Date().getFullYear();
+  function moveToNextStep(form: HTMLFormElement) {
+    const currentPanel = form.querySelector<HTMLElement>(`[data-step="${step}"]`);
+    const fields = Array.from(currentPanel?.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input, select, textarea") ?? []);
+    const invalidField = fields.find((field) => !field.checkValidity());
+    if (invalidField) { invalidField.reportValidity(); return; }
+    setError("");
+    setStep((current) => Math.min(3, current + 1));
+  }
   return <form onInput={() => error && setError("")} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_20px_50px_rgba(71,49,32,.08)] sm:p-9">
-    <p className="text-xs font-semibold uppercase tracking-[.25em] text-[var(--teal-dark)]">Create a reading</p><h2 className="mb-7 mt-2 text-3xl">Child details</h2>
-    <div className="grid gap-5 sm:grid-cols-2">
+    <p className="text-xs font-semibold uppercase tracking-[.25em] text-[var(--teal-dark)]">Create a reading</p>
+    <div className="mb-7 mt-5" aria-label={`Step ${step} of 3`}>
+      <div className="flex items-center justify-between text-xs font-semibold text-[var(--muted)]"><span>Step {step} of 3</span><span>{step === 1 ? "About your child" : step === 2 ? "About you" : "One last step"}</span></div>
+      <div className="mt-3 grid grid-cols-3 gap-2" aria-hidden="true">{[1, 2, 3].map((number) => <span key={number} className={`h-1.5 rounded-full ${number <= step ? "bg-[var(--teal)]" : "bg-[var(--border)]"}`} />)}</div>
+    </div>
+    <section data-step="1" className={step === 1 ? "block" : "hidden"}>
+      <h2 className="mb-2 text-3xl">Tell us about your child</h2>
+      <p className="mb-7 text-sm leading-6 text-[var(--muted)]">These birth details are used to prepare the Bazi chart.</p>
+      <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Child&apos;s name<input required name="subject_name" maxLength={80} className={cls} /></label>
-      <label className="text-sm sm:col-span-2">Parent&apos;s name<input required name="parent_name" maxLength={80} className={cls} /></label>
-      <label className="text-sm sm:col-span-2">Parent&apos;s email<input required type="email" name="email" className={cls} /></label>
-      <fieldset className="text-sm sm:col-span-2"><legend>Parent&apos;s mobile number</legend><div className="grid grid-cols-[8.5rem_1fr] gap-2"><select required name="phone_code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} aria-label="Mobile country code" className={cls}>{countries.map(([country, code]) => <option key={`${country}-${code}`} value={`${country}|${code}`}>{country} {code}</option>)}</select><input required type="tel" name="phone_number" inputMode="tel" minLength={6} maxLength={24} pattern="[0-9 ()-]{6,24}" title="Please check your handphone number." aria-label="Mobile number" className={cls} placeholder="9123 4567" onInvalid={(event) => event.currentTarget.setCustomValidity("Please check your handphone number.")} onInput={(event) => event.currentTarget.setCustomValidity("")} /></div></fieldset>
       <fieldset className="text-sm sm:col-span-2"><legend>Date of birth</legend><div className="grid grid-cols-3 gap-2"><select required name="birth_day" defaultValue="" aria-label="Birth day" className={cls} style={{paddingLeft:10,paddingRight:8}}><option value="" disabled>DD</option>{Array.from({length:31},(_,i)=><option key={i+1} value={String(i+1).padStart(2,"0")}>{String(i+1).padStart(2,"0")}</option>)}</select><select required name="birth_month" defaultValue="" aria-label="Birth month" className={cls} style={{paddingLeft:10,paddingRight:8}}><option value="" disabled>MMM</option>{months.map((month,i)=><option key={month} value={String(i+1).padStart(2,"0")}>{month}</option>)}</select><select required name="birth_year" defaultValue="" aria-label="Birth year" className={cls} style={{paddingLeft:10,paddingRight:8}}><option value="" disabled>YYYY</option>{Array.from({length:100},(_,i)=>thisYear-i).map(year=><option key={year} value={year}>{year}</option>)}</select></div></fieldset>
       <label className="text-sm">Local time of birth<input required type="time" name="birth_time" className={cls} /></label>
       <label className="text-sm">City of birth<input required name="birth_city" maxLength={80} className={cls} placeholder="e.g. Singapore" /></label>
       <label className="text-sm">Country of birth<select required name="birth_country" value={birthCountry} onChange={(event) => setBirthCountry(event.target.value)} className={cls}>{countries.map(([country]) => <option key={country} value={country}>{country}</option>)}</select></label>
       <label className="text-sm">Gender<select required name="gender" defaultValue="" className={cls}><option value="" disabled>Select</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></label>
       <input type="hidden" name="question_type" value="child_potential" />
+      </div>
+    </section>
+    <section data-step="2" className={step === 2 ? "block" : "hidden"}>
+      <h2 className="mb-2 text-3xl">Your contact details</h2>
+      <p className="mb-7 text-sm leading-6 text-[var(--muted)]">We use these details to identify the parent requesting the reading and to send the summary if requested.</p>
+      <div className="grid gap-5 sm:grid-cols-2">
+      <label className="text-sm sm:col-span-2">Parent&apos;s name<input required name="parent_name" maxLength={80} className={cls} /></label>
+      <label className="text-sm sm:col-span-2">Parent&apos;s email<input required type="email" name="email" className={cls} /></label>
+      <fieldset className="text-sm sm:col-span-2"><legend>Parent&apos;s mobile number</legend><div className="grid grid-cols-[8.5rem_1fr] gap-2"><select required name="phone_code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} aria-label="Mobile country code" className={cls}>{countries.map(([country, code]) => <option key={`${country}-${code}`} value={`${country}|${code}`}>{country} {code}</option>)}</select><input required type="tel" name="phone_number" inputMode="tel" minLength={6} maxLength={24} pattern="[0-9 ()-]{6,24}" title="Please check your handphone number." aria-label="Mobile number" className={cls} placeholder="9123 4567" onInvalid={(event) => event.currentTarget.setCustomValidity("Please check your handphone number.")} onInput={(event) => event.currentTarget.setCustomValidity("")} /></div></fieldset>
+      </div>
+    </section>
+    <section data-step="3" className={step === 3 ? "block" : "hidden"}>
+      <h2 className="mb-2 text-3xl">Anything you would like help with?</h2>
+      <p className="mb-7 text-sm leading-6 text-[var(--muted)]">This is optional. Share one question if there is something you would like the summary to address.</p>
+      <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[var(--muted)]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
       <label className="flex items-start gap-3 border-t border-[var(--border)] pt-5 text-sm leading-6 sm:col-span-2"><input required type="checkbox" name="privacy_consent" className="mt-1 h-4 w-4 shrink-0 accent-[var(--teal-dark)]"/><span>I confirm that I am the child&apos;s parent, legal guardian, or authorised to provide these details. I agree to the use of this information to prepare and deliver the Bazi summary, as explained in the <Link href="/privacy" target="_blank" className="underline underline-offset-2">Privacy Notice</Link> and <Link href="/terms" target="_blank" className="underline underline-offset-2">Terms &amp; Disclaimer</Link>.</span></label>
-    </div>
+      </div>
+    </section>
     {(busy || readyReportId) && <div className="fixed inset-0 z-50 overflow-y-auto bg-[var(--teal-dark)]/80 px-3 py-3 backdrop-blur-sm sm:flex sm:items-center sm:justify-center sm:px-5 sm:py-8" role="status" aria-live="polite">
       <div className="mx-auto w-full max-w-2xl rounded-sm bg-[var(--card)] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:p-10">
         <div>
@@ -76,7 +105,10 @@ export default function IntakeForm() {
       </div>
     </div>}
     {error && <p role="alert" className="mt-5 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-    <button disabled={busy} className="mt-7 w-full bg-[var(--teal-dark)] px-5 py-4 font-semibold text-white transition hover:bg-[var(--teal)] disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>
+    <div className="mt-7 flex items-center gap-3">
+      {step > 1 && <button type="button" onClick={() => { setError(""); setStep((current) => Math.max(1, current - 1)); }} className="border border-[var(--border)] px-5 py-4 font-semibold text-[var(--teal-dark)] transition hover:border-[var(--teal)]">Back</button>}
+      {step < 3 ? <button type="button" onClick={(event) => moveToNextStep(event.currentTarget.form!)} className="flex-1 bg-[var(--teal-dark)] px-5 py-4 font-semibold text-white transition hover:bg-[var(--teal)]">Continue</button> : <button disabled={busy} className="flex-1 bg-[var(--teal-dark)] px-5 py-4 font-semibold text-white transition hover:bg-[var(--teal)] disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>}
+    </div>
   </form>;
 }
 
