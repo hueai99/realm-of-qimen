@@ -13,6 +13,7 @@ const countries = [
 
 export default function IntakeForm() {
   const router = useRouter();
+  const [readingFor, setReadingFor] = useState<"child" | "self" | null>(null);
   const [step, setStep] = useState(1);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -51,8 +52,28 @@ export default function IntakeForm() {
   }
   return <form onInput={() => error && setError("")} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_20px_50px_rgba(71,49,32,.08)] sm:p-9">
     <p className="text-xs font-semibold uppercase tracking-[.25em] text-[var(--teal-dark)]">Create a reading</p>
+    {!readingFor && <section className="mt-5">
+      <h2 className="text-3xl">Who is this reading for?</h2>
+      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">Choose one option so we can ask only for the details needed for that reading.</p>
+      <div className="mt-7 grid gap-3 sm:grid-cols-2">
+        <button type="button" onClick={() => setReadingFor("child")} className="border border-[var(--teal)] bg-[var(--teal-soft)] p-5 text-left transition hover:bg-[var(--card)]">
+          <span className="block text-xl font-semibold text-[var(--teal-dark)]">My child</span>
+          <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">Create a child&apos;s Bazi personality summary.</span>
+        </button>
+        <button type="button" onClick={() => setReadingFor("self")} className="border border-[var(--border)] p-5 text-left transition hover:border-[var(--teal)]">
+          <span className="block text-xl font-semibold text-[var(--teal-dark)]">Myself</span>
+          <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">Adult Bazi readings are coming later.</span>
+        </button>
+      </div>
+    </section>}
+    {readingFor === "self" && <section className="mt-7 border-l-2 border-[var(--teal)] bg-[var(--teal-soft)] p-5">
+      <h2 className="text-2xl">Adult readings are coming later</h2>
+      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">The adult report will have its own interpretation and wording. We will not use the child report for an adult reading.</p>
+      <button type="button" onClick={() => setReadingFor(null)} className="mt-5 font-semibold text-[var(--teal-dark)] underline underline-offset-4">Choose another option</button>
+    </section>}
+    {readingFor === "child" && <>
     <div className="mb-7 mt-5" aria-label={`Step ${step} of 3`}>
-      <div className="flex items-center justify-between text-xs font-semibold text-[var(--muted)]"><span>Step {step} of 3</span><span>{step === 1 ? "About your child" : step === 2 ? "About you" : "One last step"}</span></div>
+      <div className="flex items-center justify-between gap-3 text-xs font-semibold text-[var(--muted)]"><span>Step {step} of 3 · {step === 1 ? "About your child" : step === 2 ? "About you" : "One last step"}</span><button type="button" onClick={() => { setReadingFor(null); setStep(1); setError(""); }} className="shrink-0 text-[var(--teal-dark)] underline underline-offset-2">Change reading</button></div>
       <div className="mt-3 grid grid-cols-3 gap-2" aria-hidden="true">{[1, 2, 3].map((number) => <span key={number} className={`h-1.5 rounded-full ${number <= step ? "bg-[var(--teal)]" : "bg-[var(--border)]"}`} />)}</div>
     </div>
     <section data-step="1" className={step === 1 ? "block" : "hidden"}>
@@ -109,6 +130,7 @@ export default function IntakeForm() {
       {step > 1 && <button type="button" onClick={() => { setError(""); setStep((current) => Math.max(1, current - 1)); }} className="border border-[var(--border)] px-5 py-4 font-semibold text-[var(--teal-dark)] transition hover:border-[var(--teal)]">Back</button>}
       {step < 3 ? <button type="button" onClick={(event) => moveToNextStep(event.currentTarget.form!)} className="flex-1 bg-[var(--teal-dark)] px-5 py-4 font-semibold text-white transition hover:bg-[var(--teal)]">Continue</button> : <button disabled={busy} className="flex-1 bg-[var(--teal-dark)] px-5 py-4 font-semibold text-white transition hover:bg-[var(--teal)] disabled:opacity-60">{busy ? "Preparing the personality blueprint…" : "Create the personality blueprint"}</button>}
     </div>
+    </>}
   </form>;
 }
 

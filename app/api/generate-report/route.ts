@@ -36,7 +36,10 @@ export async function POST(request: Request) {
   if (invalidField) return NextResponse.json({ error: `Please check the ${invalidField}.` }, { status: 422 });
   const db = createAdminClient();
   const { data: report, error } = await db.from("bazi_reports").insert({ subject_name, parent_name, email, birth_date, birth_time, birth_place, parenting_concern, gender, question_type }).select("id").single();
-  if (error || !report) return NextResponse.json({ error: "We could not save your reading. Please try again." }, { status: 500 });
+  if (error || !report) {
+    console.error("Reading insert failed", { code: error?.code, message: error?.message, details: error?.details, hint: error?.hint });
+    return NextResponse.json({ error: "We could not save your reading. Please try again." }, { status: 500 });
+  }
   const variation_seed = variationSeedFromReportId(report.id);
   await db.from("audit_logs").insert({ actor: "system", action: "report.requested", target_table: "bazi_reports", target_id: report.id, payload: { question_type } });
   await db.from("audit_logs").insert({ actor: "visitor", action: "privacy.consent_recorded", target_table: "bazi_reports", target_id: report.id, payload: { privacy_notice_version: "2026-08-01", terms_version: "2026-08-01", parent_or_authorised_adult: true } });
