@@ -19,13 +19,13 @@ export default async function Home() {
     <main className="flex flex-col">
       <section id="bazi" className="mx-auto grid max-w-6xl gap-6 px-5 pb-10 pt-8 sm:px-6 sm:pb-12 sm:pt-10 lg:grid-cols-[1.05fr_.95fr] lg:gap-12 lg:pb-16 lg:pt-12">
         <div className="pt-1 lg:pt-5">
-          <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Your child&apos;s Bazi personality summary</p>
-          <h1 className="mt-3 max-w-2xl text-3xl leading-[1.12] sm:mt-4 sm:text-6xl sm:leading-[1.02]">Understand your child with greater clarity.</h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-[var(--muted)] sm:mt-5 sm:text-lg sm:leading-8">Discover natural strengths, moments that may feel harder, and practical ways to support your child at home.</p>
+          <p className="text-xs font-semibold uppercase tracking-[.24em] text-[var(--teal-dark)]">Discover more through Bazi</p>
+          <h1 className="mt-3 max-w-2xl text-3xl leading-[1.12] sm:mt-4 sm:text-6xl sm:leading-[1.02]">See what a Bazi chart may reveal about you or your child.</h1>
+          <p className="mt-4 max-w-xl text-base leading-7 text-[var(--muted)] sm:mt-5 sm:text-lg sm:leading-8">Explore natural strengths, personality patterns, and how someone may respond to people, challenges, and everyday situations.</p>
           <div className="mt-5 flex flex-wrap gap-2 text-xs sm:mt-6">
             {['Personalised', 'Private', 'No login required'].map((item) => <span key={item} className="rounded-full bg-[var(--teal-soft)] px-4 py-2 text-[var(--teal-dark)]">{item}</span>)}
           </div>
-          <div className="mt-6 max-w-lg border-l-2 border-[var(--terracotta)] pl-4 text-sm leading-6 text-[var(--muted)] sm:mt-7 sm:pl-5">A reflective Bazi experience designed to support—not define—your child.</div>
+          <div className="mt-6 max-w-lg border-l-2 border-[var(--terracotta)] pl-4 text-sm italic leading-6 text-[var(--muted)] sm:mt-7 sm:pl-5">A thoughtful starting point for deeper understanding—not a fixed definition of who someone is.</div>
         </div>
         <IntakeForm />
       </section>

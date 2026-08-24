@@ -54,7 +54,6 @@ export default function IntakeForm() {
     <p className="text-xs font-semibold uppercase tracking-[.25em] text-[var(--teal-dark)]">Create a reading</p>
     {!readingFor && <section className="mt-5">
       <h2 className="text-3xl">Who is this reading for?</h2>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">Choose one option so we can ask only for the details needed for that reading.</p>
       <div className="mt-7 grid gap-3 sm:grid-cols-2">
         <button type="button" onClick={() => setReadingFor("child")} className="border border-[var(--teal)] bg-[var(--teal-soft)] p-5 text-left transition hover:bg-[var(--card)]">
           <span className="block text-xl font-semibold text-[var(--teal-dark)]">My child</span>
@@ -62,13 +61,12 @@ export default function IntakeForm() {
         </button>
         <button type="button" onClick={() => setReadingFor("self")} className="border border-[var(--border)] p-5 text-left transition hover:border-[var(--teal)]">
           <span className="block text-xl font-semibold text-[var(--teal-dark)]">Myself</span>
-          <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">Adult Bazi readings are coming later.</span>
+          <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">Coming soon</span>
         </button>
       </div>
     </section>}
     {readingFor === "self" && <section className="mt-7 border-l-2 border-[var(--teal)] bg-[var(--teal-soft)] p-5">
-      <h2 className="text-2xl">Adult readings are coming later</h2>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">The adult report will have its own interpretation and wording. We will not use the child report for an adult reading.</p>
+      <h2 className="text-2xl">Coming soon</h2>
       <button type="button" onClick={() => setReadingFor(null)} className="mt-5 font-semibold text-[var(--teal-dark)] underline underline-offset-4">Choose another option</button>
     </section>}
     {readingFor === "child" && <>
@@ -95,7 +93,7 @@ export default function IntakeForm() {
       <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Parent&apos;s name<input required name="parent_name" maxLength={80} className={cls} /></label>
       <label className="text-sm sm:col-span-2">Parent&apos;s email<input required type="email" name="email" className={cls} /></label>
-      <fieldset className="text-sm sm:col-span-2"><legend>Parent&apos;s mobile number</legend><div className="grid grid-cols-[8.5rem_1fr] gap-2"><select required name="phone_code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} aria-label="Mobile country code" className={cls}>{countries.map(([country, code]) => <option key={`${country}-${code}`} value={`${country}|${code}`}>{country} {code}</option>)}</select><input required type="tel" name="phone_number" inputMode="tel" minLength={6} maxLength={24} pattern="[0-9 ()-]{6,24}" title="Please check your handphone number." aria-label="Mobile number" className={cls} placeholder="9123 4567" onInvalid={(event) => event.currentTarget.setCustomValidity("Please check your handphone number.")} onInput={(event) => event.currentTarget.setCustomValidity("")} /></div></fieldset>
+      <fieldset className="text-sm sm:col-span-2"><legend>Parent&apos;s mobile number</legend><div className="grid gap-2 sm:grid-cols-[12rem_1fr]"><select required name="phone_code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value)} aria-label="Mobile country code" className={cls}>{countries.map(([country, code]) => <option key={`${country}-${code}`} value={`${country}|${code}`}>{country} {code}</option>)}</select><input required type="tel" name="phone_number" inputMode="tel" minLength={6} maxLength={24} pattern="[0-9 ()-]{6,24}" title="Please check your handphone number." aria-label="Mobile number" className={cls} placeholder="9123 4567" onInvalid={(event) => event.currentTarget.setCustomValidity("Please check your handphone number.")} onInput={(event) => event.currentTarget.setCustomValidity("")} /></div></fieldset>
       </div>
     </section>
     <section data-step="3" className={step === 3 ? "block" : "hidden"}>
