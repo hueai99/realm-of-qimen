@@ -53,7 +53,7 @@ export default function IntakeForm() {
   return <form onInput={() => error && setError("")} onSubmit={(event) => { event.preventDefault(); void submit(new FormData(event.currentTarget)); }} className="rounded-sm border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_20px_50px_rgba(71,49,32,.08)] sm:p-9">
     <p className="text-xs font-semibold uppercase tracking-[.25em] text-[var(--teal-dark)]">Create a reading</p>
     {!readingFor && <section className="mt-5">
-      <h2 className="text-3xl">Who is this reading for?</h2>
+      <h2 className="text-2xl sm:text-[1.75rem]">Who is this reading for?</h2>
       <div className="mt-7 grid gap-3 sm:grid-cols-2">
         <button type="button" onClick={() => setReadingFor("child")} className="border border-[var(--teal)] bg-[var(--teal-soft)] p-5 text-left transition hover:bg-[var(--card)]">
           <span className="block text-xl font-semibold text-[var(--teal-dark)]">My child</span>
@@ -75,7 +75,7 @@ export default function IntakeForm() {
       <div className="mt-3 grid grid-cols-3 gap-2" aria-hidden="true">{[1, 2, 3].map((number) => <span key={number} className={`h-1.5 rounded-full ${number <= step ? "bg-[var(--teal)]" : "bg-[var(--border)]"}`} />)}</div>
     </div>
     <section data-step="1" className={step === 1 ? "block" : "hidden"}>
-      <h2 className="mb-2 text-3xl">Tell us about your child</h2>
+      <h2 className="mb-2 text-2xl sm:text-[1.75rem]">Tell us about your child</h2>
       <p className="mb-7 text-sm leading-6 text-[var(--muted)]">These birth details are used to prepare the Bazi chart.</p>
       <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Child&apos;s name<input required name="subject_name" maxLength={80} className={cls} /></label>
@@ -88,7 +88,7 @@ export default function IntakeForm() {
       </div>
     </section>
     <section data-step="2" className={step === 2 ? "block" : "hidden"}>
-      <h2 className="mb-2 text-3xl">Your contact details</h2>
+      <h2 className="mb-2 text-2xl sm:text-[1.75rem]">Your contact details</h2>
       <p className="mb-7 text-sm leading-6 text-[var(--muted)]">We use these details to identify the parent requesting the reading and to send the summary if requested.</p>
       <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Parent&apos;s name<input required name="parent_name" maxLength={80} className={cls} /></label>
@@ -97,7 +97,7 @@ export default function IntakeForm() {
       </div>
     </section>
     <section data-step="3" className={step === 3 ? "block" : "hidden"}>
-      <h2 className="mb-2 text-3xl">Anything you would like help with?</h2>
+      <h2 className="mb-2 text-2xl sm:text-[1.75rem]">Anything you would like help with?</h2>
       <p className="mb-7 text-sm leading-6 text-[var(--muted)]">This is optional. Share one question if there is something you would like the summary to address.</p>
       <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Is there anything you would like to understand better about your child? <span className="text-[var(--muted)]">(optional)</span><textarea name="parenting_concern" maxLength={600} rows={4} className={cls} placeholder="For example: managing exam stress, building confidence, or finding ways to connect." /></label>
