@@ -44,7 +44,7 @@ export default async function Home() {
               <h3 className="mt-1 text-2xl sm:mt-2 sm:text-[1.65rem]">Bazi</h3>
               <p className="mt-2 text-sm leading-6 text-[var(--muted)] sm:mt-3 sm:min-h-20">Explore temperament, strengths, relationships, and the ways a person may grow through different stages of life.</p>
               <div className="mt-4 flex items-center justify-end sm:mt-5">
-                <Link href="#bazi" className="font-semibold text-[var(--teal-dark)] underline underline-offset-4">Start a child reading</Link>
+                <Link href="#bazi" className="font-semibold text-[var(--teal-dark)] underline underline-offset-4">Start a Bazi reading</Link>
               </div>
             </article>
             <FutureService service="qimen" eyebrow="Find clarity in a situation" title="Qimen">Consider timing, direction, and strategy when facing an important decision or uncertain situation.</FutureService>

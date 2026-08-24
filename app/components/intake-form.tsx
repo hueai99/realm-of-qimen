@@ -55,11 +55,11 @@ export default function IntakeForm() {
     {!readingFor && <section className="mt-5">
       <h2 className="text-2xl sm:text-[1.75rem]">Who is this reading for?</h2>
       <div className="mt-7 grid gap-3 sm:grid-cols-2">
-        <button type="button" onClick={() => setReadingFor("child")} className="border border-[var(--teal)] bg-[var(--teal-soft)] p-5 text-left transition hover:bg-[var(--card)]">
+        <button type="button" onClick={() => setReadingFor("child")} className="flex h-full flex-col items-start justify-start border border-[var(--teal)] bg-[var(--teal-soft)] p-5 text-left transition hover:bg-[var(--card)]">
           <span className="block text-xl font-semibold text-[var(--teal-dark)]">My child</span>
           <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">Create a child&apos;s Bazi personality summary.</span>
         </button>
-        <button type="button" onClick={() => setReadingFor("self")} className="border border-[var(--border)] p-5 text-left transition hover:border-[var(--teal)]">
+        <button type="button" onClick={() => setReadingFor("self")} className="flex h-full flex-col items-start justify-start border border-[var(--border)] p-5 text-left transition hover:border-[var(--teal)]">
           <span className="block text-xl font-semibold text-[var(--teal-dark)]">Myself</span>
           <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">Coming soon</span>
         </button>
