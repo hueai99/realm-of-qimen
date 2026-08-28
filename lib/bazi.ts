@@ -231,7 +231,12 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
   if (words(summary.closing_encouragement ?? "") < 75 || words(summary.closing_encouragement ?? "") > 220) issues.push("closing encouragement is too brief or overwhelming");
   if ((summary.closing_encouragement ?? "").split(/\n\s*\n/).filter(Boolean).length < 2) issues.push("closing encouragement does not separate encouragement from the wider Bazi invitation");
   const repeatedOpenings = visibleSections.map(({ body }) => body.trim().split(/\s+/).slice(0, 3).join(" ").toLowerCase());
-  if (new Set(repeatedOpenings).size !== repeatedOpenings.length) issues.push("repetitive sentence openings detected");
+  const openingCounts = repeatedOpenings.reduce<Record<string, number>>((counts, opening) => {
+    counts[opening] = (counts[opening] ?? 0) + 1;
+    return counts;
+  }, {});
+  const repeatedOpeningLimit = strictEditorial ? 2 : 3;
+  if (Object.values(openingCounts).some((count) => count >= repeatedOpeningLimit)) issues.push("repetitive sentence openings detected");
   const sentences = visibleProse.replace(/[{}\[\]"]/g, " ").split(/[.!?]+/).map((sentence) => sentence.trim().toLowerCase()).filter((sentence) => words(sentence) >= 7);
   const sentenceSignatures = sentences.map((sentence) => sentence.replace(/[^a-z0-9\s]/g, "").split(/\s+/).filter((word) => !/^(a|an|and|the|this|that|to|of|in|on|for|may|can|is|are|he|she|his|her)$/.test(word)).slice(0, 7).join(" "));
   if (new Set(sentenceSignatures).size !== sentenceSignatures.length) issues.push("the report repeats the same idea or sentence in more than one section");
