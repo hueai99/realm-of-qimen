@@ -9,7 +9,16 @@ export type DayMasterSupport = {
   support: string;
   weekly_action: { situation: string; action: string; example?: string; phrase: string; sign: string; bazi_link?: string };
 };
-export type SummaryReport = { personality: string; strengths: ReportPoint[]; soft_spots: ReportPoint[]; day_master_support?: DayMasterSupport; concern_original?: string; concern_response?: string; concern_tips?: string[]; parenting_tips: ReportPoint[]; closing_encouragement: string };
+export type CommunicationGuidance = {
+  introduction: string;
+  strength_note: string;
+  works_well: string[];
+  avoid: string[];
+  try_saying: string[];
+  qualification: string;
+  basis: { factor: "Day Master communication style"; value: string };
+};
+export type SummaryReport = { personality: string; strengths: ReportPoint[]; soft_spots: ReportPoint[]; communication?: CommunicationGuidance; day_master_support?: DayMasterSupport; concern_original?: string; concern_response?: string; concern_tips?: string[]; parenting_tips: ReportPoint[]; closing_encouragement: string };
 export type BaziReport = {
   id: string; subject_name: string; birth_date: string; birth_time: string | null;
   birth_place: string | null; parenting_concern: string | null; parent_name: string | null;

@@ -1,6 +1,7 @@
 import type { QuestionType, SummaryReport } from "@/lib/types";
 import { Solar } from "lunar-javascript";
 import { getDayMasterKnowledge } from "@/lib/day-master-knowledge";
+import { buildCommunicationGuidance } from "@/lib/day-master-communication";
 
 const stems: Record<string, [string, string]> = { "甲":["Jia","Wood"], "乙":["Yi","Wood"], "丙":["Bing","Fire"], "丁":["Ding","Fire"], "戊":["Wu","Earth"], "己":["Ji","Earth"], "庚":["Geng","Metal"], "辛":["Xin","Metal"], "壬":["Ren","Water"], "癸":["Gui","Water"] };
 const branches: Record<string, [string, string]> = { "子":["Zi","Rat"], "丑":["Chou","Ox"], "寅":["Yin","Tiger"], "卯":["Mao","Rabbit"], "辰":["Chen","Dragon"], "巳":["Si","Snake"], "午":["Wu","Horse"], "未":["Wei","Goat"], "申":["Shen","Monkey"], "酉":["You","Rooster"], "戌":["Xu","Dog"], "亥":["Hai","Pig"] };
@@ -193,6 +194,8 @@ function deterministicQc(reading: Reading, childName?: string, gender?: string, 
   if (!reading.year_pillar || !reading.month_pillar || !reading.day_pillar || !chart.day_master || !chart.day_master_name || !chart.day_master_strength || !chart.season) issues.push("verified chart data is incomplete");
   if (!chart.knowledge_profile?.startsWith("day-master-v1/")) issues.push("the report is not attached to a reviewed Day Master profile");
   if (!summary?.personality || summary.strengths?.length !== 3 || summary.soft_spots?.length < 2 || summary.parenting_tips?.length !== 5 || !summary.closing_encouragement) issues.push("summary structure is incomplete");
+  if (!summary.communication || summary.communication.works_well.length !== 3 || summary.communication.avoid.length !== 2 || summary.communication.try_saying.length !== 2) issues.push("communication guidance is incomplete");
+  if (summary.communication?.basis.value !== chart.day_master_name) issues.push("communication guidance is not traceable to the verified Day Master");
   if (chart.day_master && !summary.personality.includes(chart.day_master)) issues.push("personality explanation does not identify the verified Day Master");
   if (/\b(?:strong|balanced|weak) day master\b/i.test(prose)) issues.push("unverified Day Master strength is exposed in customer-facing text");
   if (unsupportedClaims.test(prose)) issues.push("unsupported or over-certain claim detected");
@@ -340,6 +343,7 @@ function attachVerifiedBasis(candidate: SummaryReport, verified: SummaryReport):
       ...verifiedSupport,
       weekly_action: keepCandidateWeekly ? { ...verifiedSupport.weekly_action, ...candidateWeekly } : verifiedSupport.weekly_action,
     } : candidate.day_master_support,
+    communication: verified.communication,
     concern_original: verified.concern_original,
     concern_response: candidate.concern_response ?? verified.concern_response,
     concern_tips: candidate.concern_tips?.length ? candidate.concern_tips : verified.concern_tips,
@@ -530,6 +534,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
     personality,
     strengths: rotate(profile.strengths, openingVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index), guidance: guidanceText(point, index), basis: { factor: "Day Master", value: dayMasterName } })),
     soft_spots: rotate(profile.softSpots, connectionVariant).map((point, index) => ({ heading: headingText(point), body: pointBody(point, index + 3), guidance: guidanceText(point, index + 3), basis: { factor: "Day Master expression", value: dayMasterName } })),
+    communication: buildCommunicationGuidance(dayMasterName, name, strength),
     day_master_support: {
       introduction: supportPortrait.introduction,
       secure: personalisePortrait(supportPortrait.secure),

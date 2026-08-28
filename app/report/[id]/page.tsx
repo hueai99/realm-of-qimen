@@ -57,6 +57,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         </section>
         <PointSection title="Top 3 strengths" points={summary.strengths} />
         <PointSection title="Where a little support can help" points={summary.soft_spots} />
+        {summary.communication && <CommunicationSection name={report.subject_name} guidance={summary.communication} />}
         {summary.day_master_support && <section>
           <h2 className="text-3xl">Helping {report.subject_name} flourish</h2>
           <div className="mt-6 max-w-3xl border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When pressure builds</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.pressure}</p></div>
@@ -103,6 +104,20 @@ function PillarCard({ label, value }: { label: string; value: string | null | un
 
 function PointSection({ title, points }: { title: string; points: { heading: string; body: string; guidance?: string }[] }) {
   return <section><h2 className="text-2xl sm:text-3xl">{title}</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{points.map((point) => <div key={point.heading} className="border border-[#b9dfe4] bg-[#ffffff] p-5 sm:p-6"><h3 className="text-lg sm:text-xl">{point.heading}</h3><p className="mt-3 whitespace-pre-line leading-7 text-[#4e5b6f]">{point.body}</p>{point.guidance && <div className="mt-5 flex gap-3 border-t border-[#d2e9ec] pt-4 leading-7 text-[#4e5b6f]"><GuidanceIcon /><p className="whitespace-pre-line">{point.guidance}</p></div>}</div>)}</div></section>;
+}
+
+function CommunicationSection({ name, guidance }: { name: string; guidance: NonNullable<NonNullable<BaziReport["report_content"]>["communication"]> }) {
+  return <section>
+    <p className="text-xs font-bold uppercase tracking-[.18em] text-[#007789]">How to communicate</p>
+    <h2 className="mt-2 text-2xl sm:text-3xl">Communicating with {name}</h2>
+    <div className="mt-4 max-w-3xl space-y-3 leading-7 text-[#4e5b6f]"><p>{guidance.introduction}</p><p>{guidance.strength_note}</p></div>
+    <div className="mt-6 grid gap-5 md:grid-cols-2">
+      <div className="border border-[#b9dfe4] bg-white p-5 sm:p-6"><h3 className="text-xl">What may work well</h3><ul className="mt-4 space-y-3 text-[#4e5b6f]">{guidance.works_well.map((item) => <li key={item} className="flex gap-3 leading-7"><span aria-hidden="true" className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#00a0b8]" /><span>{item}</span></li>)}</ul></div>
+      <div className="border border-[#b9dfe4] bg-white p-5 sm:p-6"><h3 className="text-xl">What may make conversations harder</h3><ul className="mt-4 space-y-3 text-[#4e5b6f]">{guidance.avoid.map((item) => <li key={item} className="flex gap-3 leading-7"><span aria-hidden="true" className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-[#00a0b8]" /><span>{item}</span></li>)}</ul></div>
+    </div>
+    <div className="mt-5 max-w-3xl bg-[#eaf7f9] p-5 sm:p-6"><h3 className="text-lg">Try saying</h3><div className="mt-3 space-y-3">{guidance.try_saying.map((phrase) => <blockquote key={phrase} className="border-l-2 border-[#00a0b8] pl-4 leading-7">“{phrase}”</blockquote>)}</div></div>
+    <p className="mt-4 max-w-3xl text-sm leading-6 text-[#5d6f75]">{guidance.qualification}</p>
+  </section>;
 }
 
 function splitPillarPart(value: string) {
