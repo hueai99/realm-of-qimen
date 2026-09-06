@@ -22,6 +22,7 @@ export default function IntakeForm() {
   const [emailActionToken, setEmailActionToken] = useState("");
   const [birthCountry, setBirthCountry] = useState("Singapore");
   const [phoneCode, setPhoneCode] = useState("Singapore|+65");
+  const [birthTimeUnknown, setBirthTimeUnknown] = useState(false);
   async function submit(formData: FormData) {
     const enteredName = String(formData.get("subject_name") ?? "").trim();
     const enteredPhone = String(formData.get("phone_number") ?? "").trim();
@@ -80,7 +81,11 @@ export default function IntakeForm() {
       <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm sm:col-span-2">Child&apos;s name<input required name="subject_name" maxLength={80} className={cls} /></label>
       <fieldset className="text-sm sm:col-span-2"><legend>Date of birth</legend><div className="grid grid-cols-3 gap-2"><select required name="birth_day" defaultValue="" aria-label="Birth day" className={cls} style={{paddingLeft:10,paddingRight:8}}><option value="" disabled>DD</option>{Array.from({length:31},(_,i)=><option key={i+1} value={String(i+1).padStart(2,"0")}>{String(i+1).padStart(2,"0")}</option>)}</select><select required name="birth_month" defaultValue="" aria-label="Birth month" className={cls} style={{paddingLeft:10,paddingRight:8}}><option value="" disabled>MMM</option>{months.map((month,i)=><option key={month} value={String(i+1).padStart(2,"0")}>{month}</option>)}</select><select required name="birth_year" defaultValue="" aria-label="Birth year" className={cls} style={{paddingLeft:10,paddingRight:8}}><option value="" disabled>YYYY</option>{Array.from({length:100},(_,i)=>thisYear-i).map(year=><option key={year} value={year}>{year}</option>)}</select></div></fieldset>
-      <label className="text-sm">Local time of birth<input required type="time" name="birth_time" className={cls} /></label>
+      <div className="sm:col-span-2">
+        <label className="block text-sm">Local time of birth<input required={!birthTimeUnknown} disabled={birthTimeUnknown} type="time" name="birth_time" className={`${cls} disabled:cursor-not-allowed disabled:bg-[var(--paper-deep)] disabled:opacity-60`} /></label>
+        <label className="mt-3 flex items-start gap-3 text-sm leading-6 text-[var(--muted)]"><input type="checkbox" name="birth_time_unknown" checked={birthTimeUnknown} onChange={(event) => setBirthTimeUnknown(event.target.checked)} className="mt-1 h-4 w-4 shrink-0 accent-[var(--teal-dark)]"/><span>I don&apos;t know the birth time</span></label>
+        {birthTimeUnknown && <p className="mt-2 text-sm leading-6 text-[var(--muted)]">That&apos;s okay. The reading will use the date of birth and leave out the Hour Pillar.</p>}
+      </div>
       <label className="text-sm">City of birth<input required name="birth_city" maxLength={80} className={cls} placeholder="e.g. Singapore" /></label>
       <label className="text-sm">Country of birth<select required name="birth_country" value={birthCountry} onChange={(event) => setBirthCountry(event.target.value)} className={cls}>{countries.map(([country]) => <option key={country} value={country}>{country}</option>)}</select></label>
       <label className="text-sm">Gender<select required name="gender" defaultValue="" className={cls}><option value="" disabled>Select</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></label>

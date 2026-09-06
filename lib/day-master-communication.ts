@@ -19,12 +19,12 @@ export function buildCommunicationGuidance(dayMasterName: string, name: string, 
   const profile = profiles[dayMasterName] ?? profiles.Gui;
   const personalise = (value: string) => value.replaceAll("{name}", name);
   const strengthNote = strength === "Strong"
-    ? `${name}'s preferred way of communicating may be easier to notice. Even so, it can change with the situation and the people involved.`
+    ? `You may already recognise some of these patterns in ${name}. They can still change with the situation and with how comfortable ${name} feels.`
     : strength === "Weak"
-      ? `${name}'s preferred way of communicating may emerge gradually, especially around people who feel safe and familiar.`
-      : `${name}'s preferred way of communicating may change with the setting. Notice when these suggestions fit and when a different approach works better.`;
+      ? `These patterns may be quieter at first. They are often easier to notice when ${name} feels safe, unhurried, and understood.`
+      : `Some of these patterns may feel familiar, while others may appear only in certain situations. Notice which approaches help ${name} feel heard.`;
   return {
-    introduction: `The Day Master offers a starting point for understanding how ${name} may receive information and respond during a conversation.`,
+    introduction: `Every child has a different way of opening up. ${name}'s Day Master suggests that conversations may go more smoothly when the approach feels clear, respectful, and suited to how ${name} takes things in.`,
     strength_note: strengthNote,
     works_well: profile.works.map(personalise),
     avoid: profile.avoid.map(personalise),

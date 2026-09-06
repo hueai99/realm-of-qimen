@@ -470,6 +470,7 @@ function groundedSummary(name: string, dayMasterName: string, dayMaster: string,
   const personality = [
     personalityOpenings[openingVariant],
     childConnections[connectionVariant],
+    `This Day Master is often described as ${profile.warmIntroduction}. ${name} may feel especially engaged by ${profile.motivations.slice(0, -1).join(", ")}, and ${profile.motivations.at(-1)}.`,
   ].join("\n\n");
   const wordingVariant = (heading: string) => [...`${variationCycle}-${name}-${heading}`]
     .reduce((seed, character) => Math.imul(seed ^ character.charCodeAt(0), 16777619) >>> 0, 2166136261) % 3;

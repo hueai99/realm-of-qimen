@@ -34,6 +34,15 @@ const failures = [];
 if (fixtures.size !== expected.size) failures.push(`Found ${fixtures.size}/10 Day Masters`);
 async function run() {
 for (const [dayMaster, birthDate] of fixtures) {
+  const unknownTimeReading = calculateReading({ subject_name: "Alex", birth_date: birthDate, birth_time: null, gender: "female", question_type: "child_potential", variation_seed: 17 });
+  if (unknownTimeReading.hour_pillar !== null) failures.push(`${dayMaster}: unknown birth time created an Hour Pillar`);
+  if (unknownTimeReading.chart_data.day_master_name !== dayMaster) failures.push(`${dayMaster}: unknown birth time changed the Day Master`);
+  try {
+    const releasedWithoutTime = await generateReading({ subject_name: "Alex", birth_date: birthDate, birth_time: null, gender: "female", question_type: "child_potential", variation_seed: 17 });
+    if (releasedWithoutTime.insights_review_status !== "reviewed") failures.push(`${dayMaster}: unknown-time report did not pass release QC`);
+  } catch (error) {
+    failures.push(`${dayMaster}/unknown time: ${error instanceof Error ? error.message : String(error)}`);
+  }
   for (const gender of genders) {
     for (const concern of concerns) {
       const reading = calculateReading({ subject_name: "Alex", birth_date: birthDate, birth_time: "12:00", gender, question_type: "child_potential", parenting_concern: concern, variation_seed: 17 });
@@ -63,7 +72,7 @@ if (failures.length) {
   console.error(failures.join("\n"));
   process.exit(1);
 }
-console.log(`QC matrix passed: ${fixtures.size} Day Masters × ${genders.length} genders × ${concerns.length} concern states.`);
+console.log(`QC matrix passed: ${fixtures.size} Day Masters × ${genders.length} genders × ${concerns.length} concern states, with known and unknown birth times.`);
 }
 
 run().catch((error) => { console.error(error); process.exit(1); });

@@ -39,19 +39,20 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
       <div className="border-b border-[#acd8de] pb-7 sm:pb-10">
         <p className="text-xs font-bold uppercase tracking-[.25em] text-[#007789]">Your Child&apos;s Bazi Personality Blueprint · Summary Report</p>
         <h1 className="mt-2 text-3xl sm:mt-3 sm:text-5xl">{report.subject_name}</h1>
-        <p className="mt-3 text-sm leading-6 text-[#5d6f75] sm:mt-4 sm:text-base">{genderLabel} · Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : ""}{birthCountry ? ` · ${birthCountry}` : ""}</p>
+        <p className="mt-3 text-base leading-7 text-[#5d6f75] sm:mt-4">{genderLabel} · Born {new Date(`${report.birth_date}T12:00:00`).toLocaleDateString("en", { dateStyle: "long" })}{report.birth_time ? ` at ${report.birth_time.slice(0, 5)}` : " · Birth time not provided"}{birthCountry ? ` · ${birthCountry}` : ""}</p>
       </div>
       <section className="my-7 max-w-3xl border-l-2 border-[var(--teal)] bg-[var(--card)] px-5 py-5 sm:my-8 sm:px-6">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-[#007789]">About this Bazi summary</p>
         <p className="mt-3 leading-7 text-[#4e5b6f]">In Bazi, the Day Master represents the person at the centre of the reading. It comes from the element connected to the day {subjectPronoun} {birthVerb} born and offers a first look at {possessivePronoun} natural temperament—how {subjectPronoun} may respond, make decisions, and approach everyday situations.</p>
         <p className="mt-3 leading-7 text-[#4e5b6f]">This summary looks at {report.subject_name}&apos;s Day Master. It is a starting point rather than the whole story of {possessivePronoun} personality.</p>
+        {!report.birth_time && <p className="mt-3 leading-7 text-[#4e5b6f]">Because the birth time was not provided, the Hour Pillar is left open. The Day Master and the other pillars shown here can still be calculated from the birth date.</p>}
       </section>
       <div className="grid grid-cols-4 gap-px overflow-hidden border border-[#acd8de] bg-[#acd8de]">
         {pillars.map(([label, value]) => <PillarCard key={label} label={label} value={value} />)}
       </div>
       {summary ? <div className="mt-12 space-y-12">
         <section>
-          <p className="text-xs uppercase tracking-[.2em] text-[#007789]">Personality at a glance</p>
+          <p className="text-xs font-bold uppercase tracking-[.18em] text-[#007789]">Personality at a glance</p>
           <h2 className="mt-3 text-2xl leading-tight sm:text-3xl">Getting to know {report.subject_name}</h2>
           <div className="mt-5 max-w-3xl space-y-4 leading-7 sm:leading-8">{readableParagraphs(withoutUnverifiedStrength(summary.personality)).map((paragraph, index) => <p key={`${index}-${paragraph}`}>{paragraph}</p>)}</div>
         </section>
@@ -59,11 +60,11 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         <PointSection title="Where a little support can help" points={summary.soft_spots} />
         {summary.communication && <CommunicationSection name={report.subject_name} guidance={summary.communication} />}
         {summary.day_master_support && <section>
-          <h2 className="text-3xl">Helping {report.subject_name} flourish</h2>
+          <h2 className="text-2xl sm:text-3xl">Helping {report.subject_name} flourish</h2>
           <div className="mt-6 max-w-3xl border border-[#b9dfe4] bg-[#ffffff] p-6"><h3 className="text-xl">When pressure builds</h3><p className="mt-3 leading-7 text-[#4e5b6f]">{summary.day_master_support.pressure}</p></div>
           <div className="mt-5 flex max-w-3xl gap-3 border-l-2 border-[#00a0b8] bg-[#ffffff] p-5 leading-7 text-[#4e5b6f]"><GuidanceIcon /><p>{summary.day_master_support.support}</p></div>
         </section>}
-        {summary.concern_response && <section><h2 className="text-3xl">Your concern about {report.subject_name}</h2>{summary.concern_original && <blockquote className="mt-5 max-w-3xl border-l-2 border-[#00a0b8] pl-5 italic leading-8 text-[#4e5b6f]">“{summary.concern_original}”</blockquote>}{summary.concern_tips?.length ? <><h3 className="mt-6 text-xl">What may help</h3><ul className="mt-4 max-w-3xl space-y-3">{summary.concern_tips.map((tip) => <li key={tip} className="flex gap-3 rounded-sm bg-[#ffffff] p-4 leading-7 text-[#4e5b6f]"><GuidanceIcon /> <span>{tip}</span></li>)}</ul></> : null}</section>}
+        {summary.concern_response && <section><h2 className="text-2xl sm:text-3xl">Your concern about {report.subject_name}</h2>{summary.concern_original && <blockquote className="mt-5 max-w-3xl border-l-2 border-[#00a0b8] pl-5 italic leading-8 text-[#4e5b6f]">“{summary.concern_original}”</blockquote>}{summary.concern_tips?.length ? <><h3 className="mt-6 text-xl">What may help</h3><ul className="mt-4 max-w-3xl space-y-3">{summary.concern_tips.map((tip) => <li key={tip} className="flex gap-3 rounded-sm bg-[#ffffff] p-4 leading-7 text-[#4e5b6f]"><GuidanceIcon /> <span>{tip}</span></li>)}</ul></> : null}</section>}
         {summary.day_master_support?.weekly_action && (!summary.concern_original || Boolean(summary.concern_tips?.length)) && <section className="max-w-3xl border border-[#b9dfe4] bg-[#ffffff] p-6 sm:p-8">
           <p className="text-xs font-bold uppercase tracking-[.18em] text-[#007789]">A practical next step</p>
           <h2 className="mt-2 text-xl sm:text-2xl">Try this with {report.subject_name} this week</h2>
@@ -73,7 +74,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
           {summary.day_master_support.weekly_action.bazi_link && <div className="mt-5 border-l-2 border-[#00a0b8] pl-4"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">Why this may suit {report.subject_name}</p><p className="mt-2 leading-7 text-[#4e5b6f]">{summary.day_master_support.weekly_action.bazi_link}</p></div>}
           <div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="bg-[#eaf7f9] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">Try saying</p><p className="mt-2 leading-7">“{summary.day_master_support.weekly_action.phrase}”</p></div><div className="bg-[#eaf7f9] p-4"><p className="text-xs font-bold uppercase tracking-wider text-[#007789]">Look for</p><p className="mt-2 leading-7">{summary.day_master_support.weekly_action.sign}</p></div></div>
         </section>}
-        <section className="border-l-2 border-[#00a0b8] py-2 pl-6"><h2 className="text-3xl">Closing encouragement</h2><div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.closing_encouragement.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>
+        <section className="border-l-2 border-[#00a0b8] py-2 pl-6"><h2 className="text-2xl sm:text-3xl">Closing encouragement</h2><div className="mt-5 max-w-3xl space-y-4 leading-8">{summary.closing_encouragement.split(/\n\s*\n/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>
         <ReportFeedback reportId={report.id} childName={report.subject_name} initialEmail={report.email} emailToken={emailToken} />
       </div> : report.insights ? <div className="mt-12"><h2 className="text-3xl">Three reflections</h2><ol className="mt-5 space-y-4">{insights.map((insight, i) => <li key={i} className="border-l border-[#00a0b8] py-2 pl-5 leading-7">{insight.replace(/^\d+\.\s*/, "")}</li>)}</ol></div> : <div className="my-12 border border-amber-300 bg-amber-50 p-6"><h2 className="text-xl">Analysis pending</h2><p className="mt-2 text-sm">We saved this reading and will update it shortly.</p></div>}
     </article>
@@ -103,7 +104,7 @@ function PillarCard({ label, value }: { label: string; value: string | null | un
 }
 
 function PointSection({ title, points }: { title: string; points: { heading: string; body: string; guidance?: string }[] }) {
-  return <section><h2 className="text-2xl sm:text-3xl">{title}</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{points.map((point) => <div key={point.heading} className="border border-[#b9dfe4] bg-[#ffffff] p-5 sm:p-6"><h3 className="text-lg sm:text-xl">{point.heading}</h3><p className="mt-3 whitespace-pre-line leading-7 text-[#4e5b6f]">{point.body}</p>{point.guidance && <div className="mt-5 flex gap-3 border-t border-[#d2e9ec] pt-4 leading-7 text-[#4e5b6f]"><GuidanceIcon /><p className="whitespace-pre-line">{point.guidance}</p></div>}</div>)}</div></section>;
+  return <section><h2 className="text-2xl sm:text-3xl">{title}</h2><div className="mt-6 grid gap-5 md:grid-cols-3">{points.map((point) => <div key={point.heading} className="border border-[#b9dfe4] bg-[#ffffff] p-5 sm:p-6"><h3 className="text-xl">{point.heading}</h3><p className="mt-3 whitespace-pre-line leading-7 text-[#4e5b6f]">{point.body}</p>{point.guidance && <div className="mt-5 flex gap-3 border-t border-[#d2e9ec] pt-4 leading-7 text-[#4e5b6f]"><GuidanceIcon /><p className="whitespace-pre-line">{point.guidance}</p></div>}</div>)}</div></section>;
 }
 
 function CommunicationSection({ name, guidance }: { name: string; guidance: NonNullable<NonNullable<BaziReport["report_content"]>["communication"]> }) {

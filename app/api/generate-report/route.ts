@@ -20,13 +20,14 @@ function variationSeedFromReportId(id: string) {
 export async function POST(request: Request) {
   let body: Record<string, string>; try { body = await request.json(); } catch { return NextResponse.json({ error: "Invalid request" }, { status: 400 }); }
   body.phone_code = (body.phone_code ?? "").split("|").pop() ?? "";
-  const subject_name = normaliseName(body.subject_name ?? ""); const parent_name = normaliseName(body.parent_name ?? ""); const email = body.email?.trim().toLowerCase(); const phone = body.phone?.trim() || `${body.phone_code ?? ""}${body.phone_number ?? ""}`.replace(/\s+/g, " ").trim(); const birth_date = body.birth_date || `${body.birth_year}-${body.birth_month}-${body.birth_day}`; const birth_time = body.birth_time || null; const birth_place = body.birth_place?.trim() || [body.birth_city?.trim(), body.birth_country?.trim()].filter(Boolean).join(", "); const parenting_concern = body.parenting_concern?.trim() || null; const gender = body.gender; const question_type = body.question_type as QuestionType;
+  const birthTimeUnknown = body.birth_time_unknown === "on";
+  const subject_name = normaliseName(body.subject_name ?? ""); const parent_name = normaliseName(body.parent_name ?? ""); const email = body.email?.trim().toLowerCase(); const phone = body.phone?.trim() || `${body.phone_code ?? ""}${body.phone_number ?? ""}`.replace(/\s+/g, " ").trim(); const birth_date = body.birth_date || `${body.birth_year}-${body.birth_month}-${body.birth_day}`; const birth_time = birthTimeUnknown ? null : body.birth_time || null; const birth_place = body.birth_place?.trim() || [body.birth_city?.trim(), body.birth_country?.trim()].filter(Boolean).join(", "); const parenting_concern = body.parenting_concern?.trim() || null; const gender = body.gender; const question_type = body.question_type as QuestionType;
   const invalidField = !subject_name || subject_name.length > 80 ? "child's name"
     : !parent_name || parent_name.length > 80 ? "parent's name"
     : !email || !/^\S+@\S+\.\S+$/.test(email) ? "parent's email"
     : !phone || !/^[+()\d\s-]{7,30}$/.test(phone) ? "mobile number"
     : !isValidDate(birth_date) ? "date of birth"
-    : !/^\d{2}:\d{2}$/.test(birth_time ?? "") ? "time of birth"
+    : !birthTimeUnknown && !/^\d{2}:\d{2}$/.test(birth_time ?? "") ? "time of birth"
     : !birth_place || birth_place.length > 120 ? "place of birth"
     : (parenting_concern?.length ?? 0) > 600 ? "parenting concern"
     : !allowed.has(question_type) ? "report type"
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "We could not save your reading. Please try again." }, { status: 500 });
   }
   const variation_seed = variationSeedFromReportId(report.id);
-  await db.from("audit_logs").insert({ actor: "system", action: "report.requested", target_table: "bazi_reports", target_id: report.id, payload: { question_type } });
+  await db.from("audit_logs").insert({ actor: "system", action: "report.requested", target_table: "bazi_reports", target_id: report.id, payload: { question_type, birth_time_provided: !birthTimeUnknown } });
   await db.from("audit_logs").insert({ actor: "visitor", action: "privacy.consent_recorded", target_table: "bazi_reports", target_id: report.id, payload: { privacy_notice_version: "2026-08-01", terms_version: "2026-08-01", parent_or_authorised_adult: true } });
   let reading: Awaited<ReturnType<typeof generateReading>>;
   try { reading = await generateReading({ subject_name, birth_date, birth_time, birth_place, parenting_concern, gender, question_type, variation_seed } as never); const { error: updateError } = await db.from("bazi_reports").update(reading).eq("id", report.id); if (updateError) throw updateError; await db.from("audit_logs").insert({ actor: "system", action: "report.generated", target_table: "bazi_reports", target_id: report.id, payload: { source: reading.insights_source, variation_seed } }); } catch (generationError) { const failureMessage = generationError instanceof Error ? generationError.message : "Unknown report-generation error"; console.error("Report generation failed", failureMessage); await db.from("bazi_reports").update({ generation_error: failureMessage.slice(0, 1000) }).eq("id", report.id); await db.from("audit_logs").insert({ actor: "system", action: "report.generation_failed", target_table: "bazi_reports", target_id: report.id, payload: { error: failureMessage.slice(0, 500) } }); return NextResponse.json({ error: "We saved the details, but could not prepare the report. Please try again." }, { status: 500 }); }
